@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:DAVINKI/screens/home_screen.dart/home_screen.dart';
+import 'package:DAVINKI/screens/screen_navigator.dart';
 
 void main() {
   runApp(DavinkiApp());
@@ -14,7 +14,7 @@ class DavinkiApp extends StatelessWidget {
         primarySwatch: Colors.pink,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeScreen(),
+      home: ScreenNavigator(),
     );
   }
 }

@@ -8,13 +8,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('DAVINKI'),
-      ),
-      body: Center(
-        child: Text('Hier könnte Ihre Werbung stehen!'),
-      ),
+    return Center(
+      child: Text('Home'),
     );
   }
 }
