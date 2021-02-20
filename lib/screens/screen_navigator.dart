@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:DAVINKI/screens/home_screen/home_screen.dart';
 import 'package:DAVINKI/screens/weekly_timetable_screen/weekly_timetable_screen.dart';
 import 'package:DAVINKI/screens/school_planner_screen/school_planner_screen.dart';
@@ -26,7 +27,10 @@ class _ScreenNavigatorState extends State<ScreenNavigator> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('DAVINKI'),
+        title: Text(
+          'DAVINKI',
+          style: GoogleFonts.pacifico(),
+        ),
         actions: <Widget>[
           IconButton(
             icon: Icon(

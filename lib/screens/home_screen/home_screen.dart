@@ -9,7 +9,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('Home'),
+      child: Text(
+        'Hallo Philipp!',
+        style: TextStyle(fontSize: 40.0),
+      ),
     );
   }
 }
