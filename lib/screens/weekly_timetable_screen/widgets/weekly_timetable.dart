@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:DAVINKI/services/davinci_infoserver_service.dart';
 import 'package:DAVINKI/utils.dart';
 import 'package:DAVINKI/secret.dart' as secret;
 import 'package:DAVINKI/models/lesson.dart';
-import 'package:DAVINKI/screens/weekly_timetable_screen/widgets/loading_timetable.dart';
 import 'package:DAVINKI/screens/weekly_timetable_screen/widgets/date_cell.dart';
 import 'package:DAVINKI/screens/weekly_timetable_screen/widgets/lesson_cell.dart';
 import 'package:DAVINKI/screens/weekly_timetable_screen/widgets/timseslot_cell.dart';
 
 class WeeklyTimetable extends StatefulWidget {
   final int _week;
-  WeeklyTimetable(this._week, {Key key}) : super(key: key);
+  final Map<String, dynamic> _infoserverData;
+  WeeklyTimetable(this._week, this._infoserverData, {Key key}) : super(key: key);
 
   @override
-  _WeeklyTimetableState createState() => _WeeklyTimetableState(this._week);
+  _WeeklyTimetableState createState() => _WeeklyTimetableState(this._week, this._infoserverData);
 }
 
 class _WeeklyTimetableState extends State<WeeklyTimetable> {
   final int _week;
-  _WeeklyTimetableState(this._week) : super();
+  final Map<String, dynamic> _infoserverData;
+  _WeeklyTimetableState(this._week, this._infoserverData) : super();
   List<List<Lesson>> _getLessons(List lessonTimes, List timeslots, List<DateTime> datesOfWeek) {
     List<List<Lesson>> lessons = <List<Lesson>>[];
 
@@ -61,10 +61,10 @@ class _WeeklyTimetableState extends State<WeeklyTimetable> {
     return lessons;
   }
 
-  List<TableRow> _buildTimetable(Map<String, dynamic> infoserverData) {
+  List<TableRow> _buildTimetable() {
     List<DateTime> datesOfWeek = getDatesOfWeek(this._week);
-    List lessonTimes = infoserverData['result']['displaySchedule']['lessonTimes'];
-    List timeslots = infoserverData['result']['timeframes'][0]['timeslots'];
+    List lessonTimes = this._infoserverData['result']['displaySchedule']['lessonTimes'];
+    List timeslots = this._infoserverData['result']['timeframes'][0]['timeslots'];
 
     List<List<Lesson>> lessons = _getLessons(lessonTimes, timeslots, datesOfWeek);
 
@@ -98,20 +98,17 @@ class _WeeklyTimetableState extends State<WeeklyTimetable> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map>(
-      future: DavinciInfoserverService().getData(),
-      builder: (BuildContext context, AsyncSnapshot<Map> snapshot) {
-        if (snapshot.hasData) {
-          return SingleChildScrollView(
-            child: Table(
-              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-              children: this._buildTimetable(snapshot.data),
-            ),
-          );
-        } else {
-          return LoadingTimetable();
-        }
-      },
+    return SingleChildScrollView(
+      child: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 55),
+          child: Table(
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            children: this._buildTimetable(),
+          ),
+        ),
+      ),
     );
   }
 }
