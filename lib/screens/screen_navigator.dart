@@ -3,20 +3,28 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:DAVINKI/screens/home_screen/home_screen.dart';
 import 'package:DAVINKI/screens/weekly_timetable_screen/weekly_timetable_screen.dart';
 import 'package:DAVINKI/screens/school_planner_screen/school_planner_screen.dart';
+import 'package:DAVINKI/screens/settings_screen/settings_screen.dart';
 
 class ScreenNavigator extends StatefulWidget {
+  final Map<String, dynamic> _infoserverData;
+  ScreenNavigator(this._infoserverData);
+
   @override
-  _ScreenNavigatorState createState() => _ScreenNavigatorState();
+  _ScreenNavigatorState createState() => _ScreenNavigatorState(this._infoserverData);
 }
 
 class _ScreenNavigatorState extends State<ScreenNavigator> {
   int _currentIndex = 0;
-  final List<Widget> _screens = <Widget>[
-    HomeScreen(),
-    WeeklyTimetableScreen(),
-    SchoolPlannerScreen(),
-  ];
+  List<Widget> _screens;
+  final Map<String, dynamic> _infoserverData;
 
+  _ScreenNavigatorState(this._infoserverData) {
+    this._screens = <Widget>[
+      HomeScreen(),
+      WeeklyTimetableScreen(this._infoserverData),
+      //SchoolPlannerScreen(),
+    ];
+  }
   void _onTabTapped(int index) {
     setState(() {
       this._currentIndex = index;
@@ -37,7 +45,9 @@ class _ScreenNavigatorState extends State<ScreenNavigator> {
               Icons.settings,
               color: Colors.white,
             ),
-            onPressed: null,
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsScreen()));
+            },
           )
         ],
       ),
@@ -54,10 +64,12 @@ class _ScreenNavigatorState extends State<ScreenNavigator> {
             icon: Icon(Icons.date_range),
             label: 'Stundenplan',
           ),
+          /*
           BottomNavigationBarItem(
             icon: Icon(Icons.list_alt),
             label: 'Schulplaner',
           )
+          */
         ],
         onTap: this._onTabTapped,
       ),
