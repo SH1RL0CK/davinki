@@ -9,7 +9,11 @@ class _SchoolPlannerScreenState extends State<SchoolPlannerScreen> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('Schulplaner'),
+      child: Text(
+        'Dieses Feature kommt bald (vielleicht)',
+        style: TextStyle(fontSize: 42),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 }
