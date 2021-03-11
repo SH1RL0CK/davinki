@@ -41,23 +41,27 @@ class _WeeklyTimetableState extends State<WeeklyTimetable> {
           color = subject.color;
         }
       });
-
-      if (color != 0 && lesson['dates'].any((date) => formatedDatesOfWeek.contains(date))) {
-        List<String> lessonInfo = <String>[];
-        int lessonNumber = 0;
-        int date = 0;
-        if (lesson.containsKey('lessonBlock')) {
-          lessonInfo = lesson['lessonBlock'].split('-');
-          lessonNumber = int.parse(lessonInfo[2].split('.')[0]) - 1;
-          Map<String, int> dates = {'Mo': 0, 'Di': 1, 'Mi': 2, 'Do': 3, 'Fr': 4};
-          date = dates[lessonInfo[1]];
-          if (lesson.containsKey('changes') || lessons[lessonNumber][date].freeTime) {
-            lessons[lessonNumber][date] = Lesson.fromJson(lesson, color);
+      if (color != 0) {
+        formatedDatesOfWeek.asMap().forEach((weekdayIndex, date) {
+          if (lesson['dates'].contains(date)) {
+            int lessonNumber;
+            timeslots.asMap().forEach((timeslotIndex, timeslot) {
+              if (timeslot['startTime'] == lesson['startTime']) {
+                lessonNumber = timeslotIndex;
+              }
+            });
+            for (; lessonNumber < timeslots.length; lessonNumber++) {
+              if (lesson.containsKey('changes') || lessons[lessonNumber][weekdayIndex].freeTime) {
+                lessons[lessonNumber][weekdayIndex] = Lesson.fromJson(lesson, date, color);
+              }
+              if (lesson['endTime'] == timeslots[lessonNumber]['endTime']) {
+                break;
+              }
+            }
           }
-        }
+        });
       }
     }
-    lessons[2][0].currentLesson = true;
     return lessons;
   }
 
