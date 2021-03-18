@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
-import 'package:DAVINKI/secret.dart' as secret;
+import 'package:davinki/secret.dart' as secret;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -37,7 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.white,
                     ),
                     children: <TextSpan>[
-                      TextSpan(text: formatDate(DateTime.now(), [dd, '.', mm, '.', yyyy]), style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))
+                      TextSpan(
+                          text: formatDate(DateTime.now(), [dd, '.', mm, '.', yyyy]), style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))
                     ],
                   ),
                 ),

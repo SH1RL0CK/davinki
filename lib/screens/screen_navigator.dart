@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:DAVINKI/screens/home_screen/home_screen.dart';
-import 'package:DAVINKI/screens/weekly_timetable_screen/weekly_timetable_screen.dart';
-import 'package:DAVINKI/screens/school_planner_screen/school_planner_screen.dart';
-import 'package:DAVINKI/screens/settings_screen/settings_screen.dart';
+import 'package:davinki/screens/home_screen/home_screen.dart';
+import 'package:davinki/screens/weekly_timetable_screen/weekly_timetable_screen.dart';
+//import 'package:davinki/screens/school_planner_screen/school_planner_screen.dart';
+import 'package:davinki/screens/settings_screen/settings_screen.dart';
 
 class ScreenNavigator extends StatefulWidget {
   final Map<String, dynamic> _infoserverData;
@@ -15,7 +15,7 @@ class ScreenNavigator extends StatefulWidget {
 
 class _ScreenNavigatorState extends State<ScreenNavigator> {
   int _currentIndex = 0;
-  List<Widget> _screens;
+  List<Widget> _screens = <Widget>[];
   final Map<String, dynamic> _infoserverData;
 
   _ScreenNavigatorState(this._infoserverData) {

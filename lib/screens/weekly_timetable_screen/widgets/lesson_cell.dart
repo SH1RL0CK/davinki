@@ -1,6 +1,6 @@
-import 'package:DAVINKI/screens/weekly_timetable_screen/widgets/cancelled.dart';
+import 'package:davinki/screens/weekly_timetable_screen/widgets/cancelled.dart';
 import 'package:flutter/material.dart';
-import 'package:DAVINKI/models/lesson.dart';
+import 'package:davinki/models/lesson.dart';
 
 class LessonCell extends StatefulWidget {
   final Lesson _lesson;

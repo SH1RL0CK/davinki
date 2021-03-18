@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:DAVINKI/screens/loading_screen.dart';
+import 'package:davinki/screens/loading_screen.dart';
 
 void main() {
   runApp(DavinkiApp());

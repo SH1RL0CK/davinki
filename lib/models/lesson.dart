@@ -14,7 +14,7 @@ class Lesson {
     this.date = '',
     this.sartTime = '',
     this.changeCaption = '',
-    this.changeInformation,
+    this.changeInformation = '',
     this.newTeacher = '',
     this.newRoom = '',
     this.freeTime = false,

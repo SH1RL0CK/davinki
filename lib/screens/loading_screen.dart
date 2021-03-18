@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:DAVINKI/services/davinci_infoserver_service.dart';
-import 'package:DAVINKI/screens/screen_navigator.dart';
+import 'package:davinki/services/davinci_infoserver_service.dart';
+import 'package:davinki/screens/screen_navigator.dart';
 
 class LoadingScreen extends StatefulWidget {
-  LoadingScreen({Key key}) : super(key: key);
+  LoadingScreen({Key? key}) : super(key: key);
 
   @override
   _LoadingScreenState createState() => _LoadingScreenState();
@@ -14,10 +14,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     super.initState();
-    DavinciInfoserverService().getData().then((infoserverData) {
+    DavinciInfoserverService().getData().then((Map<String, dynamic>? infoserverData) {
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => ScreenNavigator(infoserverData)),
+        MaterialPageRoute(builder: (context) => ScreenNavigator(infoserverData!)),
         (route) => false,
       );
     });

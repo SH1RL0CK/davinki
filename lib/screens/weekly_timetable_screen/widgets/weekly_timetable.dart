@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:DAVINKI/utils.dart';
-import 'package:DAVINKI/secret.dart' as secret;
-import 'package:DAVINKI/models/lesson.dart';
-import 'package:DAVINKI/screens/weekly_timetable_screen/widgets/date_cell.dart';
-import 'package:DAVINKI/screens/weekly_timetable_screen/widgets/lesson_cell.dart';
-import 'package:DAVINKI/screens/weekly_timetable_screen/widgets/timseslot_cell.dart';
+import 'package:davinki/utils.dart';
+import 'package:davinki/secret.dart' as secret;
+import 'package:davinki/models/lesson.dart';
+import 'package:davinki/screens/weekly_timetable_screen/widgets/date_cell.dart';
+import 'package:davinki/screens/weekly_timetable_screen/widgets/lesson_cell.dart';
+import 'package:davinki/screens/weekly_timetable_screen/widgets/timseslot_cell.dart';
 
 class WeeklyTimetable extends StatefulWidget {
   final int _week;
   final Map<String, dynamic> _infoserverData;
-  WeeklyTimetable(this._week, this._infoserverData, {Key key}) : super(key: key);
+  WeeklyTimetable(this._week, this._infoserverData, {Key? key}) : super(key: key);
 
   @override
   _WeeklyTimetableState createState() => _WeeklyTimetableState(this._week, this._infoserverData);
@@ -44,7 +44,7 @@ class _WeeklyTimetableState extends State<WeeklyTimetable> {
       if (color != 0) {
         formatedDatesOfWeek.asMap().forEach((weekdayIndex, date) {
           if (lesson['dates'].contains(date)) {
-            int lessonNumber;
+            int lessonNumber = 0;
             timeslots.asMap().forEach((timeslotIndex, timeslot) {
               if (timeslot['startTime'] == lesson['startTime']) {
                 lessonNumber = timeslotIndex;

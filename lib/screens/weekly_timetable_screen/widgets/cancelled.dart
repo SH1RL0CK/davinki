@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:DAVINKI/models/lesson.dart';
+import 'package:davinki/models/lesson.dart';
 
 class Cancelled extends StatelessWidget {
   final Lesson _lesson;

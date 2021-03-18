@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:DAVINKI/screens/weekly_timetable_screen/widgets/weekly_timetable.dart';
+import 'package:davinki/screens/weekly_timetable_screen/widgets/weekly_timetable.dart';
 
 class WeeklyTimetableScreen extends StatefulWidget {
   final Map<String, dynamic> _infoserverData;
