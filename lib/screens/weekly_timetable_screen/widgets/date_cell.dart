@@ -11,7 +11,7 @@ class DateCell extends StatefulWidget {
 class _DateCellState extends State<DateCell> {
   final DateTime _date;
   final DateTime _today = DateTime.now();
-  List<String> _weekdaysNames = ['Mo', 'Di', 'Mi', 'Do', 'Fr'];
+  List<String> _weekdaysNames = <String>['Mo', 'Di', 'Mi', 'Do', 'Fr'];
   _DateCellState(this._date) : super();
   @override
   Widget build(BuildContext context) {

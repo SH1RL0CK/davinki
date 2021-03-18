@@ -14,10 +14,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     super.initState();
-    DavinciInfoserverService().getData().then((Map<String, dynamic>? infoserverData) {
+    DavinciInfoserverService().getData().then((Map<String, dynamic> infoserverData) {
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => ScreenNavigator(infoserverData!)),
+        MaterialPageRoute(builder: (context) => ScreenNavigator(infoserverData)),
         (route) => false,
       );
     });

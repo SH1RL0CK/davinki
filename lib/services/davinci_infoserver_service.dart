@@ -19,13 +19,13 @@ class DavinciInfoserverService {
     file.writeAsString(data);
   }
 
-  Future<Map<String, dynamic>?> getOfflineData() async {
+  Future<Map<String, dynamic>> getOfflineData() async {
     File file = await _infoserverDateFile;
     String infoserverData = await file.readAsString();
     return jsonDecode(infoserverData);
   }
 
-  Future<Map<String, dynamic>?> getData() async {
+  Future<Map<String, dynamic>> getData() async {
     try {
       http.Response response = await http.get(infoserverUrl);
       if (response.statusCode == 200) {
@@ -35,6 +35,6 @@ class DavinciInfoserverService {
     } on SocketException {
       return getOfflineData();
     }
-    return {};
+    return <String, dynamic>{};
   }
 }
