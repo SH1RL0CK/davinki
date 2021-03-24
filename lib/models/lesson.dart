@@ -1,18 +1,25 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:davinki/utils.dart';
+
 class Lesson {
   final String course, teacher, room;
-  final String date, sartTime;
+  final DateTime date;
+  String formattedDate;
+  final int lessonNumber;
   final String changeCaption, changeInformation;
   final String newTeacher, newRoom;
   final bool cancelled, additional, freeTime;
-  final int color;
+  final Color color;
   bool currentLesson;
 
-  Lesson({
+  Lesson(
+    this.date,
+    this.lessonNumber, {
     this.course = '',
     this.teacher = '',
     this.room = '',
-    this.date = '',
-    this.sartTime = '',
+    this.formattedDate = '',
     this.changeCaption = '',
     this.changeInformation = '',
     this.newTeacher = '',
@@ -20,11 +27,13 @@ class Lesson {
     this.freeTime = false,
     this.cancelled = false,
     this.additional = false,
-    this.color = 0,
+    this.color = Colors.transparent,
     this.currentLesson = false,
-  });
+  }) {
+    formattedDate = infoserverDateFormat(this.date);
+  }
 
-  factory Lesson.fromJson(Map<String, dynamic> lesson, String date, int color) {
+  factory Lesson.fromJson(Map<String, dynamic> lesson, DateTime date, int lessonNumber) {
     String teacher = '', room = '';
     String changeCaption = '', changeInformation = '';
     String newTeacher = '', newRoom = '';
@@ -43,8 +52,14 @@ class Lesson {
       if (lesson['changes'].containsKey('newTeacherCodes')) {
         newTeacher = lesson['changes']['newTeacherCodes'][0];
       }
+      if (lesson['changes'].containsKey('absentTeacherCodes')) {
+        teacher = lesson['changes']['absentTeacherCodes'][0];
+      }
       if (lesson['changes'].containsKey('newRoomCodes')) {
         newRoom = lesson['changes']['newRoomCodes'][0];
+      }
+      if (lesson['changes'].containsKey('absentRoomCodes')) {
+        room = lesson['changes']['absentRoomCodes'][0];
       }
       if (changeCaption == 'Klasse frei' || changeCaption == 'Klasse fehlt') {
         cancelled = true;
@@ -54,18 +69,18 @@ class Lesson {
       }
     }
     return Lesson(
+      date,
+      lessonNumber,
       course: lesson['courseTitle'],
       teacher: teacher,
       changeCaption: changeCaption,
       changeInformation: changeInformation,
       room: room,
-      date: date,
-      sartTime: lesson['startTime'],
       newTeacher: newTeacher,
       newRoom: newRoom,
       cancelled: cancelled,
       additional: additional,
-      color: color,
+      color: getCourseColor(lesson['courseTitle']),
     );
   }
 }

@@ -1,27 +1,26 @@
 import 'package:davinki/screens/weekly_timetable_screen/widgets/cancelled.dart';
+import 'package:davinki/screens/weekly_timetable_screen/widgets/lesson_timetable/lesson_timetable_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:davinki/models/lesson.dart';
 
 class LessonCell extends StatefulWidget {
   final Lesson _lesson;
-  LessonCell(this._lesson) : super();
+  final Map<String, dynamic> _infoserverData;
+  LessonCell(this._lesson, this._infoserverData, {Key? key}) : super(key: key);
 
   @override
-  _LessonCellState createState() => _LessonCellState(this._lesson);
+  _LessonCellState createState() => _LessonCellState(this._lesson, this._infoserverData);
 }
 
 class _LessonCellState extends State<LessonCell> {
   final Lesson _lesson;
-  _LessonCellState(this._lesson) : super();
+  final Map<String, dynamic> _infoserverData;
+  _LessonCellState(this._lesson, this._infoserverData) : super();
   @override
   Widget build(BuildContext context) {
-    if (this._lesson.freeTime) {
-      return Container();
-    }
     String courseTitle = (this._lesson.additional) ? '+ ' + this._lesson.course : this._lesson.course;
     return Container(
       child: InkWell(
-        onTap: () => print(this._lesson.course),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 1.5),
           child: Stack(
@@ -30,17 +29,9 @@ class _LessonCellState extends State<LessonCell> {
             children: <Widget>[
               Container(
                 decoration: BoxDecoration(
-                  color: (!this._lesson.cancelled) ? Color(this._lesson.color) : Color(this._lesson.color),
+                  color: this._lesson.freeTime ? Colors.transparent : Colors.white,
+                  border: Border.all(color: this._lesson.color, width: 3),
                   borderRadius: BorderRadius.all(Radius.circular(10)),
-                  /*boxShadow: [
-                    BoxShadow(
-                      color: Colors.pink,
-                      spreadRadius: (this._lesson.currentLesson == true) ? 2 : 0,
-                      blurRadius: (this._lesson.currentLesson == true) ? 5 : 0,
-                      offset: Offset(0, 0), // Shadow position
-                    ),
-                  ],
-                  */
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -48,14 +39,14 @@ class _LessonCellState extends State<LessonCell> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        (this._lesson.course.length > 5) ? courseTitle.substring(0, 5) : courseTitle,
-                        style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.bold, color: Colors.white),
+                        (courseTitle.length > 5) ? courseTitle.substring(0, 5) : courseTitle,
+                        style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.bold, color: Colors.black),
                       ),
                       Text(
                         (this._lesson.newTeacher != '') ? this._lesson.newTeacher : this._lesson.teacher,
                         style: TextStyle(
                           fontSize: 13,
-                          color: (this._lesson.newTeacher != '') ? Colors.red[900] : Colors.white,
+                          color: (this._lesson.newTeacher != '') ? Colors.red[900] : Colors.black,
                           fontWeight: (this._lesson.newTeacher != '') ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
@@ -63,7 +54,7 @@ class _LessonCellState extends State<LessonCell> {
                         (this._lesson.newRoom != '') ? this._lesson.newRoom : this._lesson.room,
                         style: TextStyle(
                           fontSize: 13,
-                          color: (this._lesson.newRoom != '') ? Colors.red[900] : Colors.white,
+                          color: (this._lesson.newRoom != '') ? Colors.red[900] : Colors.black,
                           fontWeight: (this._lesson.newRoom != '') ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
@@ -74,6 +65,12 @@ class _LessonCellState extends State<LessonCell> {
               Cancelled(this._lesson),
             ],
           ),
+        ),
+        onTap: () => showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return LessonTimetableDialog(this._lesson, this._infoserverData, key: UniqueKey());
+          },
         ),
       ),
     );

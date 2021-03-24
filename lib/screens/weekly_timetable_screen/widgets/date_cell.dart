@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
+import 'package:davinki/utils.dart';
 
 class DateCell extends StatefulWidget {
   final DateTime _date;
@@ -11,10 +12,10 @@ class DateCell extends StatefulWidget {
 class _DateCellState extends State<DateCell> {
   final DateTime _date;
   final DateTime _today = DateTime.now();
-  List<String> _weekdaysNames = <String>['Mo', 'Di', 'Mi', 'Do', 'Fr'];
   _DateCellState(this._date) : super();
   @override
   Widget build(BuildContext context) {
+    print(this._date.weekday);
     return Padding(
       padding: EdgeInsets.only(bottom: 5, top: 10.0),
       child: Column(children: <Widget>[
@@ -22,9 +23,7 @@ class _DateCellState extends State<DateCell> {
           padding: EdgeInsets.all(6),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            color: (this._date.year == this._today.year && this._date.month == this._today.month && this._date.day == this._today.day)
-                ? Colors.blue
-                : Colors.pink,
+            color: (this._date.year == this._today.year && this._date.month == this._today.month && this._date.day == this._today.day) ? Colors.blue : Colors.pink,
           ),
           child: Text(
             formatDate(this._date, [dd, '.', mm]),
@@ -34,7 +33,7 @@ class _DateCellState extends State<DateCell> {
             ),
           ),
         ),
-        Text(_weekdaysNames[this._date.weekday - 1], style: TextStyle(fontSize: 16)),
+        Text(weekdayNames[this._date.weekday - 1], style: TextStyle(fontSize: 16)),
       ]),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:davinki/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
 import 'package:davinki/secret.dart' as secret;
@@ -37,8 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.white,
                     ),
                     children: <TextSpan>[
-                      TextSpan(
-                          text: formatDate(DateTime.now(), [dd, '.', mm, '.', yyyy]), style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))
+                      TextSpan(text: formatDate(DateTime.now(), [dd, '.', mm, '.', yyyy]), style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))
                     ],
                   ),
                 ),
@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: double.infinity,
                       padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                       decoration: BoxDecoration(
-                        color: Color(subject.color),
+                        color: getCourseColor(subject.name),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text.rich(
