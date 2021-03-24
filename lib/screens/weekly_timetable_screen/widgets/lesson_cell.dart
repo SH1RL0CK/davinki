@@ -66,12 +66,18 @@ class _LessonCellState extends State<LessonCell> {
             ],
           ),
         ),
-        onTap: () => showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return LessonTimetableDialog(this._lesson, this._infoserverData, key: UniqueKey());
-          },
-        ),
+        onTap: () {
+          LessonTimetableDialog dialog = LessonTimetableDialog(this._lesson, this._infoserverData, key: UniqueKey());
+          if (dialog.empty) {
+            return;
+          }
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return dialog;
+            },
+          );
+        },
       ),
     );
   }

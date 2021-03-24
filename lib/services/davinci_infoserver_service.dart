@@ -5,8 +5,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:davinki/secret.dart' as secret;
 
 class DavinciInfoserverService {
-  final Uri infoserverUrl =
-      Uri.https('stundenplan.bwshofheim.de', '/daVinciIS.dll', {'username': secret.username, 'password': secret.password, 'content': 'json'});
+  final Uri infoserverUrl = Uri.https(
+    'stundenplan.bwshofheim.de',
+    '/daVinciIS.dll',
+    <String, dynamic>{'username': secret.username, 'password': secret.password, 'content': 'json'},
+  );
 
   Future<File> get _infoserverDateFile async {
     final Directory directory = await getApplicationDocumentsDirectory();

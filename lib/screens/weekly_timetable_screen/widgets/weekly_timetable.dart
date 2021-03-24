@@ -30,37 +30,39 @@ class _WeeklyTimetableState extends State<WeeklyTimetable> {
     for (int i = 0; i < timeslots.length; i++) {
       List<Lesson> l = <Lesson>[];
       for (int j = 0; j < 5; j++) {
-        l.add(Lesson(freeTime: true));
+        l.add(Lesson(datesOfWeek[j], i, freeTime: true));
       }
       lessons.add(l);
     }
 
     for (Map<String, dynamic> lesson in lessonTimes) {
-      int color = 0;
+      bool isUsersLesson = false;
       secret.mySubjects.forEach((Subject subject) {
         if (subject.name == lesson['courseTitle'] && subject.teacher == lesson['teacherCodes'][0]) {
-          color = subject.color;
+          isUsersLesson = true;
         }
       });
-      if (color != 0) {
-        formatedDatesOfWeek.asMap().forEach((int weekdayIndex, String date) {
-          if (lesson['dates'].contains(date)) {
-            int lessonNumber = 0;
-            timeslots.asMap().forEach((timeslotIndex, timeslot) {
-              if (timeslot['startTime'] == lesson['startTime']) {
-                lessonNumber = timeslotIndex;
-              }
-            });
-            for (; lessonNumber < timeslots.length; lessonNumber++) {
-              if (lesson.containsKey('changes') || lessons[lessonNumber][weekdayIndex].freeTime) {
-                lessons[lessonNumber][weekdayIndex] = Lesson.fromJson(lesson, date, color);
-              }
-              if (lesson['endTime'] == timeslots[lessonNumber]['endTime']) {
-                break;
+      if (isUsersLesson) {
+        formatedDatesOfWeek.asMap().forEach(
+          (int weekdayIndex, String date) {
+            if (lesson.containsKey('dates') && lesson['dates'].contains(date)) {
+              int lessonNumber = 0;
+              timeslots.asMap().forEach((timeslotIndex, timeslot) {
+                if (timeslot['startTime'] == lesson['startTime']) {
+                  lessonNumber = timeslotIndex;
+                }
+              });
+              for (; lessonNumber < timeslots.length; lessonNumber++) {
+                if (lesson.containsKey('changes') || lessons[lessonNumber][weekdayIndex].freeTime) {
+                  lessons[lessonNumber][weekdayIndex] = Lesson.fromJson(lesson, datesOfWeek[weekdayIndex], lessonNumber);
+                }
+                if (lesson['endTime'] == timeslots[lessonNumber]['endTime']) {
+                  break;
+                }
               }
             }
-          }
-        });
+          },
+        );
       }
     }
     return lessons;
@@ -88,15 +90,18 @@ class _WeeklyTimetableState extends State<WeeklyTimetable> {
         TableCell(child: TimeslotCell(timeslots[i])),
       ];
       for (int j = 0; j < 5; j++) {
-        cells.add(TableCell(
-          child: LessonCell(lessons[i][j]),
-        ));
+        cells.add(
+          TableCell(
+            child: LessonCell(lessons[i][j], this._infoserverData),
+          ),
+        );
       }
       rows.add(TableRow(
-          children: cells,
-          decoration: BoxDecoration(
-            color: (i % 2 == 0) ? Colors.pink[50] : Colors.white,
-          )));
+        children: cells,
+        decoration: BoxDecoration(
+          color: (i % 2 == 0) ? Colors.pink[50] : Colors.white,
+        ),
+      ));
     }
     return rows;
   }
@@ -111,6 +116,9 @@ class _WeeklyTimetableState extends State<WeeklyTimetable> {
           child: Table(
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             children: this._buildTimetable(),
+            columnWidths: {
+              0: FixedColumnWidth(60),
+            },
           ),
         ),
       ),

@@ -15,7 +15,6 @@ class _DateCellState extends State<DateCell> {
   _DateCellState(this._date) : super();
   @override
   Widget build(BuildContext context) {
-    print(this._date.weekday);
     return Padding(
       padding: EdgeInsets.only(bottom: 5, top: 10.0),
       child: Column(children: <Widget>[
