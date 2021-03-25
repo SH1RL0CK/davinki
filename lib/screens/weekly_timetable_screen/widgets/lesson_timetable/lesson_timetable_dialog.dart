@@ -29,10 +29,20 @@ class LessonTimetableDialog extends StatefulWidget {
           lesson.containsKey('startTime') &&
           lesson.containsKey('endTime') &&
           this._timeslots.indexWhere((timeslot) => timeslot['startTime'] == lesson['startTime']) <= lessonNumber &&
-          this._timeslots.indexWhere((timeslot) => timeslot['endTime'] == lesson['endTime']) >= lessonNumber &&
-          (lesson['courseTitle'] != this._usersLesson.course || lesson['teacherCodes'][0] != this._usersLesson.teacher)) {
-        this._lessons.add(Lesson.fromJson(lesson, date, lessonNumber));
+          this._timeslots.indexWhere((timeslot) => timeslot['endTime'] == lesson['endTime']) >= lessonNumber) {
+        int lessonIndex = this._lessons.indexWhere((l) => l.course == lesson['courseTitle']);
+        if (lessonIndex == -1 || (lesson['teacherCodes'][0] != this._lessons[lessonIndex].teacher && !lesson.containsKey('changeCaption'))) {
+          this._lessons.add(Lesson.fromJson(lesson, date, lessonNumber));
+        } else if (lesson.containsKey('changes') && this._lessons[lessonIndex] != this._usersLesson) {
+          this._lessons[lessonIndex] = Lesson.fromJson(lesson, date, lessonNumber);
+        }
       }
+    });
+    this._lessons.sort((lesson1, lesson2) {
+      if (lesson1.course != lesson2.course) {
+        return lesson1.course.compareTo(lesson2.course);
+      }
+      return lesson1.teacher.compareTo(lesson2.teacher);
     });
     if (this._lessons.length == 0) {
       this.empty = true;
@@ -47,12 +57,16 @@ class _LessonTimetableDialogState extends State<LessonTimetableDialog> {
   final Lesson _usersLesson;
   final List<Lesson> _lessons;
   final List _timeslots;
-  _LessonTimetableDialogState(this._usersLesson, this._lessons, this._timeslots) : super();
   int _current = 0;
+  _LessonTimetableDialogState(this._usersLesson, this._lessons, this._timeslots) : super() {
+    if (!this._usersLesson.freeTime) {
+      this._current = this._lessons.indexOf(this._usersLesson);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      titleTextStyle: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+      titleTextStyle: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
       title: Text(//formatDate(this._usersLesson.date, [dd, '.', mm, '.', yyyy]) +
           '${this._usersLesson.lessonNumber + 1}: ' +
               this._timeslots[this._usersLesson.lessonNumber]['startTime'].substring(0, 2) +
@@ -64,23 +78,24 @@ class _LessonTimetableDialogState extends State<LessonTimetableDialog> {
               this._timeslots[this._usersLesson.lessonNumber]['endTime'].substring(2) +
               '  ' +
               weekdayNames[this._usersLesson.date.weekday - 1] +
-              ' ' +
+              ', ' +
               formatDate(this._usersLesson.date, [dd, '.', mm, '.', yyyy])),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25.0))),
       children: <Widget>[
         Container(
-          height: 220,
-          width: 800,
+          height: 230,
+          width: double.maxFinite,
           child: Column(children: [
             CarouselSlider(
               items: this
                   ._lessons
-                  .map((lesson) => Center(
-                        child: LessonSliderItem(lesson),
-                      ))
+                  .map(
+                    (lesson) => LessonSliderItem(lesson),
+                  )
                   .toList(),
               options: CarouselOptions(
                   enlargeCenterPage: true,
+                  initialPage: !this._usersLesson.freeTime ? this._lessons.indexOf(this._usersLesson) : 0,
                   onPageChanged: (index, reason) {
                     setState(() {
                       _current = index;

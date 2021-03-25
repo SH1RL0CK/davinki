@@ -6,11 +6,11 @@ class TimeslotCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Column(
         children: <Widget>[
           Text(
-            ' ${this._timeslot['startTime'][0] + this._timeslot['startTime'][1]}:${this._timeslot['startTime'][2] + this._timeslot['startTime'][3]}',
+            ' ${this._timeslot['startTime'].substring(0, 2)}:${this._timeslot['startTime'].substring(2)}',
             style: TextStyle(fontSize: 14),
           ),
           Text(
@@ -18,7 +18,7 @@ class TimeslotCell extends StatelessWidget {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           Text(
-            '${this._timeslot['endTime'][0] + this._timeslot['endTime'][1]}:${this._timeslot['endTime'][2] + this._timeslot['endTime'][3]}',
+            '${this._timeslot['endTime'].substring(0, 2)}:${this._timeslot['endTime'].substring(2)}',
             style: TextStyle(fontSize: 14),
           ),
         ],

@@ -18,7 +18,6 @@ class _LessonSliderItemState extends State<LessonSliderItem> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: this._lesson.color, width: 5.0),
@@ -28,24 +27,38 @@ class _LessonSliderItemState extends State<LessonSliderItem> {
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             this._lesson.changeCaption != ''
-                ? Text(
-                    this._lesson.changeCaption,
-                    style: TextStyle(
-                      backgroundColor: Colors.red.shade900,
-                      color: Colors.white,
-                      fontSize: 18,
+                ? Container(
+                    padding: EdgeInsets.all(2),
+                    margin: EdgeInsets.only(bottom: 2),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade900,
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                    child: Text(
+                      this._lesson.changeCaption,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                      ),
                     ),
                   )
                 : Container(),
             this._lesson.changeInformation != ''
-                ? Text(
-                    this._lesson.changeInformation,
-                    style: TextStyle(
-                      backgroundColor: Colors.yellow[800],
-                      color: Colors.white,
-                      fontSize: 16,
+                ? Container(
+                    padding: EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: Colors.yellow.shade800,
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                    child: Text(
+                      this._lesson.changeInformation,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
                     ),
                   )
                 : Container(),
@@ -53,13 +66,17 @@ class _LessonSliderItemState extends State<LessonSliderItem> {
               this._lesson.course,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
+            Text(
+              this._lesson.classes.join(', '),
+              style: TextStyle(fontSize: 18),
+            ),
             RichText(
               text: TextSpan(
                 children: <TextSpan>[
                   this._lesson.newTeacher != ''
                       ? TextSpan(
                           text: this._lesson.teacher,
-                          style: TextStyle(color: Colors.red[900], decoration: TextDecoration.lineThrough),
+                          style: TextStyle(color: Colors.red.shade900, decoration: TextDecoration.lineThrough),
                         )
                       : TextSpan(),
                   TextSpan(text: this._lesson.newTeacher != '' ? '  ${this._lesson.newTeacher}' : this._lesson.teacher),
@@ -73,7 +90,7 @@ class _LessonSliderItemState extends State<LessonSliderItem> {
                   this._lesson.newRoom != ''
                       ? TextSpan(
                           text: this._lesson.room,
-                          style: TextStyle(color: Colors.red[900], decoration: TextDecoration.lineThrough),
+                          style: TextStyle(color: Colors.red.shade900, decoration: TextDecoration.lineThrough),
                         )
                       : TextSpan(),
                   TextSpan(text: this._lesson.newRoom != '' ? '  ${this._lesson.newRoom}' : this._lesson.room),

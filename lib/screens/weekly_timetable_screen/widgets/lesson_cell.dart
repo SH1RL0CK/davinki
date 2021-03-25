@@ -46,7 +46,7 @@ class _LessonCellState extends State<LessonCell> {
                         (this._lesson.newTeacher != '') ? this._lesson.newTeacher : this._lesson.teacher,
                         style: TextStyle(
                           fontSize: 13,
-                          color: (this._lesson.newTeacher != '') ? Colors.red[900] : Colors.black,
+                          color: (this._lesson.newTeacher != '') ? Colors.red.shade900 : Colors.black,
                           fontWeight: (this._lesson.newTeacher != '') ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
@@ -54,7 +54,7 @@ class _LessonCellState extends State<LessonCell> {
                         (this._lesson.newRoom != '') ? this._lesson.newRoom : this._lesson.room,
                         style: TextStyle(
                           fontSize: 13,
-                          color: (this._lesson.newRoom != '') ? Colors.red[900] : Colors.black,
+                          color: (this._lesson.newRoom != '') ? Colors.red.shade900 : Colors.black,
                           fontWeight: (this._lesson.newRoom != '') ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),

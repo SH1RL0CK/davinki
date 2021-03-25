@@ -10,7 +10,7 @@ class Cancelled extends StatelessWidget {
     if (this._lesson.cancelled) {
       return Icon(
         Icons.close,
-        color: Colors.red[900],
+        color: Colors.red.shade900,
         size: 65.0,
       );
     }

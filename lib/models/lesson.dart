@@ -4,6 +4,7 @@ import 'package:davinki/utils.dart';
 
 class Lesson {
   final String course, teacher, room;
+  final List<dynamic> classes;
   final DateTime date;
   String formattedDate;
   final int lessonNumber;
@@ -16,6 +17,7 @@ class Lesson {
   Lesson(
     this.date,
     this.lessonNumber, {
+    this.classes = const <dynamic>[],
     this.course = '',
     this.teacher = '',
     this.room = '',
@@ -72,10 +74,11 @@ class Lesson {
       date,
       lessonNumber,
       course: lesson['courseTitle'],
+      classes: lesson['classCodes'],
       teacher: teacher,
+      room: room,
       changeCaption: changeCaption,
       changeInformation: changeInformation,
-      room: room,
       newTeacher: newTeacher,
       newRoom: newRoom,
       cancelled: cancelled,
