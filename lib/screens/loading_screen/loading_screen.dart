@@ -28,7 +28,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'DAVINKI',
+          'DAVINKi',
           style: GoogleFonts.pacifico(),
         ),
       ),

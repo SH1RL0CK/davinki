@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:davinki/screens/loading_screen.dart';
+import 'package:davinki/screens/loading_screen/loading_screen.dart';
 import 'package:flutter/services.dart';
 
 void main() {
@@ -13,7 +13,7 @@ class DavinkiApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
     ]);
     return MaterialApp(
-      title: 'DAVINKI',
+      title: 'DAVINKi',
       theme: ThemeData(
         primarySwatch: Colors.pink,
         visualDensity: VisualDensity.adaptivePlatformDensity,
