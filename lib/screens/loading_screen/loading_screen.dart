@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:davinki/services/davinci_infoserver_service.dart';
-import 'package:davinki/screens/screen_navigator.dart';
+import 'package:davinki/screens/weekly_timetable_screen/weekly_timetable_screen.dart';
 
 class LoadingScreen extends StatefulWidget {
   LoadingScreen({Key? key}) : super(key: key);
@@ -17,7 +17,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     DavinciInfoserverService().getData().then((Map<String, dynamic> infoserverData) {
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => ScreenNavigator(infoserverData)),
+        MaterialPageRoute(builder: (context) => WeeklyTimetableScreen(infoserverData)),
         (route) => false,
       );
     });

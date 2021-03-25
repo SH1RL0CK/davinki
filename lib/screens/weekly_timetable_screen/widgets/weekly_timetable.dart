@@ -112,7 +112,7 @@ class _WeeklyTimetableState extends State<WeeklyTimetable> {
       child: Container(
         color: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 55),
+          padding: const EdgeInsets.only(bottom: 60),
           child: Table(
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             children: this._buildTimetable(),
