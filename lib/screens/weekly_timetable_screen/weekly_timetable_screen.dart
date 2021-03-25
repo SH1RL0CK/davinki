@@ -17,8 +17,8 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'DAVINKi',
-          style: GoogleFonts.pacifico(),
+          'Davinki',
+          style: GoogleFonts.pacifico(fontSize: 25),
         ),
         actions: <Widget>[
           IconButton(

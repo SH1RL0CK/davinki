@@ -13,7 +13,7 @@ class DavinkiApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
     ]);
     return MaterialApp(
-      title: 'DAVINKi',
+      title: 'Davinki',
       theme: ThemeData(
         primarySwatch: Colors.pink,
         visualDensity: VisualDensity.adaptivePlatformDensity,
