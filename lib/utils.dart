@@ -16,7 +16,7 @@ List<DateTime> getDatesOfWeek(int week) {
   return datesOfWeek;
 }
 
-String infoserverDateFormat(DateTime? date) => formatDate(date!, [yyyy, mm, dd]);
+String infoserverDateFormat(DateTime date) => formatDate(date, [yyyy, mm, dd]);
 
 class CourseGroup {
   final Color color;

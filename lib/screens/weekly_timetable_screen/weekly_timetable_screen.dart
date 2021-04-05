@@ -11,7 +11,16 @@ class WeeklyTimetableScreen extends StatefulWidget {
 }
 
 class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
-  int _currentWeek = 0;
+  int _week = 0;
+
+  void _changeWeek(int i) {
+    setState(() {
+      if (!(i < 0 && this._week <= -2)) {
+        this._week += i;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,32 +43,35 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
       ),
       body: Stack(
         children: <Widget>[
-          WeeklyTimetable(
-            this._currentWeek,
-            this.widget._infoserverData,
-            key: UniqueKey(),
-          ),
-          Align(
-            alignment: Alignment(-0.99, 0.99),
-            child: FloatingActionButton(
-              onPressed: () {
-                setState(() {
-                  this._currentWeek--;
-                });
-              },
-              mini: true,
-              child: Icon(Icons.keyboard_arrow_left),
-              heroTag: null,
+          GestureDetector(
+            child: WeeklyTimetable(
+              this._week,
+              this.widget._infoserverData,
+              key: UniqueKey(),
             ),
+            onHorizontalDragEnd: (DragEndDetails details) {
+              if (details.primaryVelocity == 0) return;
+              if (details.primaryVelocity!.compareTo(0) == -1)
+                this._changeWeek(1);
+              else
+                _changeWeek(-1);
+            },
           ),
+          this._week > -2
+              ? Align(
+                  alignment: Alignment(-0.99, 0.99),
+                  child: FloatingActionButton(
+                    onPressed: () => this._changeWeek(-1),
+                    mini: true,
+                    child: Icon(Icons.keyboard_arrow_left),
+                    heroTag: null,
+                  ),
+                )
+              : Container(),
           Align(
             alignment: Alignment(0.99, 0.99),
             child: FloatingActionButton(
-              onPressed: () {
-                setState(() {
-                  this._currentWeek++;
-                });
-              },
+              onPressed: () => this._changeWeek(1),
               mini: true,
               child: Icon(Icons.keyboard_arrow_right),
               heroTag: null,
