@@ -27,6 +27,9 @@ dependencies:
   date_format: ^2.0.2
   google_fonts: ^2.0.0
   carousel_slider: ^4.0.0-nullsafety.0 
+  shared_preferences: ^2.0.5
+  enum_to_string: ^2.0.1
+
 
 
   # The following adds the Cupertino Icons font to your application.

@@ -1,15 +1,24 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:davinki/models/davinci_infoserver_service_exceptions.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import 'package:davinki/secret.dart' as secret;
 
 class DavinciInfoserverService {
-  final Uri infoserverUrl = Uri.https(
-    'stundenplan.bwshofheim.de',
-    '/daVinciIS.dll',
-    <String, dynamic>{'username': secret.username, 'password': secret.password, 'content': 'json'},
-  );
+  final String _username;
+  final String _password;
+
+  Uri _infoserverUrl;
+  DavinciInfoserverService(this._username, this._password)
+      : _infoserverUrl = Uri.https(
+          'stundenplan.bwshofheim.de',
+          '/daVinciIS.dll',
+          <String, String>{
+            'username': _username,
+            'password': _password,
+            'content': 'json',
+          },
+        );
 
   Future<File> get _infoserverDateFile async {
     final Directory directory = await getApplicationDocumentsDirectory();
@@ -29,14 +38,17 @@ class DavinciInfoserverService {
   }
 
   Future<Map<String, dynamic>> getData() async {
+    http.Response response;
     try {
-      http.Response response = await http.get(infoserverUrl);
-      if (response.statusCode == 200) {
-        writeDate(response.body);
-        return jsonDecode(response.body);
-      }
+      response = await http.get(this._infoserverUrl);
     } on SocketException {
       return getOfflineData();
+    }
+    if (response.statusCode == 200) {
+      writeDate(response.body);
+      return jsonDecode(response.body);
+    } else if (response.statusCode == 910) {
+      throw WrongLoginDataException();
     }
     return <String, dynamic>{};
   }

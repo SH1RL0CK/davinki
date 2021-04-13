@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:davinki/screens/settings_screen/settings_screen.dart';
+import 'package:davinki/screens/settings_screens/general_settings_screen.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/weekly_timetable.dart';
 
 class WeeklyTimetableScreen extends StatefulWidget {
   final Map<String, dynamic> _infoserverData;
   WeeklyTimetableScreen(this._infoserverData);
   @override
-  _WeeklyTimetableScreenState createState() => _WeeklyTimetableScreenState();
+  _WeeklyTimetableScreenState createState() => _WeeklyTimetableScreenState(this._infoserverData);
 }
 
 class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
+  final Map<String, dynamic> _infoserverData;
   int _week = 0;
+  _WeeklyTimetableScreenState(this._infoserverData);
 
   void _changeWeek(int i) {
     setState(() {
@@ -36,7 +38,11 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
               color: Colors.white,
             ),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsScreen()));
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => GeneralSettingsScreen()),
+                (Route route) => false,
+              );
             },
           )
         ],
@@ -54,7 +60,7 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
               if (details.primaryVelocity!.compareTo(0) == -1)
                 this._changeWeek(1);
               else
-                _changeWeek(-1);
+                this._changeWeek(-1);
             },
           ),
           this._week > -2
