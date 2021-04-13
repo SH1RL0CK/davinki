@@ -5,15 +5,48 @@ import 'package:davinki/screens/weekly_timetable_screen/widgets/weekly_timetable
 
 class WeeklyTimetableScreen extends StatefulWidget {
   final Map<String, dynamic> _infoserverData;
-  WeeklyTimetableScreen(this._infoserverData);
+  final bool _offline;
+  WeeklyTimetableScreen(this._infoserverData, this._offline);
   @override
-  _WeeklyTimetableScreenState createState() => _WeeklyTimetableScreenState(this._infoserverData);
+  _WeeklyTimetableScreenState createState() => _WeeklyTimetableScreenState(this._infoserverData, this._offline);
 }
 
 class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
   final Map<String, dynamic> _infoserverData;
+  final bool _offline;
   int _week = 0;
-  _WeeklyTimetableScreenState(this._infoserverData);
+  _WeeklyTimetableScreenState(this._infoserverData, this._offline);
+
+  @override
+  void initState() {
+    super.initState();
+    if (this._offline) {
+      WidgetsBinding.instance!.addPostFrameCallback((Duration timestamp) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red[800],
+            duration: Duration(seconds: 5),
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.wifi_off,
+                  color: Colors.white,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  'Du bist offline!',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+        );
+      });
+    }
+  }
 
   void _changeWeek(int i) {
     setState(() {
@@ -47,43 +80,42 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
           )
         ],
       ),
-      body: Stack(
-        children: <Widget>[
-          GestureDetector(
-            child: WeeklyTimetable(
-              this._week,
-              this.widget._infoserverData,
-              key: UniqueKey(),
-            ),
-            onHorizontalDragEnd: (DragEndDetails details) {
-              if (details.primaryVelocity == 0) return;
-              if (details.primaryVelocity!.compareTo(0) == -1)
-                this._changeWeek(1);
-              else
-                this._changeWeek(-1);
-            },
-          ),
-          this._week > -2
-              ? Align(
-                  alignment: Alignment(-0.99, 0.99),
-                  child: FloatingActionButton(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(2.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            this._week > -2
+                ? FloatingActionButton(
                     onPressed: () => this._changeWeek(-1),
                     mini: true,
                     child: Icon(Icons.keyboard_arrow_left),
                     heroTag: null,
-                  ),
-                )
-              : Container(),
-          Align(
-            alignment: Alignment(0.99, 0.99),
-            child: FloatingActionButton(
+                  )
+                : Container(),
+            FloatingActionButton(
               onPressed: () => this._changeWeek(1),
               mini: true,
               child: Icon(Icons.keyboard_arrow_right),
               heroTag: null,
             ),
-          ),
-        ],
+          ],
+        ),
+      ),
+      body: GestureDetector(
+        child: WeeklyTimetable(
+          this._week,
+          this._infoserverData,
+          key: UniqueKey(),
+        ),
+        onHorizontalDragEnd: (DragEndDetails details) {
+          if (details.primaryVelocity == 0) return;
+          if (details.primaryVelocity!.compareTo(0) == -1)
+            this._changeWeek(1);
+          else
+            this._changeWeek(-1);
+        },
       ),
     );
   }

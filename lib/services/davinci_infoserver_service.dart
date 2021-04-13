@@ -23,7 +23,7 @@ class DavinciInfoserverService {
   Future<File> get _infoserverDateFile async {
     final Directory directory = await getApplicationDocumentsDirectory();
     final String path = directory.path;
-    return File('$path/infoserver_data.dart');
+    return File('$path/infoserver_data.json');
   }
 
   void writeDate(String data) async {
@@ -37,12 +37,12 @@ class DavinciInfoserverService {
     return jsonDecode(infoserverData);
   }
 
-  Future<Map<String, dynamic>> getData() async {
+  Future<Map<String, dynamic>> getOnlineData() async {
     http.Response response;
     try {
       response = await http.get(this._infoserverUrl);
     } on SocketException {
-      return getOfflineData();
+      throw UserIsOfflineException();
     }
     if (response.statusCode == 200) {
       writeDate(response.body);

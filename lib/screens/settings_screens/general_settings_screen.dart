@@ -223,7 +223,7 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                                 this._password = this._passwordInputController.text.isEmpty ? this._password! : this._passwordInputController.text;
                                 try {
                                   this._infoserverData =
-                                      await DavinciInfoserverService(this._usernameInputController.text, this._password!).getData();
+                                      await DavinciInfoserverService(this._usernameInputController.text, this._password!).getOnlineData();
                                 } on WrongLoginDataException {
                                   setState(() {
                                     this._wrongLoginData = true;
@@ -250,7 +250,7 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                             }
                           : null,
                       label: Text(
-                        'Speichern',
+                        'Zu Deinen Kursen',
                       ),
                     )
                   ],
