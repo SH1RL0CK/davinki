@@ -86,14 +86,15 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            this._week > -2
-                ? FloatingActionButton(
-                    onPressed: () => this._changeWeek(-1),
-                    mini: true,
-                    child: Icon(Icons.keyboard_arrow_left),
-                    heroTag: null,
-                  )
-                : Container(),
+            Visibility(
+              visible: this._week > -2,
+              child: FloatingActionButton(
+                onPressed: () => this._changeWeek(-1),
+                mini: true,
+                child: Icon(Icons.keyboard_arrow_left),
+                heroTag: null,
+              ),
+            ),
             FloatingActionButton(
               onPressed: () => this._changeWeek(1),
               mini: true,
