@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:davinki/utils.dart';
 import 'package:davinki/secret.dart' as secret;
 import 'package:davinki/models/lesson.dart';
-import 'package:davinki/models/subject.dart';
+import 'package:davinki/models/course.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/date_cell.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/lesson_cell.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/timseslot_cell.dart';
@@ -37,8 +37,8 @@ class _WeeklyTimetableState extends State<WeeklyTimetable> {
 
     for (Map<String, dynamic> lesson in lessonTimes) {
       bool isUsersLesson = false;
-      secret.mySubjects.forEach((Subject subject) {
-        if (subject.name == lesson['courseTitle'] && subject.teacher == lesson['teacherCodes'][0]) {
+      secret.mySubjects.forEach((Course subject) {
+        if (subject.title == lesson['courseTitle'] && subject.teacher == lesson['teacherCodes'][0]) {
           isUsersLesson = true;
         }
       });

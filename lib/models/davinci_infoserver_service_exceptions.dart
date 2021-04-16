@@ -6,7 +6,7 @@ class WrongLoginDataException implements Exception {
   }
 }
 
-class UserIsOfflineException {
+class UserIsOfflineException implements Exception {
   final String _message = 'The user is offline!';
   @override
   String toString() {

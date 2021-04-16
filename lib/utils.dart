@@ -18,6 +18,7 @@ List<DateTime> getDatesOfWeek(int week) {
 
 String infoserverDateFormat(DateTime date) => formatDate(date, [yyyy, mm, dd]);
 
+/*
 class CourseGroup {
   final Color color;
   final List<String> courses;
@@ -49,5 +50,6 @@ Color getCourseColor(String courseTitle) {
   }
   return Colors.white;
 }
+*/
 
 List<String> weekdayNames = <String>['Mo', 'Di', 'Mi', 'Do', 'Fr'];

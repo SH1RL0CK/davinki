@@ -1,5 +1,5 @@
 import 'package:davinki/models/davinci_infoserver_service_exceptions.dart';
-import 'package:davinki/screens/settings_screens/general_settings_screen.dart';
+import 'package:davinki/screens/setting_screens/general_settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:davinki/services/davinci_infoserver_service.dart';

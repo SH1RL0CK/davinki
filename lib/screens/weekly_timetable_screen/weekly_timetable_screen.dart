@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:davinki/screens/settings_screens/general_settings_screen.dart';
+import 'package:davinki/screens/setting_screens/general_settings_screen.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/weekly_timetable.dart';
 
 class WeeklyTimetableScreen extends StatefulWidget {
