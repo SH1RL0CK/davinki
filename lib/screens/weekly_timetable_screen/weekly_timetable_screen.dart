@@ -1,3 +1,5 @@
+import 'package:davinki/models/course_settings.dart';
+import 'package:davinki/models/general_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:davinki/screens/setting_screens/general_settings_screen.dart';
@@ -6,16 +8,21 @@ import 'package:davinki/screens/weekly_timetable_screen/widgets/weekly_timetable
 class WeeklyTimetableScreen extends StatefulWidget {
   final Map<String, dynamic> _infoserverData;
   final bool _offline;
-  WeeklyTimetableScreen(this._infoserverData, this._offline);
+  final GeneralSettings _generalSettings;
+  final CourseSettings _courseSettings;
+  WeeklyTimetableScreen(this._infoserverData, this._offline, this._generalSettings, this._courseSettings);
   @override
-  _WeeklyTimetableScreenState createState() => _WeeklyTimetableScreenState(this._infoserverData, this._offline);
+  _WeeklyTimetableScreenState createState() =>
+      _WeeklyTimetableScreenState(this._infoserverData, this._offline, this._generalSettings, this._courseSettings);
 }
 
 class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
   final Map<String, dynamic> _infoserverData;
   final bool _offline;
+  final GeneralSettings _generalSettings;
+  final CourseSettings _courseSettings;
   int _week = 0;
-  _WeeklyTimetableScreenState(this._infoserverData, this._offline);
+  _WeeklyTimetableScreenState(this._infoserverData, this._offline, this._generalSettings, this._courseSettings);
 
   @override
   void initState() {
@@ -73,7 +80,7 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
             onPressed: () {
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => GeneralSettingsScreen()),
+                MaterialPageRoute(builder: (context) => GeneralSettingsScreen(this._generalSettings, this._courseSettings)),
                 (Route route) => false,
               );
             },
@@ -108,6 +115,7 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
         child: WeeklyTimetable(
           this._week,
           this._infoserverData,
+          this._courseSettings,
           key: UniqueKey(),
         ),
         onHorizontalDragEnd: (DragEndDetails details) {

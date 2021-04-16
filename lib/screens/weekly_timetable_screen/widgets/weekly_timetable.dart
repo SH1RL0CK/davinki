@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:davinki/utils.dart';
-import 'package:davinki/secret.dart' as secret;
+import 'package:davinki/models/course_settings.dart';
 import 'package:davinki/models/lesson.dart';
 import 'package:davinki/models/course.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/date_cell.dart';
@@ -10,16 +10,18 @@ import 'package:davinki/screens/weekly_timetable_screen/widgets/timseslot_cell.d
 class WeeklyTimetable extends StatefulWidget {
   final int _week;
   final Map<String, dynamic> _infoserverData;
-  WeeklyTimetable(this._week, this._infoserverData, {Key? key}) : super(key: key);
+  final CourseSettings _courseSettings;
+  WeeklyTimetable(this._week, this._infoserverData, this._courseSettings, {Key? key}) : super(key: key);
 
   @override
-  _WeeklyTimetableState createState() => _WeeklyTimetableState(this._week, this._infoserverData);
+  _WeeklyTimetableState createState() => _WeeklyTimetableState(this._week, this._infoserverData, this._courseSettings);
 }
 
 class _WeeklyTimetableState extends State<WeeklyTimetable> {
   final int _week;
   final Map<String, dynamic> _infoserverData;
-  _WeeklyTimetableState(this._week, this._infoserverData) : super();
+  final CourseSettings _courseSettings;
+  _WeeklyTimetableState(this._week, this._infoserverData, this._courseSettings) : super();
   List<List<Lesson>> _getLessons(List lessonTimes, List timeslots, List<DateTime> datesOfWeek) {
     List<List<Lesson>> lessons = <List<Lesson>>[];
 
@@ -37,8 +39,8 @@ class _WeeklyTimetableState extends State<WeeklyTimetable> {
 
     for (Map<String, dynamic> lesson in lessonTimes) {
       bool isUsersLesson = false;
-      secret.mySubjects.forEach((Course subject) {
-        if (subject.title == lesson['courseTitle'] && subject.teacher == lesson['teacherCodes'][0]) {
+      this._courseSettings.usersCourses.forEach((Course course) {
+        if (course.title == lesson['courseTitle'] && course.teacher == lesson['teacherCodes'][0]) {
           isUsersLesson = true;
         }
       });

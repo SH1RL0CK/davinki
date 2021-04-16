@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:davinki/models/course_settings.dart';
 import 'package:davinki/models/course_group_templates.dart';
 import 'package:davinki/models/course_group.dart';
 import 'package:davinki/models/course.dart';
@@ -7,22 +8,24 @@ import 'package:davinki/models/lesson.dart';
 import 'package:davinki/screens/loading_screen/loading_screen.dart';
 
 class CourseSettingsScreen extends StatefulWidget {
+  final CourseSettings _courseSettings;
   final Map<String, dynamic> _infoserverData;
-  CourseSettingsScreen(this._infoserverData, {Key? key}) : super(key: key);
+  CourseSettingsScreen(this._courseSettings, this._infoserverData, {Key? key}) : super(key: key);
 
   @override
-  _CourseSettingsScreenState createState() => _CourseSettingsScreenState(this._infoserverData);
+  _CourseSettingsScreenState createState() => _CourseSettingsScreenState(this._courseSettings, this._infoserverData);
 }
 
 class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final CourseSettings _courseSettings;
   final Map<String, dynamic> _infoserverData;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   List<int?> courses = List<int?>.filled(courseGroupTemplates.length, null);
 
   List<CourseGroup> _courseGroups = <CourseGroup>[];
 
-  _CourseSettingsScreenState(this._infoserverData) : super() {
+  _CourseSettingsScreenState(this._courseSettings, this._infoserverData) : super() {
     this._createCourseGroupList();
   }
 
@@ -49,6 +52,13 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
       teachers = teachers.toSet().toList();
       teachers.forEach((String teacher) {
         group.courses.add(Course(courseTitle, teacher));
+      });
+      this._courseGroups.forEach((CourseGroup group) {
+        group.courses.forEach((Course course) {
+          if (this._courseSettings.usersCourses.contains(course)) {
+            group.usersCourse = course;
+          }
+        });
       });
     });
   }
@@ -150,7 +160,16 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
               ),
               onPressed: () {
                 if (this._formKey.currentState!.validate()) {
-                  print(true);
+                  this._courseSettings.usersCourses.clear();
+                  this._courseGroups.forEach((CourseGroup group) {
+                    if (group.usersCourse != null) this._courseSettings.usersCourses.add(group.usersCourse!);
+                  });
+                  this._courseSettings.storeData();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoadingScreen()),
+                    (Route route) => false,
+                  );
                 }
               },
             ),

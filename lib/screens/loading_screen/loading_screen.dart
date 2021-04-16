@@ -1,10 +1,11 @@
-import 'package:davinki/models/davinci_infoserver_service_exceptions.dart';
-import 'package:davinki/screens/setting_screens/general_settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:davinki/models/course_settings.dart';
+import 'package:davinki/models/general_settings.dart';
+import 'package:davinki/models/davinci_infoserver_service_exceptions.dart';
 import 'package:davinki/services/davinci_infoserver_service.dart';
+import 'package:davinki/screens/setting_screens/general_settings_screen.dart';
 import 'package:davinki/screens/weekly_timetable_screen/weekly_timetable_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoadingScreen extends StatefulWidget {
   LoadingScreen({Key? key}) : super(key: key);
@@ -14,20 +15,13 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
-  bool _requiredSettingsAreMissing(SharedPreferences sharedPreferences) {
-    bool missing = false;
-    for (String key in <String>['name', 'userType', 'schoolType', 'username', 'password']) {
-      if (sharedPreferences.getString(key) == null) {
-        missing = true;
-      }
-    }
-    return missing;
-  }
+  final GeneralSettings _generalSettings = GeneralSettings();
+  final CourseSettings _courseSettings = CourseSettings();
 
   void _navigateToSettings() {
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => GeneralSettingsScreen()),
+      MaterialPageRoute(builder: (context) => GeneralSettingsScreen(this._generalSettings, this._courseSettings)),
       (Route route) => false,
     );
   }
@@ -35,38 +29,43 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void _navigateToWeeklyTimetable(Map<String, dynamic> infoserverData, bool offline) {
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => WeeklyTimetableScreen(infoserverData, offline)),
+      MaterialPageRoute(builder: (context) => WeeklyTimetableScreen(infoserverData, offline, this._generalSettings, this._courseSettings)),
       (Route route) => false,
     );
   }
 
-  @override
-  void initState() {
-    SharedPreferences.getInstance().then((SharedPreferences sharedPreferences) {
-      if (this._requiredSettingsAreMissing(sharedPreferences)) {
+  void _loadInofoserverData() {
+    DavinciInfoserverService infoserverService = DavinciInfoserverService(this._generalSettings.username!, this._generalSettings.password!);
+    infoserverService.getOnlineData().then((Map<String, dynamic> infoserverData) {
+      this._navigateToWeeklyTimetable(infoserverData, false);
+    }, onError: (exception) {
+      if (exception is WrongLoginDataException) {
         this._navigateToSettings();
         return;
-      }
-
-      String? username = sharedPreferences.getString('username');
-      String? password = sharedPreferences.getString('password');
-      if (username != null && password != null) {
-        DavinciInfoserverService infoserverService = DavinciInfoserverService(username, password);
-        infoserverService.getOnlineData().then((Map<String, dynamic> infoserverData) {
-          this._navigateToWeeklyTimetable(infoserverData, false);
-        }, onError: (exception) {
-          if (exception is WrongLoginDataException) {
-            this._navigateToSettings();
-            return;
-          } else if (exception is UserIsOfflineException) {
-            infoserverService.getOfflineData().then((Map<String, dynamic> infoserverData) {
-              this._navigateToWeeklyTimetable(infoserverData, true);
-            });
-          }
+      } else if (exception is UserIsOfflineException) {
+        infoserverService.getOfflineData().then((Map<String, dynamic> infoserverData) {
+          this._navigateToWeeklyTimetable(infoserverData, true);
         });
       }
     });
+  }
+
+  void _laodRequiredData() {
+    this._generalSettings.loadData().then((bool generalSettingsAreAvailable) {
+      this._courseSettings.loadData().then((bool courseSettingsAreAvailable) {
+        if (!generalSettingsAreAvailable || !courseSettingsAreAvailable) {
+          this._navigateToSettings();
+          return;
+        }
+        this._loadInofoserverData();
+      });
+    });
+  }
+
+  @override
+  void initState() {
     super.initState();
+    this._laodRequiredData();
   }
 
   @override
