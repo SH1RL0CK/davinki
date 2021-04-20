@@ -13,3 +13,11 @@ class UserIsOfflineException implements Exception {
     return this._message;
   }
 }
+
+class NoOfflineDataExeption implements Exception {
+  final String _message = 'No offline data was found!';
+  @override
+  String toString() {
+    return this._message;
+  }
+}

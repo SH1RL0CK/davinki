@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:davinki/utils.dart';
 import 'package:davinki/models/course_settings.dart';
 import 'package:davinki/models/course_group_templates.dart';
 import 'package:davinki/models/course_group.dart';
@@ -78,10 +79,9 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
               color: Colors.white,
             ),
             onPressed: () {
-              Navigator.pushAndRemoveUntil(
+              navigateToOtherScreen(
+                LoadingScreen(),
                 context,
-                MaterialPageRoute(builder: (context) => LoadingScreen()),
-                (Route route) => false,
               );
             },
           )
@@ -165,10 +165,9 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
                     if (group.usersCourse != null) this._courseSettings.usersCourses.add(group.usersCourse!);
                   });
                   this._courseSettings.storeData();
-                  Navigator.pushAndRemoveUntil(
+                  navigateToOtherScreen(
+                    LoadingScreen(),
                     context,
-                    MaterialPageRoute(builder: (context) => LoadingScreen()),
-                    (Route route) => false,
                   );
                 }
               },

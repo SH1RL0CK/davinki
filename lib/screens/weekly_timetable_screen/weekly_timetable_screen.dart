@@ -1,19 +1,19 @@
-import 'package:davinki/models/course_settings.dart';
-import 'package:davinki/models/general_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:davinki/screens/setting_screens/general_settings_screen.dart';
+import 'package:davinki/utils.dart';
+import 'package:davinki/models/general_settings.dart';
+import 'package:davinki/models/course_settings.dart';
+import 'package:davinki/screens/setting_screens/general_settings_screen/general_settings_screen.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/weekly_timetable.dart';
 
 class WeeklyTimetableScreen extends StatefulWidget {
   final Map<String, dynamic> _infoserverData;
-  final bool _offline;
+  final bool offline;
   final GeneralSettings _generalSettings;
   final CourseSettings _courseSettings;
-  WeeklyTimetableScreen(this._infoserverData, this._offline, this._generalSettings, this._courseSettings);
+  WeeklyTimetableScreen(this._infoserverData, this._generalSettings, this._courseSettings, {this.offline = false});
   @override
-  _WeeklyTimetableScreenState createState() =>
-      _WeeklyTimetableScreenState(this._infoserverData, this._offline, this._generalSettings, this._courseSettings);
+  _WeeklyTimetableScreenState createState() => _WeeklyTimetableScreenState(this._infoserverData, this.offline, this._generalSettings, this._courseSettings);
 }
 
 class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
@@ -78,10 +78,9 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
               color: Colors.white,
             ),
             onPressed: () {
-              Navigator.pushAndRemoveUntil(
+              navigateToOtherScreen(
+                GeneralSettingsScreen(this._generalSettings, this._courseSettings),
                 context,
-                MaterialPageRoute(builder: (context) => GeneralSettingsScreen(this._generalSettings, this._courseSettings)),
-                (Route route) => false,
               );
             },
           )

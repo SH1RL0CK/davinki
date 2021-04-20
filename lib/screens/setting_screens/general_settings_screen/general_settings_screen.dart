@@ -1,13 +1,16 @@
-import 'package:davinki/models/course_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:davinki/utils.dart';
+import 'package:davinki/models/course_settings.dart';
 import 'package:davinki/models/user_type.dart';
 import 'package:davinki/models/school_type.dart';
 import 'package:davinki/models/general_settings.dart';
 import 'package:davinki/models/davinci_infoserver_service_exceptions.dart';
 import 'package:davinki/services/davinci_infoserver_service.dart';
 import 'package:davinki/screens/loading_screen/loading_screen.dart';
-import 'package:davinki/screens/setting_screens/course_settings_screen.dart';
+import 'package:davinki/screens/user_is_offline_screen/user_is_offline_screen.dart';
+import 'package:davinki/screens/setting_screens/couse_settings_screen/course_settings_screen.dart';
+import 'package:davinki/widgets/info_dialog.dart';
 
 class GeneralSettingsScreen extends StatefulWidget {
   final GeneralSettings _generalSettings;
@@ -59,10 +62,9 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
               color: Colors.white,
             ),
             onPressed: () {
-              Navigator.pushAndRemoveUntil(
+              navigateToOtherScreen(
+                LoadingScreen(),
                 context,
-                MaterialPageRoute(builder: (context) => LoadingScreen()),
-                (Route route) => false,
               );
             },
           )
@@ -206,11 +208,24 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                       if (this._formKey.currentState!.validate()) {
                         this._generalSettings.name = this._nameInputController.text;
                         this._generalSettings.username = this._usernameInputController.text;
-                        this._generalSettings.password =
-                            this._passwordInputController.text.isEmpty ? this._generalSettings.password : this._passwordInputController.text;
+                        this._generalSettings.password = this._passwordInputController.text.isEmpty ? this._generalSettings.password : this._passwordInputController.text;
                         try {
-                          this._infoserverData =
-                              await DavinciInfoserverService(this._generalSettings.username!, this._generalSettings.password!).getOnlineData();
+                          this._infoserverData = await DavinciInfoserverService(this._generalSettings.username!, this._generalSettings.password!).getOnlineData();
+                        } on UserIsOfflineException {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return InfoDialog(
+                                'Du bist offline!',
+                                'Du musst online sein, um die Einstellungen zu speichern!',
+                              );
+                            },
+                          ).then((dynamic exit) {
+                            setState(() {
+                              this._formFieldsEnabled = true;
+                            });
+                          });
+                          return;
                         } on WrongLoginDataException {
                           setState(() {
                             this._wrongLoginData = true;
@@ -220,10 +235,9 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                         }
 
                         this._generalSettings.storeData();
-                        Navigator.pushAndRemoveUntil(
+                        navigateToOtherScreen(
+                          CourseSettingsScreen(this._courseSettings, this._infoserverData),
                           context,
-                          MaterialPageRoute(builder: (context) => CourseSettingsScreen(this._courseSettings, this._infoserverData)),
-                          (Route route) => false,
                         );
                       } else {
                         setState(() {

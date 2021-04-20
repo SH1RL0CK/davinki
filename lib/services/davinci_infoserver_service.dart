@@ -5,17 +5,16 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
 class DavinciInfoserverService {
-  final String _username;
-  final String _password;
-
   Uri _infoserverUrl;
-  DavinciInfoserverService(this._username, this._password)
+  final String _infoServerFileName = 'infoserver_data.json';
+
+  DavinciInfoserverService(username, password)
       : _infoserverUrl = Uri.https(
           'stundenplan.bwshofheim.de',
           '/daVinciIS.dll',
           <String, String>{
-            'username': _username,
-            'password': _password,
+            'username': username,
+            'password': password,
             'content': 'json',
           },
         );
@@ -23,7 +22,7 @@ class DavinciInfoserverService {
   Future<File> get _infoserverDateFile async {
     final Directory directory = await getApplicationDocumentsDirectory();
     final String path = directory.path;
-    return File('$path/infoserver_data.json');
+    return File('$path/${this._infoServerFileName}');
   }
 
   void writeDate(String data) async {
@@ -32,9 +31,13 @@ class DavinciInfoserverService {
   }
 
   Future<Map<String, dynamic>> getOfflineData() async {
-    File file = await _infoserverDateFile;
-    String infoserverData = await file.readAsString();
-    return jsonDecode(infoserverData);
+    try {
+      File file = await _infoserverDateFile;
+      String infoserverData = await file.readAsString();
+      return jsonDecode(infoserverData);
+    } catch (e) {
+      throw NoOfflineDataExeption();
+    }
   }
 
   Future<Map<String, dynamic>> getOnlineData() async {

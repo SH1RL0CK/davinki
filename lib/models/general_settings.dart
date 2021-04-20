@@ -24,7 +24,7 @@ class GeneralSettings {
     String? schoolType = sharedPreferences.getString(this._schoolTypeKey);
     this.schoolType = EnumToString.fromString(SchoolType.values, schoolType ?? '');
     this.username = sharedPreferences.getString(this._usernameKey);
-    this.password = password = sharedPreferences.getString(this._passwordKey);
+    this.password = sharedPreferences.getString(this._passwordKey);
     if (this.name == null || this.userType == null || this.schoolType == null || this.username == null || this.password == null) {
       return false;
     }

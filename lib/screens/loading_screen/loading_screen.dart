@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:davinki/utils.dart';
 import 'package:davinki/models/course_settings.dart';
 import 'package:davinki/models/general_settings.dart';
 import 'package:davinki/models/davinci_infoserver_service_exceptions.dart';
 import 'package:davinki/services/davinci_infoserver_service.dart';
-import 'package:davinki/screens/setting_screens/general_settings_screen.dart';
+import 'package:davinki/screens/setting_screens/general_settings_screen/general_settings_screen.dart';
+import 'package:davinki/screens/user_is_offline_screen/user_is_offline_screen.dart';
 import 'package:davinki/screens/weekly_timetable_screen/weekly_timetable_screen.dart';
+import 'package:davinki/widgets/info_dialog.dart';
 
 class LoadingScreen extends StatefulWidget {
   LoadingScreen({Key? key}) : super(key: key);
@@ -19,32 +22,53 @@ class _LoadingScreenState extends State<LoadingScreen> {
   final CourseSettings _courseSettings = CourseSettings();
 
   void _navigateToSettings() {
-    Navigator.pushAndRemoveUntil(
+    navigateToOtherScreen(
+      GeneralSettingsScreen(this._generalSettings, this._courseSettings),
       context,
-      MaterialPageRoute(builder: (context) => GeneralSettingsScreen(this._generalSettings, this._courseSettings)),
-      (Route route) => false,
     );
   }
 
-  void _navigateToWeeklyTimetable(Map<String, dynamic> infoserverData, bool offline) {
-    Navigator.pushAndRemoveUntil(
+  void _navigateToWeeklyTimetable(Map<String, dynamic> infoserverData, {bool offline = false}) {
+    navigateToOtherScreen(
+      WeeklyTimetableScreen(infoserverData, this._generalSettings, this._courseSettings, offline: offline),
       context,
-      MaterialPageRoute(builder: (context) => WeeklyTimetableScreen(infoserverData, offline, this._generalSettings, this._courseSettings)),
-      (Route route) => false,
     );
   }
 
   void _loadInofoserverData() {
     DavinciInfoserverService infoserverService = DavinciInfoserverService(this._generalSettings.username!, this._generalSettings.password!);
     infoserverService.getOnlineData().then((Map<String, dynamic> infoserverData) {
-      this._navigateToWeeklyTimetable(infoserverData, false);
-    }, onError: (exception) {
+      this._navigateToWeeklyTimetable(infoserverData);
+    }, onError: (dynamic exception) {
       if (exception is WrongLoginDataException) {
-        this._navigateToSettings();
-        return;
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return InfoDialog(
+              'Falsche Anmeldededaten!',
+              'Die Anmeldedaten für den DAVINCI-Infoserver sind falsch. Bitte korrigiere sie in den Einstellungen!',
+            );
+          },
+        ).then((dynamic exit) {
+          this._navigateToSettings();
+        });
       } else if (exception is UserIsOfflineException) {
         infoserverService.getOfflineData().then((Map<String, dynamic> infoserverData) {
-          this._navigateToWeeklyTimetable(infoserverData, true);
+          this._navigateToWeeklyTimetable(infoserverData, offline: true);
+        }, onError: (dynamic exception) {
+          if (exception is NoOfflineDataExeption) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return InfoDialog(
+                  'Kein Offline Stundenplan gefunden!',
+                  'Bitte gehe online, um Deinen Stundenplan zu sehen!',
+                );
+              },
+            ).then((dynamic exit) {
+              return navigateToOtherScreen(UserIsOfflineScreen(), context);
+            });
+          }
         });
       }
     });
@@ -54,10 +78,20 @@ class _LoadingScreenState extends State<LoadingScreen> {
     this._generalSettings.loadData().then((bool generalSettingsAreAvailable) {
       this._courseSettings.loadData().then((bool courseSettingsAreAvailable) {
         if (!generalSettingsAreAvailable || !courseSettingsAreAvailable) {
-          this._navigateToSettings();
-          return;
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return InfoDialog(
+                'Willkommen!',
+                'Bitte mache zunächst ein paar wichtige Einstellungen, damit Du die App richtig nutzen kannst.',
+              );
+            },
+          ).then((dynamic exit) {
+            this._navigateToSettings();
+          });
+        } else {
+          this._loadInofoserverData();
         }
-        this._loadInofoserverData();
       });
     });
   }
