@@ -44,9 +44,9 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
       List<String> teachers = <String>[];
 
       this._infoserverData['result']['displaySchedule']['lessonTimes'].forEach((dynamic lessonAsMap) {
-        Lesson lesson = Lesson.fromJson(lessonAsMap, DateTime(0), 0);
-        if (lesson.course == courseTitle) {
-          teachers.add(lesson.teacher);
+        Lesson lesson = Lesson.fromJson(lessonAsMap);
+        if (lesson.course.title == courseTitle) {
+          teachers.add(lesson.course.teacher);
         }
       });
       CourseGroup group = this._courseGroups.firstWhere((CourseGroup group) => group.template == groupTemplate);

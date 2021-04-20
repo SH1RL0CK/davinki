@@ -37,28 +37,27 @@ class _WeeklyTimetableState extends State<WeeklyTimetable> {
       lessons.add(l);
     }
 
-    for (Map<String, dynamic> lesson in lessonTimes) {
-      bool isUsersLesson = false;
-      this._courseSettings.usersCourses.forEach((Course course) {
-        if (course.title == lesson['courseTitle'] && course.teacher == lesson['teacherCodes'][0]) {
-          isUsersLesson = true;
-        }
-      });
+    for (Map<String, dynamic> lessonAsMap in lessonTimes) {
+      Lesson lesson = Lesson.fromJson(lessonAsMap);
+      bool isUsersLesson = this._courseSettings.usersCourses.contains(lesson.course);
       if (isUsersLesson) {
         formatedDatesOfWeek.asMap().forEach(
           (int weekdayIndex, String date) {
-            if (lesson.containsKey('dates') && lesson['dates'].contains(date)) {
+            if (lessonAsMap.containsKey('dates') && lessonAsMap['dates'].contains(date)) {
               int lessonNumber = 0;
               timeslots.asMap().forEach((timeslotIndex, timeslot) {
-                if (timeslot['startTime'] == lesson['startTime']) {
+                if (timeslot['startTime'] == lessonAsMap['startTime']) {
                   lessonNumber = timeslotIndex;
                 }
               });
               for (; lessonNumber < timeslots.length; lessonNumber++) {
-                if (lesson.containsKey('changes') || lessons[lessonNumber][weekdayIndex].freeTime) {
-                  lessons[lessonNumber][weekdayIndex] = Lesson.fromJson(lesson, datesOfWeek[weekdayIndex], lessonNumber);
+                if (lesson.changeCaption.isNotEmpty || lessons[lessonNumber][weekdayIndex].freeTime) {
+                  lesson.date = datesOfWeek[weekdayIndex];
+                  lesson.formattedDate = infoserverDateFormat(lesson.date);
+                  lesson.lessonNumber = lessonNumber;
+                  lessons[lessonNumber][weekdayIndex] = lesson;
                 }
-                if (lesson['endTime'] == timeslots[lessonNumber]['endTime']) {
+                if (lessonAsMap['endTime'] == timeslots[lessonNumber]['endTime']) {
                   break;
                 }
               }

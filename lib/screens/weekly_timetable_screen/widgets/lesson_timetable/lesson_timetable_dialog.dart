@@ -23,26 +23,24 @@ class LessonTimetableDialog extends StatefulWidget {
       this._lessons.add(this._usersLesson);
     }
 
-    this._lessonTimes.forEach((lesson) {
-      if (lesson.containsKey('dates') &&
-          lesson['dates'].contains(formattedDate) &&
-          lesson.containsKey('startTime') &&
-          lesson.containsKey('endTime') &&
-          this._timeslots.indexWhere((timeslot) => timeslot['startTime'] == lesson['startTime']) <= lessonNumber &&
-          this._timeslots.indexWhere((timeslot) => timeslot['endTime'] == lesson['endTime']) >= lessonNumber) {
-        int lessonIndex = this._lessons.indexWhere((l) => l.course == lesson['courseTitle']);
-        if (lessonIndex == -1 || (lesson['teacherCodes'][0] != this._lessons[lessonIndex].teacher && !lesson.containsKey('changeCaption'))) {
-          this._lessons.add(Lesson.fromJson(lesson, date, lessonNumber));
-        } else if (lesson.containsKey('changes') && this._lessons[lessonIndex] != this._usersLesson) {
-          this._lessons[lessonIndex] = Lesson.fromJson(lesson, date, lessonNumber);
+    this._lessonTimes.forEach((lessonAsMap) {
+      if (lessonAsMap.containsKey('dates') &&
+          lessonAsMap['dates'].contains(formattedDate) &&
+          lessonAsMap.containsKey('startTime') &&
+          lessonAsMap.containsKey('endTime') &&
+          this._timeslots.indexWhere((timeslot) => timeslot['startTime'] == lessonAsMap['startTime']) <= lessonNumber &&
+          this._timeslots.indexWhere((timeslot) => timeslot['endTime'] == lessonAsMap['endTime']) >= lessonNumber) {
+        int lessonIndex = this._lessons.indexWhere((l) => l.course.title == lessonAsMap['courseTitle']);
+        Lesson lesson = Lesson.fromJson(lessonAsMap, date: date, lessonNumber: lessonNumber);
+        if (lessonIndex == -1 || (this._lessons[lessonIndex].course != lesson.course)) {
+          this._lessons.add(lesson);
+        } else if (lesson.changeCaption.isNotEmpty && this._lessons[lessonIndex] != this._usersLesson) {
+          this._lessons[lessonIndex] = lesson;
         }
       }
     });
     this._lessons.sort((lesson1, lesson2) {
-      if (lesson1.course != lesson2.course) {
-        return lesson1.course.compareTo(lesson2.course);
-      }
-      return lesson1.teacher.compareTo(lesson2.teacher);
+      return lesson1.course.compareTo(lesson2.course);
     });
     if (this._lessons.length == 0) {
       this.empty = true;

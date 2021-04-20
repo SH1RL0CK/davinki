@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:davinki/models/course_group_templates.dart';
 import 'package:davinki/utils.dart';
+import 'package:davinki/models/course.dart';
+import 'package:davinki/models/course_group_templates.dart';
 
 class Lesson {
-  final String course, teacher, room;
+  final Course course;
+  final String room;
   final List<dynamic> classes;
-  final DateTime date;
+  DateTime date;
   String formattedDate;
-  final int lessonNumber;
+  int lessonNumber;
   final String changeCaption, changeInformation;
   final String newTeacher, newRoom;
   final bool cancelled, additional, freeTime;
@@ -18,10 +20,10 @@ class Lesson {
   Lesson(
     this.date,
     this.lessonNumber, {
-    this.classes = const <dynamic>[],
-    this.course = '',
-    this.teacher = '',
+    String courseTitle = '',
+    String teacher = '',
     this.room = '',
+    this.classes = const <dynamic>[],
     this.formattedDate = '',
     this.changeCaption = '',
     this.changeInformation = '',
@@ -32,11 +34,11 @@ class Lesson {
     this.additional = false,
     this.color = Colors.transparent,
     this.currentLesson = false,
-  }) {
+  }) : this.course = Course(courseTitle, teacher) {
     formattedDate = infoserverDateFormat(this.date);
   }
 
-  factory Lesson.fromJson(Map<String, dynamic> lesson, DateTime date, int lessonNumber) {
+  factory Lesson.fromJson(Map<String, dynamic> lesson, {DateTime? date, int lessonNumber = -1}) {
     String teacher = '', room = '';
     String changeCaption = '', changeInformation = '';
     String newTeacher = '', newRoom = '';
@@ -72,12 +74,12 @@ class Lesson {
       }
     }
     return Lesson(
-      date,
+      date ?? DateTime(-1),
       lessonNumber,
-      course: lesson['courseTitle'],
-      classes: lesson['classCodes'],
+      courseTitle: lesson['courseTitle'],
       teacher: teacher,
       room: room,
+      classes: lesson['classCodes'],
       changeCaption: changeCaption,
       changeInformation: changeInformation,
       newTeacher: newTeacher,

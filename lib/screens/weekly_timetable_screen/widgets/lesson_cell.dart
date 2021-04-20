@@ -18,7 +18,7 @@ class _LessonCellState extends State<LessonCell> {
   _LessonCellState(this._lesson, this._infoserverData) : super();
   @override
   Widget build(BuildContext context) {
-    String courseTitle = (this._lesson.additional) ? '+ ' + this._lesson.course : this._lesson.course;
+    String courseTitle = (this._lesson.additional) ? '+ ' + this._lesson.course.title : this._lesson.course.title;
     return Container(
       child: InkWell(
         child: Padding(
@@ -43,7 +43,7 @@ class _LessonCellState extends State<LessonCell> {
                         style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.bold, color: Colors.black),
                       ),
                       Text(
-                        (this._lesson.newTeacher != '') ? this._lesson.newTeacher : this._lesson.teacher,
+                        (this._lesson.newTeacher != '') ? this._lesson.newTeacher : this._lesson.course.teacher,
                         style: TextStyle(
                           fontSize: 13,
                           color: (this._lesson.newTeacher != '') ? Colors.red.shade900 : Colors.black,

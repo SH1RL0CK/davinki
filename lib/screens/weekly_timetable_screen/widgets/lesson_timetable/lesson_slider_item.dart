@@ -63,7 +63,7 @@ class _LessonSliderItemState extends State<LessonSliderItem> {
                   )
                 : Container(),
             Text(
-              this._lesson.course,
+              this._lesson.course.title,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
             Text(
@@ -75,11 +75,11 @@ class _LessonSliderItemState extends State<LessonSliderItem> {
                 children: <TextSpan>[
                   this._lesson.newTeacher != ''
                       ? TextSpan(
-                          text: this._lesson.teacher,
+                          text: this._lesson.course.teacher,
                           style: TextStyle(color: Colors.red.shade900, decoration: TextDecoration.lineThrough),
                         )
                       : TextSpan(),
-                  TextSpan(text: this._lesson.newTeacher != '' ? '  ${this._lesson.newTeacher}' : this._lesson.teacher),
+                  TextSpan(text: this._lesson.newTeacher != '' ? '  ${this._lesson.newTeacher}' : this._lesson.course.teacher),
                 ],
                 style: TextStyle(color: Colors.black, fontSize: 18),
               ),
