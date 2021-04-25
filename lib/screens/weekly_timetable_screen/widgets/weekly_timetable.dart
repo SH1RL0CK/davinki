@@ -111,20 +111,12 @@ class _WeeklyTimetableState extends State<WeeklyTimetable> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 55),
-          child: Table(
-            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-            children: this._buildTimetable(),
-            columnWidths: {
-              0: FixedColumnWidth(58),
-            },
-          ),
-        ),
-      ),
+    return Table(
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      children: this._buildTimetable(),
+      columnWidths: {
+        0: FixedColumnWidth(58),
+      },
     );
   }
 }

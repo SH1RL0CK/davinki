@@ -131,6 +131,7 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
                 }
               },
             ),
+            SizedBox(height: 20),
           ],
         ),
       ),

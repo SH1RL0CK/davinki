@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:davinki/utils.dart';
 import 'package:davinki/models/general_settings.dart';
 import 'package:davinki/models/course_settings.dart';
+import 'package:davinki/screens/loading_screen/loading_screen.dart';
 import 'package:davinki/screens/setting_screens/general_settings_screen/general_settings_screen.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/weekly_timetable.dart';
 
@@ -13,7 +14,8 @@ class WeeklyTimetableScreen extends StatefulWidget {
   final CourseSettings _courseSettings;
   WeeklyTimetableScreen(this._infoserverData, this._generalSettings, this._courseSettings, {this.offline = false});
   @override
-  _WeeklyTimetableScreenState createState() => _WeeklyTimetableScreenState(this._infoserverData, this.offline, this._generalSettings, this._courseSettings);
+  _WeeklyTimetableScreenState createState() =>
+      _WeeklyTimetableScreenState(this._infoserverData, this.offline, this._generalSettings, this._courseSettings);
 }
 
 class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
@@ -22,6 +24,7 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
   final GeneralSettings _generalSettings;
   final CourseSettings _courseSettings;
   int _week = 0;
+  bool _offlineSnackbarIsDisplayed = false;
   _WeeklyTimetableScreenState(this._infoserverData, this._offline, this._generalSettings, this._courseSettings);
 
   @override
@@ -31,28 +34,41 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
   }
 
   void _showOfflineSnackbar() {
+    setState(() {
+      this._offlineSnackbarIsDisplayed = true;
+    });
+
     WidgetsBinding.instance!.addPostFrameCallback((Duration timestamp) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.red.shade800,
-          duration: Duration(seconds: 5),
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Icon(
-                Icons.wifi_off,
-                color: Colors.white,
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.red.shade800,
+              duration: Duration(seconds: 5),
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.wifi_off,
+                    color: Colors.white,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Du bist offline!',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
               ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(
-                'Du bist offline!',
-                style: TextStyle(fontSize: 16),
-              ),
-            ],
-          ),
-        ),
+            ),
+          )
+          .closed
+          .then(
+        (dynamic reason) {
+          setState(() {
+            this._offlineSnackbarIsDisplayed = false;
+          });
+        },
       );
     });
   }
@@ -74,6 +90,18 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
           style: GoogleFonts.pacifico(fontSize: 25),
         ),
         actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.refresh,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              navigateToOtherScreen(
+                LoadingScreen(),
+                context,
+              );
+            },
+          ),
           IconButton(
             icon: Icon(
               Icons.settings,
@@ -113,11 +141,17 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
         ),
       ),
       body: GestureDetector(
-        child: WeeklyTimetable(
-          this._week,
-          this._infoserverData,
-          this._courseSettings,
-          key: UniqueKey(),
+        child: SingleChildScrollView(
+          child: Container(
+            color: Colors.white,
+            padding: EdgeInsets.only(bottom: this._offlineSnackbarIsDisplayed ? 120 : 55),
+            child: WeeklyTimetable(
+              this._week,
+              this._infoserverData,
+              this._courseSettings,
+              key: UniqueKey(),
+            ),
+          ),
         ),
         onHorizontalDragEnd: (DragEndDetails details) {
           if (details.primaryVelocity == 0) return;

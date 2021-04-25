@@ -18,6 +18,7 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
+  bool _isLoading = true;
   final GeneralSettings _generalSettings = GeneralSettings();
   final CourseSettings _courseSettings = CourseSettings();
 
@@ -57,6 +58,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
           this._navigateToWeeklyTimetable(infoserverData, offline: true);
         }, onError: (dynamic exception) {
           if (exception is NoOfflineDataExeption) {
+            setState(() {
+              this._isLoading = false;
+            });
             showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -78,6 +82,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
     this._generalSettings.loadData().then((bool generalSettingsAreAvailable) {
       this._courseSettings.loadData().then((bool courseSettingsAreAvailable) {
         if (!generalSettingsAreAvailable || !courseSettingsAreAvailable) {
+          setState(() {
+            this._isLoading = false;
+          });
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -111,30 +118,32 @@ class _LoadingScreenState extends State<LoadingScreen> {
           style: GoogleFonts.pacifico(fontSize: 25),
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 15),
-              child: SizedBox(
-                width: 90,
-                height: 90,
-                child: CircularProgressIndicator(
-                  strokeWidth: 6,
-                ),
+      body: this._isLoading
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 15),
+                    child: SizedBox(
+                      width: 90,
+                      height: 90,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 6,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    'Dein Stundenplan wird geladen...',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 30.0,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            Text(
-              'Dein Stundenplan wird geladen...',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 30.0,
-              ),
-            ),
-          ],
-        ),
-      ),
+            )
+          : Container(),
     );
   }
 }
