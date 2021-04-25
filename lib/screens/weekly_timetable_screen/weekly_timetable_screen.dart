@@ -9,9 +9,9 @@ import 'package:davinki/screens/weekly_timetable_screen/widgets/weekly_timetable
 
 class WeeklyTimetableScreen extends StatefulWidget {
   final Map<String, dynamic> _infoserverData;
-  final bool offline;
   final GeneralSettings _generalSettings;
   final CourseSettings _courseSettings;
+  final bool offline;
   WeeklyTimetableScreen(this._infoserverData, this._generalSettings, this._courseSettings, {this.offline = false});
   @override
   _WeeklyTimetableScreenState createState() =>

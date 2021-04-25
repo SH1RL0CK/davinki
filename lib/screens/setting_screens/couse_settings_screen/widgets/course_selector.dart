@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:davinki/models/course_group.dart';
+import 'package:davinki/models/general_settings.dart';
 import 'package:davinki/models/course.dart';
 
 class CourseSelector extends StatefulWidget {
   final CourseGroup _courseGroup;
-  CourseSelector(this._courseGroup, {Key? key}) : super(key: key);
+  final GeneralSettings _generalSettings;
+  CourseSelector(this._courseGroup, this._generalSettings, {Key? key}) : super(key: key);
 
   @override
-  _CourseSelectorState createState() => _CourseSelectorState(this._courseGroup);
+  _CourseSelectorState createState() => _CourseSelectorState(this._courseGroup, this._generalSettings);
 }
 
 class _CourseSelectorState extends State<CourseSelector> {
   final CourseGroup _courseGroup;
+  final GeneralSettings _generalSettings;
 
-  _CourseSelectorState(this._courseGroup);
+  _CourseSelectorState(this._courseGroup, this._generalSettings);
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +44,9 @@ class _CourseSelectorState extends State<CourseSelector> {
               hintText: 'Nicht ausgewählt',
             ),
             validator: (Course? course) {
-              if (this._courseGroup.template.mustBeSelected && course == null) {
+              if ((this._courseGroup.template.mustBeSelected ||
+                      this._courseGroup.template.mustBeSelectedInGrade.contains(this._generalSettings.grade)) &&
+                  course == null) {
                 return 'Dieser Kurs muss ausgewählt werden!';
               }
               return null;
@@ -62,8 +67,9 @@ class _CourseSelectorState extends State<CourseSelector> {
                   (int index) {
                     return DropdownMenuItem<Course>(
                       child: Text(
-                        '${this._courseGroup.courses[index].title}  (Lehrer/in: ${this._courseGroup.courses[index].teacher})',
-                        style: TextStyle(fontWeight: this._courseGroup.courses[index] == this._courseGroup.usersCourse ? FontWeight.bold : FontWeight.normal),
+                        '${this._courseGroup.courses[index].title} (Lehrer/in: ${this._courseGroup.courses[index].teacher})',
+                        style: TextStyle(
+                            fontWeight: this._courseGroup.courses[index] == this._courseGroup.usersCourse ? FontWeight.bold : FontWeight.normal),
                       ),
                       value: this._courseGroup.courses[index],
                     );

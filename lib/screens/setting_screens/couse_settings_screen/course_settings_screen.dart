@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:davinki/utils.dart';
+import 'package:davinki/models/general_settings.dart';
 import 'package:davinki/models/course_settings.dart';
 import 'package:davinki/models/course_group_templates.dart';
 import 'package:davinki/models/course_group.dart';
@@ -10,30 +11,37 @@ import 'package:davinki/screens/loading_screen/loading_screen.dart';
 import 'package:davinki/screens/setting_screens/couse_settings_screen/widgets/course_selector.dart';
 
 class CourseSettingsScreen extends StatefulWidget {
-  final CourseSettings _courseSettings;
   final Map<String, dynamic> _infoserverData;
-  CourseSettingsScreen(this._courseSettings, this._infoserverData, {Key? key}) : super(key: key);
+  final GeneralSettings _generalSettings;
+  final CourseSettings _courseSettings;
+  CourseSettingsScreen(this._infoserverData, this._generalSettings, this._courseSettings, {Key? key}) : super(key: key);
 
   @override
-  _CourseSettingsScreenState createState() => _CourseSettingsScreenState(this._courseSettings, this._infoserverData);
+  _CourseSettingsScreenState createState() => _CourseSettingsScreenState(this._infoserverData, this._generalSettings, this._courseSettings);
 }
 
 class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
-  final CourseSettings _courseSettings;
   final Map<String, dynamic> _infoserverData;
+  final GeneralSettings _generalSettings;
+  final CourseSettings _courseSettings;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  List<int?> courses = List<int?>.filled(courseGroupTemplates.length, null);
 
   List<CourseGroup> _courseGroups = <CourseGroup>[];
 
-  _CourseSettingsScreenState(this._courseSettings, this._infoserverData) : super() {
+  _CourseSettingsScreenState(this._infoserverData, this._generalSettings, this._courseSettings) {
     this._createCourseGroupList();
   }
 
   void _createCourseGroupList() {
-    this._courseGroups = List<CourseGroup>.generate(courseGroupTemplates.length, (int index) {
-      return CourseGroup(courseGroupTemplates[index]);
+    List<CourseGroupTemplate> templates = courseGroupTemplates[this._generalSettings.schoolType]!;
+    /*.where(
+      (CourseGroupTemplate template) {
+        return template.onlyInGrade == null || template.onlyInGrade!.contains(this._generalSettings.grade);
+      },
+    ).toList();
+  */
+    this._courseGroups = List<CourseGroup>.generate(templates.length, (int index) {
+      return CourseGroup(templates[index]);
     });
 
     this._infoserverData['result']['subjects'].forEach((dynamic course) {
@@ -108,7 +116,7 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
               shrinkWrap: true,
               itemCount: this._courseGroups.length,
               itemBuilder: (BuildContext context, int index) {
-                return CourseSelector(this._courseGroups[index]);
+                return CourseSelector(this._courseGroups[index], this._generalSettings);
               },
             ),
             SizedBox(height: 14),

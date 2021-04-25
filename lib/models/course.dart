@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class Course {
   final String title, teacher;
   Course(this.title, this.teacher);

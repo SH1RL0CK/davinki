@@ -124,34 +124,70 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                 )
               ],
             ),
-            SizedBox(height: 12),
-            DropdownButtonFormField<SchoolType>(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.account_balance),
-                labelText: 'Deine Schulform',
-              ),
-              value: this._generalSettings.schoolType,
-              onChanged: this._formFieldsEnabled
-                  ? (SchoolType? newSchoolType) {
-                      setState(() {
-                        this._generalSettings.schoolType = newSchoolType;
-                      });
-                    }
-                  : null,
-              validator: (SchoolType? schoolType) {
-                if (schoolType == null) {
-                  return 'Bitte wähle Deine Schulform aus!';
-                }
-                return null;
-              },
-              items: <DropdownMenuItem<SchoolType>>[
-                DropdownMenuItem<SchoolType>(
-                  child: Text('Berufliches Gymnasium'),
-                  value: SchoolType.vocationalGymnasium,
-                ),
-              ],
-            ),
+            this._generalSettings.userType == UserType.student
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: DropdownButtonFormField<SchoolType>(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.account_balance),
+                        labelText: 'Deine Schulform',
+                      ),
+                      value: this._generalSettings.schoolType,
+                      onChanged: this._formFieldsEnabled
+                          ? (SchoolType? newSchoolType) {
+                              setState(() {
+                                this._generalSettings.schoolType = newSchoolType;
+                              });
+                            }
+                          : null,
+                      validator: (SchoolType? schoolType) {
+                        if (schoolType == null) {
+                          return 'Bitte wähle Deine Schulform aus!';
+                        }
+                        return null;
+                      },
+                      items: <DropdownMenuItem<SchoolType>>[
+                        DropdownMenuItem<SchoolType>(
+                          child: Text('Berufliches Gymnasium'),
+                          value: SchoolType.vocationalGymnasium,
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(),
+            this._generalSettings.schoolType == SchoolType.vocationalGymnasium
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: DropdownButtonFormField<int>(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.class_),
+                        labelText: 'Deine Klasse',
+                      ),
+                      value: this._generalSettings.grade,
+                      onChanged: this._formFieldsEnabled
+                          ? (int? newGrade) {
+                              setState(() {
+                                this._generalSettings.grade = newGrade;
+                              });
+                            }
+                          : null,
+                      validator: (int? grade) {
+                        if (grade == null) {
+                          return 'Bitte wähle Deine Klasse aus!';
+                        }
+                        return null;
+                      },
+                      items: <int>[11, 12, 13]
+                          .map((int grade) => DropdownMenuItem<int>(
+                                child: Text(grade.toString()),
+                                value: grade,
+                              ))
+                          .toList(),
+                    ),
+                  )
+                : Container(),
             SizedBox(height: 20),
             Text(
               'Anmeldung',
@@ -196,7 +232,7 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
             FloatingActionButton.extended(
               icon: Icon(Icons.save),
               label: Text(
-                'Zu Deinen Kursen',
+                this._generalSettings.userType == UserType.student ? 'Zu Deinen Kursen' : 'Speichern',
               ),
               onPressed: this._formFieldsEnabled
                   ? () async {
@@ -207,9 +243,10 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                       if (this._formKey.currentState!.validate()) {
                         this._generalSettings.name = this._nameInputController.text;
                         this._generalSettings.username = this._usernameInputController.text;
-                        this._generalSettings.password = this._passwordInputController.text.isEmpty ? this._generalSettings.password : this._passwordInputController.text;
+                        String? password =
+                            this._passwordInputController.text.isEmpty ? this._generalSettings.password : this._passwordInputController.text;
                         try {
-                          this._infoserverData = await DavinciInfoserverService(this._generalSettings.username!, this._generalSettings.password!).getOnlineData();
+                          this._infoserverData = await DavinciInfoserverService(this._generalSettings.username!, password!).getOnlineData();
                         } on UserIsOfflineException {
                           showDialog(
                             context: context,
@@ -232,12 +269,19 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                           });
                           return;
                         }
-
+                        this._generalSettings.password = password;
                         this._generalSettings.storeData();
-                        navigateToOtherScreen(
-                          CourseSettingsScreen(this._courseSettings, this._infoserverData),
-                          context,
-                        );
+                        if (this._generalSettings.userType == UserType.student) {
+                          navigateToOtherScreen(
+                            CourseSettingsScreen(this._infoserverData, this._generalSettings, this._courseSettings),
+                            context,
+                          );
+                        } else {
+                          navigateToOtherScreen(
+                            LoadingScreen(),
+                            context,
+                          );
+                        }
                       } else {
                         setState(() {
                           this._formFieldsEnabled = true;
@@ -246,6 +290,7 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                     }
                   : null,
             ),
+            SizedBox(height: 20),
           ],
         ),
       ),
