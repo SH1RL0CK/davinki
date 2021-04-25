@@ -5,7 +5,7 @@ class Course {
   Course(this.title, this.teacher);
 
   int compareTo(Course otherCourse) {
-    if (this.title == otherCourse.title) {
+    if (this.title != otherCourse.title) {
       return this.title.compareTo(otherCourse.title);
     }
     return this.teacher.compareTo(otherCourse.teacher);

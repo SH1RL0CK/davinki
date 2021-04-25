@@ -27,32 +27,34 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
   @override
   void initState() {
     super.initState();
-    if (this._offline) {
-      WidgetsBinding.instance!.addPostFrameCallback((Duration timestamp) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Colors.red[800],
-            duration: Duration(seconds: 5),
-            content: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  Icons.wifi_off,
-                  color: Colors.white,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  'Du bist offline!',
-                  style: TextStyle(fontSize: 16),
-                ),
-              ],
-            ),
+    if (this._offline) this._showOfflineSnackbar();
+  }
+
+  void _showOfflineSnackbar() {
+    WidgetsBinding.instance!.addPostFrameCallback((Duration timestamp) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red.shade800,
+          duration: Duration(seconds: 5),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(
+                Icons.wifi_off,
+                color: Colors.white,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                'Du bist offline!',
+                style: TextStyle(fontSize: 16),
+              ),
+            ],
           ),
-        );
-      });
-    }
+        ),
+      );
+    });
   }
 
   void _changeWeek(int i) {

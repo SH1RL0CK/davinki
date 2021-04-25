@@ -7,6 +7,7 @@ import 'package:davinki/models/course_group.dart';
 import 'package:davinki/models/course.dart';
 import 'package:davinki/models/lesson.dart';
 import 'package:davinki/screens/loading_screen/loading_screen.dart';
+import 'package:davinki/screens/setting_screens/couse_settings_screen/widgets/course_selector.dart';
 
 class CourseSettingsScreen extends StatefulWidget {
   final CourseSettings _courseSettings;
@@ -44,8 +45,9 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
       List<String> teachers = <String>[];
 
       this._infoserverData['result']['displaySchedule']['lessonTimes'].forEach((dynamic lessonAsMap) {
+        if (!Lesson.isLesson(lessonAsMap)) return;
         Lesson lesson = Lesson.fromJson(lessonAsMap);
-        if (lesson.course.title == courseTitle) {
+        if (lesson.course.title == courseTitle && !lesson.additional) {
           teachers.add(lesson.course.teacher);
         }
       });
@@ -96,60 +98,17 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
               'Deine Kurse',
               style: TextStyle(fontSize: 25),
             ),
+            Text(
+              'Bitte wähle Deine Kurse aus.',
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(height: 10),
             ListView.builder(
               primary: false,
               shrinkWrap: true,
               itemCount: this._courseGroups.length,
-              itemBuilder: (BuildContext context, int i) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        this._courseGroups[i].template.describtion,
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      DropdownButtonFormField<Course>(
-                          value: this._courseGroups[i].usersCourse,
-                          decoration: InputDecoration(
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.red.shade900, width: 3.0),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: this._courseGroups[i].template.color, width: 2.0),
-                            ),
-                            hintText: 'Nicht ausgewählt',
-                          ),
-                          validator: (Course? course) {
-                            if (this._courseGroups[i].template.mustBeSelected && course == null) {
-                              return 'Dieser Kurs muss ausgewählt werden!';
-                            }
-                            return null;
-                          },
-                          onChanged: (Course? newCourse) {
-                            setState(() {
-                              this._courseGroups[i].usersCourse = newCourse;
-                            });
-                          },
-                          items: <DropdownMenuItem<Course>>[
-                                DropdownMenuItem<Course>(
-                                  child: Text('Nicht auswgewählt'),
-                                  value: null,
-                                )
-                              ] +
-                              List<DropdownMenuItem<Course>>.generate(this._courseGroups[i].courses.length, (int j) {
-                                return DropdownMenuItem<Course>(
-                                  child: Text('${this._courseGroups[i].courses[j].title}  (Lehrer/in: ${this._courseGroups[i].courses[j].teacher})'),
-                                  value: this._courseGroups[i].courses[j],
-                                );
-                              })),
-                    ],
-                  ),
-                );
+              itemBuilder: (BuildContext context, int index) {
+                return CourseSelector(this._courseGroups[index]);
               },
             ),
             SizedBox(height: 14),

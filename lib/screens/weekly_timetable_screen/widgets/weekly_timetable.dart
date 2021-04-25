@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:davinki/utils.dart';
 import 'package:davinki/models/course_settings.dart';
 import 'package:davinki/models/lesson.dart';
-import 'package:davinki/models/course.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/date_cell.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/lesson_cell.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/timseslot_cell.dart';
@@ -38,6 +37,9 @@ class _WeeklyTimetableState extends State<WeeklyTimetable> {
     }
 
     for (Map<String, dynamic> lessonAsMap in lessonTimes) {
+      if (!Lesson.isLesson(lessonAsMap)) {
+        continue;
+      }
       Lesson lesson = Lesson.fromJson(lessonAsMap);
       bool isUsersLesson = this._courseSettings.usersCourses.contains(lesson.course);
       if (isUsersLesson) {
@@ -113,12 +115,12 @@ class _WeeklyTimetableState extends State<WeeklyTimetable> {
       child: Container(
         color: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 60),
+          padding: const EdgeInsets.only(bottom: 55),
           child: Table(
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             children: this._buildTimetable(),
             columnWidths: {
-              0: FixedColumnWidth(60),
+              0: FixedColumnWidth(58),
             },
           ),
         ),

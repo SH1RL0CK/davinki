@@ -24,10 +24,8 @@ class LessonTimetableDialog extends StatefulWidget {
     }
 
     this._lessonTimes.forEach((lessonAsMap) {
-      if (lessonAsMap.containsKey('dates') &&
+      if (Lesson.isLesson(lessonAsMap) &&
           lessonAsMap['dates'].contains(formattedDate) &&
-          lessonAsMap.containsKey('startTime') &&
-          lessonAsMap.containsKey('endTime') &&
           this._timeslots.indexWhere((timeslot) => timeslot['startTime'] == lessonAsMap['startTime']) <= lessonNumber &&
           this._timeslots.indexWhere((timeslot) => timeslot['endTime'] == lessonAsMap['endTime']) >= lessonNumber) {
         int lessonIndex = this._lessons.indexWhere((l) => l.course.title == lessonAsMap['courseTitle']);

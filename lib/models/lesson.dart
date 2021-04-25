@@ -38,6 +38,13 @@ class Lesson {
     formattedDate = infoserverDateFormat(this.date);
   }
 
+  static bool isLesson(Map<String, dynamic> map) {
+    for (String key in <String>['courseTitle', 'startTime', 'endTime', 'dates']) {
+      if (!map.containsKey(key)) return false;
+    }
+    return true;
+  }
+
   factory Lesson.fromJson(Map<String, dynamic> lesson, {DateTime? date, int lessonNumber = -1}) {
     String teacher = '', room = '';
     String changeCaption = '', changeInformation = '';
