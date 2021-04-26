@@ -33,20 +33,23 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
   }
 
   void _createCourseGroupList() {
-    List<CourseGroupTemplate> templates = courseGroupTemplates[this._generalSettings.schoolType]!;
-    /*.where(
+    List<CourseGroupTemplate> templates = courseGroupTemplates[this._generalSettings.schoolType]!.where(
       (CourseGroupTemplate template) {
-        return template.onlyInGrade == null || template.onlyInGrade!.contains(this._generalSettings.grade);
+        return template.onlyInGrades == null || template.onlyInGrades!.contains(this._generalSettings.grade);
       },
     ).toList();
-  */
+
     this._courseGroups = List<CourseGroup>.generate(templates.length, (int index) {
       return CourseGroup(templates[index]);
     });
 
     this._infoserverData['result']['subjects'].forEach((dynamic course) {
       String courseTitle = course['code'];
-      CourseGroupTemplate? groupTemplate = getGroupTemplateByCourseTitle(courseTitle);
+      CourseGroupTemplate? groupTemplate = getGroupTemplateByCourseTitle(
+        courseTitle,
+        schoolType: this._generalSettings.schoolType,
+        grade: this._generalSettings.grade,
+      );
       if (groupTemplate == null) {
         return;
       }
@@ -64,12 +67,12 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
       teachers.forEach((String teacher) {
         group.courses.add(Course(courseTitle, teacher));
       });
-      this._courseGroups.forEach((CourseGroup group) {
-        group.courses.forEach((Course course) {
-          if (this._courseSettings.usersCourses.contains(course)) {
-            group.usersCourse = course;
-          }
-        });
+    });
+    this._courseGroups.forEach((CourseGroup group) {
+      group.courses.forEach((Course course) {
+        if (this._courseSettings.usersCourses.contains(course)) {
+          group.usersCourse = course;
+        }
       });
     });
   }

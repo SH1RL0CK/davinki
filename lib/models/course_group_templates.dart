@@ -5,16 +5,16 @@ class CourseGroupTemplate {
   final String describtion;
   final Color color;
   final List<String> courseTitlePrefixes;
-  final List<int>? onlyInGrade;
+  final List<int>? onlyInGrades;
   final bool mustBeSelected;
-  final List<int> mustBeSelectedInGrade;
+  final List<int> mustBeSelectedInGrades;
   CourseGroupTemplate(
     this.describtion,
     this.color,
     this.courseTitlePrefixes, {
-    this.onlyInGrade,
+    this.onlyInGrades,
     this.mustBeSelected = false,
-    this.mustBeSelectedInGrade = const <int>[],
+    this.mustBeSelectedInGrades = const <int>[],
   });
 }
 
@@ -30,20 +30,20 @@ Map<SchoolType, List<CourseGroupTemplate>> courseGroupTemplates = <SchoolType, L
     CourseGroupTemplate('Biologie', Colors.grey.shade700, <String>['BioG']),
     CourseGroupTemplate('Chemie', Colors.grey.shade700, <String>['ChG']),
     CourseGroupTemplate('Religion/Ethik', Colors.purple, <String>['ReG', 'RkG', 'EtG'], mustBeSelected: true),
-    CourseGroupTemplate('Politik & Wirtschaft', Colors.pink, <String>['PWG'], mustBeSelectedInGrade: [11, 12]),
+    CourseGroupTemplate('Politik & Wirtschaft', Colors.pink, <String>['PWG'], mustBeSelectedInGrades: [11, 12]),
     CourseGroupTemplate('Geschichte', Colors.black, <String>['GG'], mustBeSelected: true),
     CourseGroupTemplate('Sport', Colors.deepOrangeAccent, <String>['SpG'], mustBeSelected: true),
     CourseGroupTemplate('2. Fremdsprache', Colors.lime, <String>['SpanG', 'FG']),
-    CourseGroupTemplate('Turtor', Colors.green, <String>['Tutor'], mustBeSelected: true, onlyInGrade: <int>[11]),
+    CourseGroupTemplate('Turtor', Colors.green, <String>['Tutor'], mustBeSelected: true),
   ],
 };
 
-CourseGroupTemplate? getGroupTemplateByCourseTitle(String courseTitle, {SchoolType? schoolType}) {
+CourseGroupTemplate? getGroupTemplateByCourseTitle(String courseTitle, {SchoolType? schoolType, int? grade}) {
   CourseGroupTemplate? searchInSchoolType() {
     for (CourseGroupTemplate groupTemplate in courseGroupTemplates[schoolType]!) {
       for (String courseTitlePrefix in groupTemplate.courseTitlePrefixes) {
         RegExp regex = RegExp(courseTitlePrefix + r'([0-9]+)?$');
-        if (regex.hasMatch(courseTitle)) {
+        if (regex.hasMatch(courseTitle) && (grade == null || (groupTemplate.onlyInGrades == null || groupTemplate.onlyInGrades!.contains(grade)))) {
           return groupTemplate;
         }
       }
