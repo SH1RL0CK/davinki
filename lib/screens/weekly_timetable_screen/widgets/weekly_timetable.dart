@@ -45,7 +45,7 @@ class _WeeklyTimetableState extends State<WeeklyTimetable> {
       if (isUsersLesson) {
         formatedDatesOfWeek.asMap().forEach(
           (int weekdayIndex, String date) {
-            if (lessonAsMap.containsKey('dates') && lessonAsMap['dates'].contains(date)) {
+            if (lessonAsMap['dates'].contains(date)) {
               int lessonNumber = 0;
               timeslots.asMap().forEach((timeslotIndex, timeslot) {
                 if (timeslot['startTime'] == lessonAsMap['startTime']) {
@@ -53,7 +53,8 @@ class _WeeklyTimetableState extends State<WeeklyTimetable> {
                 }
               });
               for (; lessonNumber < timeslots.length; lessonNumber++) {
-                if (lesson.changeCaption.isNotEmpty || lessons[lessonNumber][weekdayIndex].freeTime) {
+                if ((lesson.changeCaption.isNotEmpty && !lessons[lessonNumber][weekdayIndex].additional) ||
+                    lessons[lessonNumber][weekdayIndex].freeTime) {
                   lesson.date = datesOfWeek[weekdayIndex];
                   lesson.formattedDate = infoserverDateFormat(lesson.date);
                   lesson.lessonNumber = lessonNumber;
