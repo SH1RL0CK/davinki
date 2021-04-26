@@ -51,7 +51,7 @@ class _LessonCellState extends State<LessonCell> {
                         ),
                       ),
                       Text(
-                        (this._lesson.newRoom != '') ? this._lesson.newRoom : this._lesson.room,
+                        (this._lesson.newRoom != '') ? this._lesson.newRoom.split('(')[0] : this._lesson.room.split('(')[0],
                         style: TextStyle(
                           fontSize: 13,
                           color: (this._lesson.newRoom != '') ? Colors.red.shade900 : Colors.black,

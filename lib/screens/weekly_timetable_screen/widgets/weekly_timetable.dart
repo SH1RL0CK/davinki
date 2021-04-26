@@ -77,12 +77,6 @@ class _WeeklyTimetableState extends State<WeeklyTimetable> {
 
     List<List<Lesson>> timetable = _getLessonsOfTimetable(lessonTimes, timeslots, datesOfWeek);
 
-    List<TableCell> firstRow = <TableCell>[TableCell(child: Container())];
-
-    datesOfWeek.forEach((DateTime date) {
-      firstRow.add(TableCell(child: DateCell(date)));
-    });
-
     return <TableRow>[
           TableRow(
             children: <TableCell>[
