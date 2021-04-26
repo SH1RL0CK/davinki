@@ -20,21 +20,19 @@ class _WeeklyTimetableState extends State<WeeklyTimetable> {
   final int _week;
   final Map<String, dynamic> _infoserverData;
   final CourseSettings _courseSettings;
-  _WeeklyTimetableState(this._week, this._infoserverData, this._courseSettings) : super();
-  List<List<Lesson>> _getLessons(List lessonTimes, List timeslots, List<DateTime> datesOfWeek) {
-    List<List<Lesson>> lessons = <List<Lesson>>[];
+  _WeeklyTimetableState(this._week, this._infoserverData, this._courseSettings);
 
-    List<String> formatedDatesOfWeek = <String>[];
+  List<List<Lesson>> _getLessonsOfTimetable(List lessonTimes, List timeslots, List<DateTime> datesOfWeek) {
+    List<List<Lesson>> lessons = List<List<Lesson>>.generate(
+      timeslots.length,
+      (int lessonNumber) => datesOfWeek
+          .map(
+            (DateTime date) => Lesson(date, lessonNumber, freeTime: true),
+          )
+          .toList(),
+    );
 
-    datesOfWeek.forEach((DateTime date) => formatedDatesOfWeek.add(infoserverDateFormat(date)));
-
-    for (int i = 0; i < timeslots.length; i++) {
-      List<Lesson> l = <Lesson>[];
-      for (int j = 0; j < 5; j++) {
-        l.add(Lesson(datesOfWeek[j], i, freeTime: true));
-      }
-      lessons.add(l);
-    }
+    List<String> formatedDatesOfWeek = datesOfWeek.map((DateTime date) => infoserverDateFormat(date)).toList();
 
     for (Map<String, dynamic> lessonAsMap in lessonTimes) {
       if (!Lesson.isLesson(lessonAsMap)) {
@@ -77,7 +75,7 @@ class _WeeklyTimetableState extends State<WeeklyTimetable> {
     List lessonTimes = this._infoserverData['result']['displaySchedule']['lessonTimes'];
     List timeslots = this._infoserverData['result']['timeframes'][0]['timeslots'];
 
-    List<List<Lesson>> lessons = _getLessons(lessonTimes, timeslots, datesOfWeek);
+    List<List<Lesson>> timetable = _getLessonsOfTimetable(lessonTimes, timeslots, datesOfWeek);
 
     List<TableCell> firstRow = <TableCell>[TableCell(child: Container())];
 
@@ -85,29 +83,42 @@ class _WeeklyTimetableState extends State<WeeklyTimetable> {
       firstRow.add(TableCell(child: DateCell(date)));
     });
 
-    List<TableRow> rows = <TableRow>[
-      TableRow(children: firstRow, decoration: BoxDecoration(color: Colors.white)),
-    ];
-
-    for (int i = 0; i < lessons.length; i++) {
-      List<TableCell> cells = <TableCell>[
-        TableCell(child: TimeslotCell(timeslots[i])),
-      ];
-      for (int j = 0; j < 5; j++) {
-        cells.add(
-          TableCell(
-            child: LessonCell(lessons[i][j], this._infoserverData),
-          ),
-        );
-      }
-      rows.add(TableRow(
-        children: cells,
-        decoration: BoxDecoration(
-          color: (i % 2 == 0) ? Colors.pink[50] : Colors.white,
-        ),
-      ));
-    }
-    return rows;
+    return <TableRow>[
+          TableRow(
+            children: <TableCell>[
+                  TableCell(
+                    child: Container(),
+                  ),
+                ] +
+                datesOfWeek
+                    .map(
+                      (DateTime date) => TableCell(
+                        child: DateCell(date),
+                      ),
+                    )
+                    .toList(),
+            decoration: BoxDecoration(color: Colors.white),
+          )
+        ] +
+        List<TableRow>.generate(timetable.length, (int index) {
+          return TableRow(
+            children: <TableCell>[
+                  TableCell(
+                    child: TimeslotCell(timeslots[index]),
+                  ),
+                ] +
+                timetable[index]
+                    .map(
+                      (Lesson lesson) => TableCell(
+                        child: LessonCell(lesson, this._infoserverData),
+                      ),
+                    )
+                    .toList(),
+            decoration: BoxDecoration(
+              color: (index % 2 == 0) ? Colors.pink[50] : Colors.white,
+            ),
+          );
+        });
   }
 
   @override

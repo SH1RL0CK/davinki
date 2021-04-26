@@ -57,7 +57,7 @@ class _LessonSliderItemState extends State<LessonSliderItem> {
                       this._lesson.changeInformation,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 16,
+                        fontSize: 15,
                       ),
                     ),
                   )
