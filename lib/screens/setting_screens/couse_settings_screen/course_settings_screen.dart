@@ -75,6 +75,11 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
         }
       });
     });
+    this._courseGroups.forEach((CourseGroup group) {
+      if ((group.template.mustBeSelected || group.template.mustBeSelectedInGrades.contains(this._generalSettings.grade)) && group.courses.length == 1 && group.usersCourse == null) {
+        group.usersCourse = group.courses[0];
+      }
+    });
   }
 
   @override

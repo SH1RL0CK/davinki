@@ -44,9 +44,7 @@ class _CourseSelectorState extends State<CourseSelector> {
               hintText: 'Nicht ausgewählt',
             ),
             validator: (Course? course) {
-              if ((this._courseGroup.template.mustBeSelected ||
-                      this._courseGroup.template.mustBeSelectedInGrade.contains(this._generalSettings.grade)) &&
-                  course == null) {
+              if ((this._courseGroup.template.mustBeSelected || this._courseGroup.template.mustBeSelectedInGrades.contains(this._generalSettings.grade)) && course == null) {
                 return 'Dieser Kurs muss ausgewählt werden!';
               }
               return null;
@@ -68,8 +66,7 @@ class _CourseSelectorState extends State<CourseSelector> {
                     return DropdownMenuItem<Course>(
                       child: Text(
                         '${this._courseGroup.courses[index].title} (Lehrer/in: ${this._courseGroup.courses[index].teacher})',
-                        style: TextStyle(
-                            fontWeight: this._courseGroup.courses[index] == this._courseGroup.usersCourse ? FontWeight.bold : FontWeight.normal),
+                        style: TextStyle(fontWeight: this._courseGroup.courses[index] == this._courseGroup.usersCourse ? FontWeight.bold : FontWeight.normal),
                       ),
                       value: this._courseGroup.courses[index],
                     );
