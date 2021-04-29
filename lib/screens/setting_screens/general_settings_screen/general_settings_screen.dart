@@ -38,6 +38,70 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
     this._usernameInputController.text = this._generalSettings.username ?? '';
   }
 
+  Future<bool> _loginDataIsCorrect(String? username, String? password) async {
+    try {
+      this._infoserverData = await DavinciInfoserverService(username!, password!).getOnlineData();
+    } on UserIsOfflineException {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return InfoDialog(
+            'Du bist offline!',
+            'Du musst online sein, um die Einstellungen zu speichern!',
+          );
+        },
+      ).then((dynamic exit) {
+        setState(() {
+          this._formFieldsEnabled = true;
+        });
+      });
+      return false;
+    } on WrongLoginDataException {
+      setState(() {
+        this._wrongLoginData = true;
+        this._formFieldsEnabled = true;
+      });
+      return false;
+    }
+    return true;
+  }
+
+  void _handleForm() async {
+    if (!this._formFieldsEnabled) return;
+
+    setState(() {
+      this._wrongLoginData = false;
+      this._formFieldsEnabled = false;
+    });
+
+    if (!this._formKey.currentState!.validate()) {
+      setState(() {
+        this._formFieldsEnabled = true;
+      });
+      return;
+    }
+
+    this._generalSettings.name = this._nameInputController.text;
+    this._generalSettings.username = this._usernameInputController.text;
+    String? password = this._passwordInputController.text.isEmpty ? this._generalSettings.password : this._passwordInputController.text;
+
+    if (!await this._loginDataIsCorrect(this._generalSettings.username, password)) return;
+
+    this._generalSettings.password = password;
+    this._generalSettings.storeData();
+    if (this._generalSettings.userType == UserType.student) {
+      navigateToOtherScreen(
+        CourseSettingsScreen(this._infoserverData, this._generalSettings, this._courseSettings),
+        context,
+      );
+    } else {
+      navigateToOtherScreen(
+        LoadingScreen(),
+        context,
+      );
+    }
+  }
+
   @override
   void dispose() {
     this._nameInputController.dispose();
@@ -61,10 +125,12 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
               color: Colors.white,
             ),
             onPressed: () {
-              navigateToOtherScreen(
-                LoadingScreen(),
-                context,
-              );
+              if (this._formFieldsEnabled) {
+                navigateToOtherScreen(
+                  LoadingScreen(),
+                  context,
+                );
+              }
             },
           )
         ],
@@ -234,61 +300,7 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
               label: Text(
                 this._generalSettings.userType == UserType.student ? 'Zu Deinen Kursen' : 'Speichern',
               ),
-              onPressed: this._formFieldsEnabled
-                  ? () async {
-                      setState(() {
-                        this._wrongLoginData = false;
-                        this._formFieldsEnabled = false;
-                      });
-                      if (this._formKey.currentState!.validate()) {
-                        this._generalSettings.name = this._nameInputController.text;
-                        this._generalSettings.username = this._usernameInputController.text;
-                        String? password =
-                            this._passwordInputController.text.isEmpty ? this._generalSettings.password : this._passwordInputController.text;
-                        try {
-                          this._infoserverData = await DavinciInfoserverService(this._generalSettings.username!, password!).getOnlineData();
-                        } on UserIsOfflineException {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return InfoDialog(
-                                'Du bist offline!',
-                                'Du musst online sein, um die Einstellungen zu speichern!',
-                              );
-                            },
-                          ).then((dynamic exit) {
-                            setState(() {
-                              this._formFieldsEnabled = true;
-                            });
-                          });
-                          return;
-                        } on WrongLoginDataException {
-                          setState(() {
-                            this._wrongLoginData = true;
-                            this._formFieldsEnabled = true;
-                          });
-                          return;
-                        }
-                        this._generalSettings.password = password;
-                        this._generalSettings.storeData();
-                        if (this._generalSettings.userType == UserType.student) {
-                          navigateToOtherScreen(
-                            CourseSettingsScreen(this._infoserverData, this._generalSettings, this._courseSettings),
-                            context,
-                          );
-                        } else {
-                          navigateToOtherScreen(
-                            LoadingScreen(),
-                            context,
-                          );
-                        }
-                      } else {
-                        setState(() {
-                          this._formFieldsEnabled = true;
-                        });
-                      }
-                    }
-                  : null,
+              onPressed: this._handleForm,
             ),
             SizedBox(height: 20),
           ],

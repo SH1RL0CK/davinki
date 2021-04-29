@@ -32,6 +32,43 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
     this._createCourseGroupList();
   }
 
+  /* 
+    There could be diffrent courses with same title (for example Tutor) but with diffrent teachers.
+    This the reason why this function searchs in the lessons for the course title and creates a list of the teachers for that
+    course title.
+  */
+  List<String> _searchForCourseTeachersInLessons(String courseTitle) {
+    List<String> teachers = <String>[];
+    this._infoserverData['result']['displaySchedule']['lessonTimes'].forEach((dynamic lessonAsMap) {
+      if (!Lesson.isLesson(lessonAsMap)) return;
+      Lesson lesson = Lesson.fromJson(lessonAsMap);
+      if (lesson.course.title == courseTitle && !lesson.additional) {
+        teachers.add(lesson.course.teacher);
+      }
+    });
+    // This converts the list to a set and back to a list to remove the same teachers.
+    return teachers.toSet().toList();
+  }
+
+  void _searchForSelectedCoursesInSettings() {
+    this._courseGroups.forEach((CourseGroup group) {
+      group.courses.forEach((Course course) {
+        if (this._courseSettings.usersCourses.contains(course)) group.usersCourse = course;
+      });
+    });
+  }
+
+  // Select a course automatically if this course group must be selected and there is only one course.
+  void _autoSelectCoures() {
+    this._courseGroups.forEach((CourseGroup group) {
+      if ((group.template.mustBeSelected || group.template.mustBeSelectedInGrades.contains(this._generalSettings.grade)) &&
+          group.courses.length == 1 &&
+          group.usersCourse == null) {
+        group.usersCourse = group.courses[0];
+      }
+    });
+  }
+
   void _createCourseGroupList() {
     List<CourseGroupTemplate> templates = courseGroupTemplates[this._generalSettings.schoolType]!.where(
       (CourseGroupTemplate template) {
@@ -53,33 +90,31 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
       if (groupTemplate == null) {
         return;
       }
-      List<String> teachers = <String>[];
 
-      this._infoserverData['result']['displaySchedule']['lessonTimes'].forEach((dynamic lessonAsMap) {
-        if (!Lesson.isLesson(lessonAsMap)) return;
-        Lesson lesson = Lesson.fromJson(lessonAsMap);
-        if (lesson.course.title == courseTitle && !lesson.additional) {
-          teachers.add(lesson.course.teacher);
-        }
-      });
       CourseGroup group = this._courseGroups.firstWhere((CourseGroup group) => group.template == groupTemplate);
-      teachers = teachers.toSet().toList();
+
+      List<String> teachers = this._searchForCourseTeachersInLessons(courseTitle);
+
       teachers.forEach((String teacher) {
         group.courses.add(Course(courseTitle, teacher));
       });
     });
-    this._courseGroups.forEach((CourseGroup group) {
-      group.courses.forEach((Course course) {
-        if (this._courseSettings.usersCourses.contains(course)) {
-          group.usersCourse = course;
-        }
+    this._searchForSelectedCoursesInSettings();
+    this._autoSelectCoures();
+  }
+
+  void _handleForm() {
+    if (this._formKey.currentState!.validate()) {
+      this._courseSettings.usersCourses.clear();
+      this._courseGroups.forEach((CourseGroup group) {
+        if (group.usersCourse != null) this._courseSettings.usersCourses.add(group.usersCourse!);
       });
-    });
-    this._courseGroups.forEach((CourseGroup group) {
-      if ((group.template.mustBeSelected || group.template.mustBeSelectedInGrades.contains(this._generalSettings.grade)) && group.courses.length == 1 && group.usersCourse == null) {
-        group.usersCourse = group.courses[0];
-      }
-    });
+      this._courseSettings.storeData();
+      navigateToOtherScreen(
+        LoadingScreen(),
+        context,
+      );
+    }
   }
 
   @override
@@ -133,19 +168,7 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
               label: Text(
                 'Speichern',
               ),
-              onPressed: () {
-                if (this._formKey.currentState!.validate()) {
-                  this._courseSettings.usersCourses.clear();
-                  this._courseGroups.forEach((CourseGroup group) {
-                    if (group.usersCourse != null) this._courseSettings.usersCourses.add(group.usersCourse!);
-                  });
-                  this._courseSettings.storeData();
-                  navigateToOtherScreen(
-                    LoadingScreen(),
-                    context,
-                  );
-                }
-              },
+              onPressed: this._handleForm,
             ),
             SizedBox(height: 20),
           ],
