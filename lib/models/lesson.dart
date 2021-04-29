@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:davinki/utils.dart';
 import 'package:davinki/models/course.dart';
-import 'package:davinki/models/course_group_templates.dart';
+import 'package:davinki/models/subject_templates.dart';
 
 class Lesson {
   final Course course;
@@ -93,7 +93,7 @@ class Lesson {
       newRoom: newRoom,
       cancelled: cancelled,
       additional: additional,
-      color: getGroupTemplateByCourseTitle(lesson['courseTitle'])?.color ?? Colors.white,
+      color: getSubjectTemplateByCourseTitle(lesson['courseTitle'])?.color ?? Colors.white,
     );
   }
 }

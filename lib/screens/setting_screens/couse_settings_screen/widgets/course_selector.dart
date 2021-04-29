@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:davinki/models/course_group.dart';
+import 'package:davinki/models/subject.dart';
 import 'package:davinki/models/general_settings.dart';
 import 'package:davinki/models/course.dart';
 
 class CourseSelector extends StatefulWidget {
-  final CourseGroup _courseGroup;
+  final Subject subject;
   final GeneralSettings _generalSettings;
-  CourseSelector(this._courseGroup, this._generalSettings, {Key? key}) : super(key: key);
+  CourseSelector(this.subject, this._generalSettings, {Key? key}) : super(key: key);
 
   @override
-  _CourseSelectorState createState() => _CourseSelectorState(this._courseGroup, this._generalSettings);
+  _CourseSelectorState createState() => _CourseSelectorState(this.subject, this._generalSettings);
 }
 
 class _CourseSelectorState extends State<CourseSelector> {
-  final CourseGroup _courseGroup;
+  final Subject _subject;
   final GeneralSettings _generalSettings;
 
-  _CourseSelectorState(this._courseGroup, this._generalSettings);
+  _CourseSelectorState(this._subject, this._generalSettings);
 
   @override
   Widget build(BuildContext context) {
@@ -26,26 +26,25 @@ class _CourseSelectorState extends State<CourseSelector> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            this._courseGroup.template.describtion,
+            this._subject.template.title,
             style: TextStyle(fontSize: 18),
           ),
           SizedBox(
             height: 5,
           ),
           DropdownButtonFormField<Course>(
-            value: this._courseGroup.usersCourse,
+            value: this._subject.usersCourse,
             decoration: InputDecoration(
               errorBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.red, width: 4.0),
               ),
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: this._courseGroup.template.color, width: 3.0),
+                borderSide: BorderSide(color: this._subject.template.color, width: 3.0),
               ),
               hintText: 'Nicht ausgewählt',
             ),
             validator: (Course? course) {
-              if ((this._courseGroup.template.mustBeSelected ||
-                      this._courseGroup.template.mustBeSelectedInGrades.contains(this._generalSettings.grade)) &&
+              if ((this._subject.template.mustBeSelected || this._subject.template.mustBeSelectedInGrades.contains(this._generalSettings.grade)) &&
                   course == null) {
                 return 'Dieser Kurs muss ausgewählt werden!';
               }
@@ -53,7 +52,7 @@ class _CourseSelectorState extends State<CourseSelector> {
             },
             onChanged: (Course? newCourse) {
               setState(() {
-                this._courseGroup.usersCourse = newCourse;
+                this._subject.usersCourse = newCourse;
               });
             },
             items: <DropdownMenuItem<Course>>[
@@ -63,13 +62,13 @@ class _CourseSelectorState extends State<CourseSelector> {
                   )
                 ] +
                 this
-                    ._courseGroup
+                    ._subject
                     .courses
                     .map(
                       (Course course) => DropdownMenuItem<Course>(
                         child: Text(
                           '${course.title} (Lehrer/in: ${course.teacher})',
-                          style: TextStyle(fontWeight: course == this._courseGroup.usersCourse ? FontWeight.bold : FontWeight.normal),
+                          style: TextStyle(fontWeight: course == this._subject.usersCourse ? FontWeight.bold : FontWeight.normal),
                         ),
                         value: course,
                       ),

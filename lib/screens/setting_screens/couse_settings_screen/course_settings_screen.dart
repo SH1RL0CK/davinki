@@ -3,8 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:davinki/utils.dart';
 import 'package:davinki/models/general_settings.dart';
 import 'package:davinki/models/course_settings.dart';
-import 'package:davinki/models/course_group_templates.dart';
-import 'package:davinki/models/course_group.dart';
+import 'package:davinki/models/subject_templates.dart';
+import 'package:davinki/models/subject.dart';
 import 'package:davinki/models/course.dart';
 import 'package:davinki/models/lesson.dart';
 import 'package:davinki/screens/loading_screen/loading_screen.dart';
@@ -26,10 +26,10 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
   final CourseSettings _courseSettings;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  List<CourseGroup> _courseGroups = <CourseGroup>[];
+  List<Subject> _subjects = <Subject>[];
 
   _CourseSettingsScreenState(this._infoserverData, this._generalSettings, this._courseSettings) {
-    this._createCourseGroupList();
+    this._createSubjectList();
   }
 
   /* 
@@ -50,55 +50,60 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
     return teachers.toSet().toList();
   }
 
+  void _removeSubjectsWithNoCourses() {
+    this._subjects = this._subjects.where((Subject subject) => subject.courses.length > 0).toList();
+  }
+
   void _searchForSelectedCoursesInSettings() {
-    this._courseGroups.forEach((CourseGroup group) {
-      group.courses.forEach((Course course) {
-        if (this._courseSettings.usersCourses.contains(course)) group.usersCourse = course;
+    this._subjects.forEach((Subject subject) {
+      subject.courses.forEach((Course course) {
+        if (this._courseSettings.usersCourses.contains(course)) subject.usersCourse = course;
       });
     });
   }
 
-  // Select a course automatically if this course group must be selected and there is only one course.
+  // Select a course automatically if this subject must be selected and there is only one course.
   void _autoSelectCoures() {
-    this._courseGroups.forEach((CourseGroup group) {
-      if ((group.template.mustBeSelected || group.template.mustBeSelectedInGrades.contains(this._generalSettings.grade)) &&
-          group.courses.length == 1 &&
-          group.usersCourse == null) {
-        group.usersCourse = group.courses[0];
+    this._subjects.forEach((Subject subject) {
+      if ((subject.template.mustBeSelected || subject.template.mustBeSelectedInGrades.contains(this._generalSettings.grade)) &&
+          subject.courses.length == 1 &&
+          subject.usersCourse == null) {
+        subject.usersCourse = subject.courses[0];
       }
     });
   }
 
-  void _createCourseGroupList() {
-    List<CourseGroupTemplate> templates = courseGroupTemplates[this._generalSettings.schoolType]!.where(
-      (CourseGroupTemplate template) {
+  void _createSubjectList() {
+    List<SubjectTemplate> templates = subjectTemplates[this._generalSettings.schoolType]!.where(
+      (SubjectTemplate template) {
         return template.onlyInGrades == null || template.onlyInGrades!.contains(this._generalSettings.grade);
       },
     ).toList();
 
-    this._courseGroups = List<CourseGroup>.generate(templates.length, (int index) {
-      return CourseGroup(templates[index]);
+    this._subjects = List<Subject>.generate(templates.length, (int index) {
+      return Subject(templates[index]);
     });
 
     this._infoserverData['result']['subjects'].forEach((dynamic course) {
       String courseTitle = course['code'];
-      CourseGroupTemplate? groupTemplate = getGroupTemplateByCourseTitle(
+      SubjectTemplate? subjectTemplate = getSubjectTemplateByCourseTitle(
         courseTitle,
         schoolType: this._generalSettings.schoolType,
         grade: this._generalSettings.grade,
       );
-      if (groupTemplate == null) {
+      if (subjectTemplate == null) {
         return;
       }
 
-      CourseGroup group = this._courseGroups.firstWhere((CourseGroup group) => group.template == groupTemplate);
+      Subject subject = this._subjects.firstWhere((Subject s) => s.template == subjectTemplate);
 
       List<String> teachers = this._searchForCourseTeachersInLessons(courseTitle);
 
       teachers.forEach((String teacher) {
-        group.courses.add(Course(courseTitle, teacher));
+        subject.courses.add(Course(courseTitle, teacher));
       });
     });
+    this._removeSubjectsWithNoCourses();
     this._searchForSelectedCoursesInSettings();
     this._autoSelectCoures();
   }
@@ -106,8 +111,8 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
   void _handleForm() {
     if (this._formKey.currentState!.validate()) {
       this._courseSettings.usersCourses.clear();
-      this._courseGroups.forEach((CourseGroup group) {
-        if (group.usersCourse != null) this._courseSettings.usersCourses.add(group.usersCourse!);
+      this._subjects.forEach((Subject subject) {
+        if (subject.usersCourse != null) this._courseSettings.usersCourses.add(subject.usersCourse!);
       });
       this._courseSettings.storeData();
       navigateToOtherScreen(
@@ -157,9 +162,9 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
             ListView.builder(
               primary: false,
               shrinkWrap: true,
-              itemCount: this._courseGroups.length,
+              itemCount: this._subjects.length,
               itemBuilder: (BuildContext context, int index) {
-                return CourseSelector(this._courseGroups[index], this._generalSettings);
+                return CourseSelector(this._subjects[index], this._generalSettings);
               },
             ),
             SizedBox(height: 14),
