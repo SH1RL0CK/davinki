@@ -44,7 +44,9 @@ class _CourseSelectorState extends State<CourseSelector> {
               hintText: 'Nicht ausgewählt',
             ),
             validator: (Course? course) {
-              if ((this._courseGroup.template.mustBeSelected || this._courseGroup.template.mustBeSelectedInGrades.contains(this._generalSettings.grade)) && course == null) {
+              if ((this._courseGroup.template.mustBeSelected ||
+                      this._courseGroup.template.mustBeSelectedInGrades.contains(this._generalSettings.grade)) &&
+                  course == null) {
                 return 'Dieser Kurs muss ausgewählt werden!';
               }
               return null;
@@ -60,19 +62,20 @@ class _CourseSelectorState extends State<CourseSelector> {
                     value: null,
                   )
                 ] +
-                List<DropdownMenuItem<Course>>.generate(
-                  this._courseGroup.courses.length,
-                  (int index) {
-                    return DropdownMenuItem<Course>(
-                      child: Text(
-                        '${this._courseGroup.courses[index].title} (Lehrer/in: ${this._courseGroup.courses[index].teacher})',
-                        style: TextStyle(fontWeight: this._courseGroup.courses[index] == this._courseGroup.usersCourse ? FontWeight.bold : FontWeight.normal),
+                this
+                    ._courseGroup
+                    .courses
+                    .map(
+                      (Course course) => DropdownMenuItem<Course>(
+                        child: Text(
+                          '${course.title} (Lehrer/in: ${course.teacher})',
+                          style: TextStyle(fontWeight: course == this._courseGroup.usersCourse ? FontWeight.bold : FontWeight.normal),
+                        ),
+                        value: course,
                       ),
-                      value: this._courseGroup.courses[index],
-                    );
-                  },
-                ),
-          ),
+                    )
+                    .toList(),
+          )
         ],
       ),
     );
