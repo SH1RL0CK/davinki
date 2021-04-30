@@ -102,6 +102,10 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
     }
   }
 
+  void _unfocusTextFields() {
+    FocusScope.of(context).unfocus();
+  }
+
   @override
   void dispose() {
     this._nameInputController.dispose();
@@ -135,175 +139,181 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
           )
         ],
       ),
-      body: Form(
-        key: this._formKey,
-        child: ListView(
-          padding: EdgeInsets.all(12.0),
-          children: <Widget>[
-            Text(
-              'Allgemeine Einstellungen',
-              style: TextStyle(fontSize: 25),
-            ),
-            SizedBox(height: 12),
-            TextFormField(
-              enabled: this._formFieldsEnabled,
-              keyboardType: TextInputType.text,
-              autocorrect: false,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.face),
-                labelText: 'Dein Name',
+      body: GestureDetector(
+        onTap: this._unfocusTextFields,
+        child: Form(
+          key: this._formKey,
+          child: ListView(
+            padding: EdgeInsets.all(12.0),
+            children: <Widget>[
+              Text(
+                'Allgemeine Einstellungen',
+                style: TextStyle(fontSize: 25),
               ),
-              controller: this._nameInputController,
-              validator: (String? name) {
-                if (name == null || name.isEmpty) {
-                  return 'Bitte gib Deinen Namen an!';
-                }
-                return null;
-              },
-            ),
-            SizedBox(height: 12),
-            DropdownButtonFormField<UserType>(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.school),
-                labelText: 'Du bist',
+              SizedBox(height: 12),
+              TextFormField(
+                enabled: this._formFieldsEnabled,
+                keyboardType: TextInputType.text,
+                autocorrect: false,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.face),
+                  labelText: 'Dein Name',
+                ),
+                controller: this._nameInputController,
+                validator: (String? name) {
+                  if (name == null || name.isEmpty) {
+                    return 'Bitte gib Deinen Namen an!';
+                  }
+                  return null;
+                },
               ),
-              value: this._generalSettings.userType,
-              onChanged: this._formFieldsEnabled
-                  ? (UserType? newUserType) {
-                      setState(() {
-                        this._generalSettings.userType = newUserType;
-                      });
-                    }
-                  : null,
-              validator: (UserType? userType) {
-                if (userType == null) {
-                  return 'Bitte gib an, was Du bist!';
-                }
-                return null;
-              },
-              items: <DropdownMenuItem<UserType>>[
-                DropdownMenuItem<UserType>(
-                  child: Text('Schüler'),
-                  value: UserType.student,
-                )
-              ],
-            ),
-            this._generalSettings.userType == UserType.student
-                ? Padding(
-                    padding: const EdgeInsets.only(top: 12),
-                    child: DropdownButtonFormField<SchoolType>(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.account_balance),
-                        labelText: 'Deine Schulform',
-                      ),
-                      value: this._generalSettings.schoolType,
-                      onChanged: this._formFieldsEnabled
-                          ? (SchoolType? newSchoolType) {
-                              setState(() {
-                                this._generalSettings.schoolType = newSchoolType;
-                              });
-                            }
-                          : null,
-                      validator: (SchoolType? schoolType) {
-                        if (schoolType == null) {
-                          return 'Bitte wähle Deine Schulform aus!';
-                        }
-                        return null;
-                      },
-                      items: <DropdownMenuItem<SchoolType>>[
-                        DropdownMenuItem<SchoolType>(
-                          child: Text('Berufliches Gymnasium'),
-                          value: SchoolType.vocationalGymnasium,
+              SizedBox(height: 12),
+              DropdownButtonFormField<UserType>(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.school),
+                  labelText: 'Du bist',
+                ),
+                value: this._generalSettings.userType,
+                onTap: this._unfocusTextFields,
+                onChanged: this._formFieldsEnabled
+                    ? (UserType? newUserType) {
+                        setState(() {
+                          this._generalSettings.userType = newUserType;
+                        });
+                      }
+                    : null,
+                validator: (UserType? userType) {
+                  if (userType == null) {
+                    return 'Bitte gib an, was Du bist!';
+                  }
+                  return null;
+                },
+                items: <DropdownMenuItem<UserType>>[
+                  DropdownMenuItem<UserType>(
+                    child: Text('Schüler'),
+                    value: UserType.student,
+                  )
+                ],
+              ),
+              this._generalSettings.userType == UserType.student
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: DropdownButtonFormField<SchoolType>(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.account_balance),
+                          labelText: 'Deine Schulform',
                         ),
-                      ],
-                    ),
-                  )
-                : Container(),
-            this._generalSettings.schoolType == SchoolType.vocationalGymnasium
-                ? Padding(
-                    padding: const EdgeInsets.only(top: 12),
-                    child: DropdownButtonFormField<int>(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.class_),
-                        labelText: 'Deine Klasse',
+                        value: this._generalSettings.schoolType,
+                        onTap: this._unfocusTextFields,
+                        onChanged: this._formFieldsEnabled
+                            ? (SchoolType? newSchoolType) {
+                                setState(() {
+                                  this._generalSettings.schoolType = newSchoolType;
+                                });
+                              }
+                            : null,
+                        validator: (SchoolType? schoolType) {
+                          if (schoolType == null) {
+                            return 'Bitte wähle Deine Schulform aus!';
+                          }
+                          return null;
+                        },
+                        items: <DropdownMenuItem<SchoolType>>[
+                          DropdownMenuItem<SchoolType>(
+                            child: Text('Berufliches Gymnasium'),
+                            value: SchoolType.vocationalGymnasium,
+                          ),
+                        ],
                       ),
-                      value: this._generalSettings.grade,
-                      onChanged: this._formFieldsEnabled
-                          ? (int? newGrade) {
-                              setState(() {
-                                this._generalSettings.grade = newGrade;
-                              });
-                            }
-                          : null,
-                      validator: (int? grade) {
-                        if (grade == null) {
-                          return 'Bitte wähle Deine Klasse aus!';
-                        }
-                        return null;
-                      },
-                      items: <int>[11, 12, 13]
-                          .map((int grade) => DropdownMenuItem<int>(
-                                child: Text(grade.toString()),
-                                value: grade,
-                              ))
-                          .toList(),
-                    ),
-                  )
-                : Container(),
-            SizedBox(height: 20),
-            Text(
-              'Anmeldung',
-              style: TextStyle(fontSize: 25),
-            ),
-            SizedBox(height: 12),
-            TextFormField(
-              enabled: this._formFieldsEnabled,
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.person),
-                border: OutlineInputBorder(),
-                labelText: 'Benutzername',
-                errorText: this._wrongLoginData ? 'Die Anmeldedaten sind falsch!' : null,
+                    )
+                  : Container(),
+              this._generalSettings.schoolType == SchoolType.vocationalGymnasium
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: DropdownButtonFormField<int>(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.class_),
+                          labelText: 'Deine Klasse',
+                        ),
+                        value: this._generalSettings.grade,
+                        onTap: this._unfocusTextFields,
+                        onChanged: this._formFieldsEnabled
+                            ? (int? newGrade) {
+                                setState(() {
+                                  this._generalSettings.grade = newGrade;
+                                });
+                              }
+                            : null,
+                        validator: (int? grade) {
+                          if (grade == null) {
+                            return 'Bitte wähle Deine Klasse aus!';
+                          }
+                          return null;
+                        },
+                        items: <int>[11, 12, 13]
+                            .map((int grade) => DropdownMenuItem<int>(
+                                  child: Text(grade.toString()),
+                                  value: grade,
+                                ))
+                            .toList(),
+                      ),
+                    )
+                  : Container(),
+              SizedBox(height: 20),
+              Text(
+                'Anmeldung',
+                style: TextStyle(fontSize: 25),
               ),
-              controller: this._usernameInputController,
-              validator: (String? username) {
-                if (username == null || username.isEmpty) {
-                  return 'Bitte gib Deinen Benutzernamen an!';
-                }
-                return null;
-              },
-            ),
-            SizedBox(height: 12),
-            TextFormField(
-              enabled: this._formFieldsEnabled,
-              obscureText: true,
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.lock),
-                border: OutlineInputBorder(),
-                labelText: this._generalSettings.password == null ? 'Passwort' : 'Neues Passwort',
-                errorText: this._wrongLoginData ? 'Die Anmeldedaten sind falsch!' : null,
+              SizedBox(height: 12),
+              TextFormField(
+                enabled: this._formFieldsEnabled,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.person),
+                  border: OutlineInputBorder(),
+                  labelText: 'Benutzername',
+                  errorText: this._wrongLoginData ? 'Die Anmeldedaten sind falsch!' : null,
+                ),
+                controller: this._usernameInputController,
+                validator: (String? username) {
+                  if (username == null || username.isEmpty) {
+                    return 'Bitte gib Deinen Benutzernamen an!';
+                  }
+                  return null;
+                },
               ),
-              controller: this._passwordInputController,
-              validator: (String? password) {
-                if (this._generalSettings.password == null && (password == null || password.isEmpty)) {
-                  return 'Bitte gib Dein Passwort an!';
-                }
-                return null;
-              },
-            ),
-            SizedBox(height: 20),
-            FloatingActionButton.extended(
-              icon: Icon(Icons.save),
-              label: Text(
-                this._generalSettings.userType == UserType.student ? 'Zu Deinen Kursen' : 'Speichern',
+              SizedBox(height: 12),
+              TextFormField(
+                enabled: this._formFieldsEnabled,
+                obscureText: true,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.lock),
+                  border: OutlineInputBorder(),
+                  labelText: this._generalSettings.password == null ? 'Passwort' : 'Neues Passwort',
+                  errorText: this._wrongLoginData ? 'Die Anmeldedaten sind falsch!' : null,
+                ),
+                controller: this._passwordInputController,
+                validator: (String? password) {
+                  if (this._generalSettings.password == null && (password == null || password.isEmpty)) {
+                    return 'Bitte gib Dein Passwort an!';
+                  }
+                  return null;
+                },
               ),
-              onPressed: this._handleForm,
-            ),
-            SizedBox(height: 20),
-          ],
+              SizedBox(height: 20),
+              FloatingActionButton.extended(
+                icon: Icon(Icons.save),
+                label: Text(
+                  this._generalSettings.userType == UserType.student ? 'Zu Deinen Kursen' : 'Speichern',
+                ),
+                onPressed: this._handleForm,
+              ),
+              SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );
