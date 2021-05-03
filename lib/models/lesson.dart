@@ -93,7 +93,7 @@ class Lesson {
       newRoom: newRoom,
       cancelled: cancelled,
       additional: additional,
-      color: getSubjectTemplateByCourseTitle(lesson['courseTitle'])?.color ?? Colors.white,
+      color: getSubjectTemplateByCourseTitle(lesson['courseTitle'])?.color ?? Colors.pink,
     );
   }
 }
