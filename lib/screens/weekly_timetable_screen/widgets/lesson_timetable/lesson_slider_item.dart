@@ -1,18 +1,10 @@
 import 'package:davinki/models/lesson.dart';
 import 'package:flutter/material.dart';
 
-class LessonSliderItem extends StatefulWidget {
-  final Lesson _lesson;
-  const LessonSliderItem(this._lesson, {Key? key}) : super(key: key);
-
-  @override
-  _LessonSliderItemState createState() => _LessonSliderItemState(this._lesson);
-}
-
-class _LessonSliderItemState extends State<LessonSliderItem> {
+class LessonSliderItem extends StatelessWidget {
   final Lesson _lesson;
 
-  _LessonSliderItemState(this._lesson) : super();
+  LessonSliderItem(this._lesson, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

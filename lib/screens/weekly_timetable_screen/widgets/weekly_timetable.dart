@@ -6,21 +6,11 @@ import 'package:davinki/screens/weekly_timetable_screen/widgets/date_cell.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/lesson_cell.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/timseslot_cell.dart';
 
-class WeeklyTimetable extends StatefulWidget {
+class WeeklyTimetable extends StatelessWidget {
   final int _week;
   final Map<String, dynamic> _infoserverData;
   final CourseSettings _courseSettings;
   WeeklyTimetable(this._week, this._infoserverData, this._courseSettings, {Key? key}) : super(key: key);
-
-  @override
-  _WeeklyTimetableState createState() => _WeeklyTimetableState(this._week, this._infoserverData, this._courseSettings);
-}
-
-class _WeeklyTimetableState extends State<WeeklyTimetable> {
-  final int _week;
-  final Map<String, dynamic> _infoserverData;
-  final CourseSettings _courseSettings;
-  _WeeklyTimetableState(this._week, this._infoserverData, this._courseSettings);
 
   List<List<Lesson>> _getLessonsOfTimetable(List lessonTimes, List timeslots, List<DateTime> datesOfWeek) {
     List<List<Lesson>> lessons = List<List<Lesson>>.generate(

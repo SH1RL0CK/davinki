@@ -3,19 +3,10 @@ import 'package:davinki/screens/weekly_timetable_screen/widgets/lesson_timetable
 import 'package:flutter/material.dart';
 import 'package:davinki/models/lesson.dart';
 
-class LessonCell extends StatefulWidget {
+class LessonCell extends StatelessWidget {
   final Lesson _lesson;
   final Map<String, dynamic> _infoserverData;
   LessonCell(this._lesson, this._infoserverData, {Key? key}) : super(key: key);
-
-  @override
-  _LessonCellState createState() => _LessonCellState(this._lesson, this._infoserverData);
-}
-
-class _LessonCellState extends State<LessonCell> {
-  final Lesson _lesson;
-  final Map<String, dynamic> _infoserverData;
-  _LessonCellState(this._lesson, this._infoserverData) : super();
   @override
   Widget build(BuildContext context) {
     String courseTitle = (this._lesson.additional) ? '+ ' + this._lesson.course.title : this._lesson.course.title;
