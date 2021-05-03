@@ -43,7 +43,7 @@ SubjectTemplate? getSubjectTemplateByCourseTitle(String courseTitle, {SchoolType
   SubjectTemplate? searchInSchoolType() {
     for (SubjectTemplate subjectTemplate in subjectTemplates[schoolType]!) {
       for (String courseTitlePrefix in subjectTemplate.courseTitlePrefixes) {
-        RegExp regex = RegExp(courseTitlePrefix + r'([0-9]+)?$');
+        RegExp regex = RegExp(r'^' + courseTitlePrefix + r'([0-9]+)?$');
         if (regex.hasMatch(courseTitle) &&
             (grade == null || (subjectTemplate.onlyInGrades == null || subjectTemplate.onlyInGrades!.contains(grade)))) {
           return subjectTemplate;
