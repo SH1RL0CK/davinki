@@ -62,7 +62,23 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
         this._formFieldsEnabled = true;
       });
       return false;
+    } on UnknownErrorException {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return InfoDialog(
+            'Unbekannter Fehler!',
+            'Ein unbekannter Fehler ist während der Verbindung mit dem DAVINCI-Infoserver aufgetreten!',
+          );
+        },
+      ).then((dynamic exit) {
+        setState(() {
+          this._formFieldsEnabled = true;
+        });
+      });
+      return false;
     }
+
     return true;
   }
 

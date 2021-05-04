@@ -78,7 +78,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       } else if (exception is UnknownErrorException) {
         this._showInfoDialog(
           'Unbekannter Fehler!',
-          'Ein unbekannter Fehler ist aufgetreten während der Verbindung mit dem DAVINCI-Infoserver!',
+          'Ein unbekannter Fehler ist während der Verbindung mit dem DAVINCI-Infoserver aufgetreten!',
           () => this._loadOfflineInfoserverData(infoserverService),
         );
       }
