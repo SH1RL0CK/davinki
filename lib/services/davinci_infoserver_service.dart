@@ -11,7 +11,7 @@ class DavinciInfoserverService {
   DavinciInfoserverService(username, password)
       : _infoserverUrl = Uri.https(
           'stundenplan.bwshofheim.de',
-          '/daVinciIS.dl',
+          '/daVinciIS.dll',
           <String, String>{
             'username': username,
             'password': password,
