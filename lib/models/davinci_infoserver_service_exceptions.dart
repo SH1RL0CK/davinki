@@ -14,6 +14,14 @@ class UserIsOfflineException implements Exception {
   }
 }
 
+class UnknownErrorException implements Exception {
+  final String _message = 'An unknown error occurred while fetching data from the Infoserver';
+  @override
+  String toString() {
+    return this._message;
+  }
+}
+
 class NoOfflineDataExeption implements Exception {
   final String _message = 'No offline data was found!';
   @override

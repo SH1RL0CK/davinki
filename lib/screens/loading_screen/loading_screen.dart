@@ -36,44 +36,51 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
+  void _showInfoDialog(String dialogTitle, String dialogBody, Function onClose) {
+    setState(() {
+      this._isLoading = false;
+    });
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return InfoDialog(dialogTitle, dialogBody);
+      },
+    ).then((dynamic exit) => onClose());
+  }
+
+  void _loadOfflineInfoserverData(DavinciInfoserverService infoserverService) {
+    infoserverService.getOfflineData().then((Map<String, dynamic> infoserverData) {
+      this._navigateToWeeklyTimetable(infoserverData, offline: true);
+    }, onError: (dynamic exception) {
+      if (exception is NoOfflineDataExeption) {
+        this._showInfoDialog(
+          'Kein Offline Stundenplan gefunden!',
+          'Bitte gehe online, um Deinen Stundenplan zu sehen!',
+          () => navigateToOtherScreen(UserIsOfflineScreen(), context),
+        );
+      }
+    });
+  }
+
   void _loadInofoserverData() {
     DavinciInfoserverService infoserverService = DavinciInfoserverService(this._generalSettings.username!, this._generalSettings.password!);
     infoserverService.getOnlineData().then((Map<String, dynamic> infoserverData) {
       this._navigateToWeeklyTimetable(infoserverData);
     }, onError: (dynamic exception) {
       if (exception is WrongLoginDataException) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return InfoDialog(
-              'Falsche Anmeldededaten!',
-              'Die Anmeldedaten für den DAVINCI-Infoserver sind falsch. Bitte korrigiere sie in den Einstellungen!',
-            );
-          },
-        ).then((dynamic exit) {
-          this._navigateToSettings();
-        });
+        this._showInfoDialog(
+          'Falsche Anmeldededaten!',
+          'Die Anmeldedaten für den DAVINCI-Infoserver sind falsch. Bitte korrigiere sie in den Einstellungen!',
+          this._navigateToSettings,
+        );
       } else if (exception is UserIsOfflineException) {
-        infoserverService.getOfflineData().then((Map<String, dynamic> infoserverData) {
-          this._navigateToWeeklyTimetable(infoserverData, offline: true);
-        }, onError: (dynamic exception) {
-          if (exception is NoOfflineDataExeption) {
-            setState(() {
-              this._isLoading = false;
-            });
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return InfoDialog(
-                  'Kein Offline Stundenplan gefunden!',
-                  'Bitte gehe online, um Deinen Stundenplan zu sehen!',
-                );
-              },
-            ).then((dynamic exit) {
-              return navigateToOtherScreen(UserIsOfflineScreen(), context);
-            });
-          }
-        });
+        this._loadOfflineInfoserverData(infoserverService);
+      } else if (exception is UnknownErrorException) {
+        this._showInfoDialog(
+          'Unbekannter Fehler!',
+          'Ein unbekannter Fehler ist aufgetreten während der Verbindung mit dem DAVINCI-Infoserver!',
+          () => this._loadOfflineInfoserverData(infoserverService),
+        );
       }
     });
   }
@@ -82,20 +89,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
     this._generalSettings.loadData().then((bool generalSettingsAreAvailable) {
       this._courseSettings.loadData().then((bool courseSettingsAreAvailable) {
         if (!generalSettingsAreAvailable || !courseSettingsAreAvailable) {
-          setState(() {
-            this._isLoading = false;
-          });
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return InfoDialog(
-                'Willkommen!',
-                'Bitte mache zunächst ein paar wichtige Einstellungen, damit Du die App richtig nutzen kannst.',
-              );
-            },
-          ).then((dynamic exit) {
-            this._navigateToSettings();
-          });
+          this._showInfoDialog(
+            'Willkommen!',
+            'Bitte mache zunächst ein paar wichtige Einstellungen, damit Du die App richtig nutzen kannst.',
+            () => this._navigateToSettings,
+          );
         } else {
           this._loadInofoserverData();
         }

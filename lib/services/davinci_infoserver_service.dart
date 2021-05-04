@@ -6,12 +6,12 @@ import 'package:path_provider/path_provider.dart';
 
 class DavinciInfoserverService {
   Uri _infoserverUrl;
-  final String _infoServerFileName = 'infoserver_data.json';
+  final String _infoserverDataFileName = 'infoserver_data.json';
 
   DavinciInfoserverService(username, password)
       : _infoserverUrl = Uri.https(
           'stundenplan.bwshofheim.de',
-          '/daVinciIS.dll',
+          '/daVinciIS.dl',
           <String, String>{
             'username': username,
             'password': password,
@@ -22,7 +22,7 @@ class DavinciInfoserverService {
   Future<File> get _infoserverDateFile async {
     final Directory directory = await getApplicationDocumentsDirectory();
     final String path = directory.path;
-    return File('$path/${this._infoServerFileName}');
+    return File('$path/${this._infoserverDataFileName}');
   }
 
   void writeDate(String data) async {
@@ -53,6 +53,6 @@ class DavinciInfoserverService {
     } else if (response.statusCode == 910) {
       throw WrongLoginDataException();
     }
-    return <String, dynamic>{};
+    throw UnknownErrorException();
   }
 }
