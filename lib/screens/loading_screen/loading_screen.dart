@@ -92,7 +92,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           this._showInfoDialog(
             'Willkommen!',
             'Bitte mache zunächst ein paar wichtige Einstellungen, damit Du die App richtig nutzen kannst.',
-            () => this._navigateToSettings,
+            this._navigateToSettings,
           );
         } else {
           this._loadInofoserverData();
