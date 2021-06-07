@@ -12,10 +12,15 @@ class WeeklyTimetableScreen extends StatefulWidget {
   final GeneralSettings _generalSettings;
   final CourseSettings _courseSettings;
   final bool offline;
-  WeeklyTimetableScreen(this._infoserverData, this._generalSettings, this._courseSettings, {this.offline = false});
+  WeeklyTimetableScreen(
+      this._infoserverData, this._generalSettings, this._courseSettings,
+      {this.offline = false});
   @override
-  _WeeklyTimetableScreenState createState() =>
-      _WeeklyTimetableScreenState(this._infoserverData, this.offline, this._generalSettings, this._courseSettings);
+  _WeeklyTimetableScreenState createState() => _WeeklyTimetableScreenState(
+      this._infoserverData,
+      this.offline,
+      this._generalSettings,
+      this._courseSettings);
 }
 
 class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
@@ -25,7 +30,8 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
   final CourseSettings _courseSettings;
   int _week = 0;
   bool _offlineSnackbarIsDisplayed = false;
-  _WeeklyTimetableScreenState(this._infoserverData, this._offline, this._generalSettings, this._courseSettings);
+  _WeeklyTimetableScreenState(this._infoserverData, this._offline,
+      this._generalSettings, this._courseSettings);
 
   @override
   void initState() {
@@ -109,7 +115,8 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
             ),
             onPressed: () {
               navigateToOtherScreen(
-                GeneralSettingsScreen(this._generalSettings, this._courseSettings),
+                GeneralSettingsScreen(
+                    this._generalSettings, this._courseSettings),
                 context,
               );
             },
@@ -140,26 +147,35 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
           ],
         ),
       ),
-      body: GestureDetector(
-        child: SingleChildScrollView(
-          child: Container(
-            color: Colors.white,
-            padding: EdgeInsets.only(bottom: this._offlineSnackbarIsDisplayed ? 120 : 55),
-            child: WeeklyTimetable(
-              this._week,
-              this._infoserverData,
-              this._courseSettings,
-              key: UniqueKey(),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          navigateToOtherScreen(
+            LoadingScreen(),
+            context,
+          );
+        },
+        child: GestureDetector(
+          child: SingleChildScrollView(
+            child: Container(
+              color: Colors.white,
+              padding: EdgeInsets.only(
+                  bottom: this._offlineSnackbarIsDisplayed ? 120 : 55),
+              child: WeeklyTimetable(
+                this._week,
+                this._infoserverData,
+                this._courseSettings,
+                key: UniqueKey(),
+              ),
             ),
           ),
+          onHorizontalDragEnd: (DragEndDetails details) {
+            if (details.primaryVelocity == 0) return;
+            if (details.primaryVelocity!.compareTo(0) == -1)
+              this._changeWeek(1);
+            else
+              this._changeWeek(-1);
+          },
         ),
-        onHorizontalDragEnd: (DragEndDetails details) {
-          if (details.primaryVelocity == 0) return;
-          if (details.primaryVelocity!.compareTo(0) == -1)
-            this._changeWeek(1);
-          else
-            this._changeWeek(-1);
-        },
       ),
     );
   }
