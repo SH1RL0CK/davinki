@@ -62,23 +62,49 @@ class _CourseSelectorState extends State<CourseSelector> {
                 this._subject.usersCourse = newCourse;
               });
             },
+            selectedItemBuilder: (BuildContext context) =>
+                <Text>[
+                  Text(
+                    'Nicht auswgewählt',
+                    style: TextStyle(
+                      color: Colors.black54,
+                    ),
+                  ),
+                ] +
+                this
+                    ._subject
+                    .courses
+                    .map<Text>(
+                      (Course course) => Text(
+                        '${course.title} (Lehrer/in: ${course.teacher})',
+                      ),
+                    )
+                    .toList(),
             items: <DropdownMenuItem<Course>>[
                   DropdownMenuItem<Course>(
-                    child: Text('Nicht auswgewählt'),
+                    child: Text(
+                      'Nicht auswgewählt',
+                      style: TextStyle(
+                        fontWeight: this._subject.usersCourse == null
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
                     value: null,
                   )
                 ] +
                 this
                     ._subject
                     .courses
-                    .map(
+                    .map<DropdownMenuItem<Course>>(
                       (Course course) => DropdownMenuItem<Course>(
                         child: Text(
                           '${course.title} (Lehrer/in: ${course.teacher})',
                           style: TextStyle(
-                              fontWeight: course == this._subject.usersCourse
-                                  ? FontWeight.bold
-                                  : FontWeight.normal),
+                            fontWeight: this._subject.usersCourse == course
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
                         ),
                         value: course,
                       ),
