@@ -6,10 +6,12 @@ import 'package:davinki/models/course.dart';
 class CourseSelector extends StatefulWidget {
   final Subject subject;
   final GeneralSettings _generalSettings;
-  CourseSelector(this.subject, this._generalSettings, {Key? key}) : super(key: key);
+  CourseSelector(this.subject, this._generalSettings, {Key? key})
+      : super(key: key);
 
   @override
-  _CourseSelectorState createState() => _CourseSelectorState(this.subject, this._generalSettings);
+  _CourseSelectorState createState() =>
+      _CourseSelectorState(this.subject, this._generalSettings);
 }
 
 class _CourseSelectorState extends State<CourseSelector> {
@@ -39,12 +41,17 @@ class _CourseSelectorState extends State<CourseSelector> {
                 borderSide: BorderSide(color: Colors.red, width: 4.0),
               ),
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: this._subject.template.color, width: 3.0),
+                borderSide:
+                    BorderSide(color: this._subject.template.color, width: 3.0),
               ),
-              hintText: 'Nicht ausgewählt',
             ),
             validator: (Course? course) {
-              if ((this._subject.template.mustBeSelected || this._subject.template.mustBeSelectedInGrades.contains(this._generalSettings.grade)) &&
+              if ((this._subject.template.mustBeSelected ||
+                      this
+                          ._subject
+                          .template
+                          .mustBeSelectedInGrades
+                          .contains(this._generalSettings.grade)) &&
                   course == null) {
                 return 'Dieser Kurs muss ausgewählt werden!';
               }
@@ -68,7 +75,10 @@ class _CourseSelectorState extends State<CourseSelector> {
                       (Course course) => DropdownMenuItem<Course>(
                         child: Text(
                           '${course.title} (Lehrer/in: ${course.teacher})',
-                          style: TextStyle(fontWeight: course == this._subject.usersCourse ? FontWeight.bold : FontWeight.normal),
+                          style: TextStyle(
+                              fontWeight: course == this._subject.usersCourse
+                                  ? FontWeight.bold
+                                  : FontWeight.normal),
                         ),
                         value: course,
                       ),
