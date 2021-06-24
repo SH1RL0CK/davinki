@@ -18,6 +18,7 @@ class DavinkiApp extends StatelessWidget {
         primarySwatch: Colors.pink,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+      debugShowCheckedModeBanner: false,
       home: LoadingScreen(),
     );
   }
