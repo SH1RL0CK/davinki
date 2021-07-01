@@ -12,9 +12,12 @@ class LessonTimetableDialog extends StatefulWidget {
   List<Lesson> _lessons = <Lesson>[];
   bool empty = false;
 
-  LessonTimetableDialog(this._usersLesson, this._infoserverData, {Key? key}) : super(key: key) {
-    this._lessonTimes = this._infoserverData['result']['displaySchedule']['lessonTimes'];
-    this._timeslots = this._infoserverData['result']['timeframes'][0]['timeslots'];
+  LessonTimetableDialog(this._usersLesson, this._infoserverData, {Key? key})
+      : super(key: key) {
+    this._lessonTimes =
+        this._infoserverData['result']['displaySchedule']['lessonTimes'];
+    this._timeslots =
+        this._infoserverData['result']['timeframes'][0]['timeslots'];
     DateTime date = this._usersLesson.date;
     String formattedDate = this._usersLesson.formattedDate;
     int lessonNumber = this._usersLesson.lessonNumber;
@@ -26,13 +29,22 @@ class LessonTimetableDialog extends StatefulWidget {
     this._lessonTimes.forEach((lessonAsMap) {
       if (Lesson.isLesson(lessonAsMap) &&
           lessonAsMap['dates'].contains(formattedDate) &&
-          this._timeslots.indexWhere((timeslot) => timeslot['startTime'] == lessonAsMap['startTime']) <= lessonNumber &&
-          this._timeslots.indexWhere((timeslot) => timeslot['endTime'] == lessonAsMap['endTime']) >= lessonNumber) {
-        int lessonIndex = this._lessons.indexWhere((l) => l.course.title == lessonAsMap['courseTitle']);
-        Lesson lesson = Lesson.fromJson(lessonAsMap, date: date, lessonNumber: lessonNumber);
-        if (lessonIndex == -1 || (this._lessons[lessonIndex].course != lesson.course)) {
+          this._timeslots.indexWhere((timeslot) =>
+                  timeslot['startTime'] == lessonAsMap['startTime']) <=
+              lessonNumber &&
+          this._timeslots.indexWhere((timeslot) =>
+                  timeslot['endTime'] == lessonAsMap['endTime']) >=
+              lessonNumber) {
+        int lessonIndex = this
+            ._lessons
+            .indexWhere((l) => l.course.title == lessonAsMap['courseTitle']);
+        Lesson lesson = Lesson.fromJson(lessonAsMap,
+            date: date, lessonNumber: lessonNumber);
+        if (lessonIndex == -1 ||
+            (this._lessons[lessonIndex].course != lesson.course)) {
           this._lessons.add(lesson);
-        } else if (lesson.changeCaption.isNotEmpty && this._lessons[lessonIndex] != this._usersLesson) {
+        } else if (lesson.changeCaption.isNotEmpty &&
+            this._lessons[lessonIndex] != this._usersLesson) {
           this._lessons[lessonIndex] = lesson;
         }
       }
@@ -46,7 +58,8 @@ class LessonTimetableDialog extends StatefulWidget {
   }
 
   @override
-  _LessonTimetableDialogState createState() => _LessonTimetableDialogState(this._usersLesson, this._lessons, this._timeslots);
+  _LessonTimetableDialogState createState() => _LessonTimetableDialogState(
+      this._usersLesson, this._lessons, this._timeslots);
 }
 
 class _LessonTimetableDialogState extends State<LessonTimetableDialog> {
@@ -54,7 +67,8 @@ class _LessonTimetableDialogState extends State<LessonTimetableDialog> {
   final List<Lesson> _lessons;
   final List _timeslots;
   int _current = 0;
-  _LessonTimetableDialogState(this._usersLesson, this._lessons, this._timeslots) : super() {
+  _LessonTimetableDialogState(this._usersLesson, this._lessons, this._timeslots)
+      : super() {
     if (!this._usersLesson.freeTime) {
       this._current = this._lessons.indexOf(this._usersLesson);
     }
@@ -62,24 +76,38 @@ class _LessonTimetableDialogState extends State<LessonTimetableDialog> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      titleTextStyle: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
-      title: Text(//formatDate(this._usersLesson.date, [dd, '.', mm, '.', yyyy]) +
-          '${this._usersLesson.lessonNumber + 1}: ' +
-              this._timeslots[this._usersLesson.lessonNumber]['startTime'].substring(0, 2) +
-              ':' +
-              this._timeslots[this._usersLesson.lessonNumber]['startTime'].substring(2) +
-              ' - ' +
-              this._timeslots[this._usersLesson.lessonNumber]['endTime'].substring(0, 2) +
-              ':' +
-              this._timeslots[this._usersLesson.lessonNumber]['endTime'].substring(2) +
-              '  ' +
-              weekdayNames[this._usersLesson.date.weekday - 1] +
-              ', ' +
-              formatDate(this._usersLesson.date, [dd, '.', mm, '.', yyyy])),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25.0))),
+      titleTextStyle: TextStyle(
+        fontSize: 16,
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+      ),
+      title: Text(
+        '${this._usersLesson.lessonNumber + 1}: ' +
+            this
+                ._timeslots[this._usersLesson.lessonNumber]['startTime']
+                .substring(0, 2) +
+            ':' +
+            this
+                ._timeslots[this._usersLesson.lessonNumber]['startTime']
+                .substring(2) +
+            ' - ' +
+            this
+                ._timeslots[this._usersLesson.lessonNumber]['endTime']
+                .substring(0, 2) +
+            ':' +
+            this
+                ._timeslots[this._usersLesson.lessonNumber]['endTime']
+                .substring(2) +
+            '  ' +
+            weekdayNames[this._usersLesson.date.weekday - 1] +
+            ', ' +
+            formatDate(this._usersLesson.date, [dd, '.', mm, '.', yyyy]),
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(25.0)),
+      ),
       children: <Widget>[
         Container(
-          height: 230,
           width: double.maxFinite,
           child: Column(children: [
             CarouselSlider(
@@ -90,11 +118,14 @@ class _LessonTimetableDialogState extends State<LessonTimetableDialog> {
                   )
                   .toList(),
               options: CarouselOptions(
+                  height: MediaQuery.of(context).size.height / 3.0,
                   enlargeCenterPage: true,
-                  initialPage: !this._usersLesson.freeTime ? this._lessons.indexOf(this._usersLesson) : 0,
+                  initialPage: !this._usersLesson.freeTime
+                      ? this._lessons.indexOf(this._usersLesson)
+                      : 0,
                   onPageChanged: (index, reason) {
                     setState(() {
-                      _current = index;
+                      this._current = index;
                     });
                   }),
             ),
@@ -108,7 +139,9 @@ class _LessonTimetableDialogState extends State<LessonTimetableDialog> {
                   margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: _current == index ? Color.fromRGBO(0, 0, 0, 0.9) : Color.fromRGBO(0, 0, 0, 0.4),
+                    color: _current == index
+                        ? Color.fromRGBO(0, 0, 0, 0.9)
+                        : Color.fromRGBO(0, 0, 0, 0.4),
                   ),
                 );
               }).toList(),

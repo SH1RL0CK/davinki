@@ -68,10 +68,15 @@ class LessonSliderItem extends StatelessWidget {
                   this._lesson.newTeacher != ''
                       ? TextSpan(
                           text: this._lesson.course.teacher,
-                          style: TextStyle(color: Colors.red.shade900, decoration: TextDecoration.lineThrough),
+                          style: TextStyle(
+                              color: Colors.red.shade900,
+                              decoration: TextDecoration.lineThrough),
                         )
                       : TextSpan(),
-                  TextSpan(text: this._lesson.newTeacher != '' ? '  ${this._lesson.newTeacher}' : this._lesson.course.teacher),
+                  TextSpan(
+                      text: this._lesson.newTeacher != ''
+                          ? '  ${this._lesson.newTeacher}'
+                          : this._lesson.course.teacher),
                 ],
                 style: TextStyle(color: Colors.black, fontSize: 18),
               ),
@@ -82,10 +87,15 @@ class LessonSliderItem extends StatelessWidget {
                   this._lesson.newRoom != ''
                       ? TextSpan(
                           text: this._lesson.room,
-                          style: TextStyle(color: Colors.red.shade900, decoration: TextDecoration.lineThrough),
+                          style: TextStyle(
+                              color: Colors.red.shade900,
+                              decoration: TextDecoration.lineThrough),
                         )
                       : TextSpan(),
-                  TextSpan(text: this._lesson.newRoom != '' ? '  ${this._lesson.newRoom}' : this._lesson.room),
+                  TextSpan(
+                      text: this._lesson.newRoom != ''
+                          ? '  ${this._lesson.newRoom}'
+                          : this._lesson.room),
                 ],
                 style: TextStyle(color: Colors.black, fontSize: 18),
               ),
