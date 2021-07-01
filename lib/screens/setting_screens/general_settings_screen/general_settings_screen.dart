@@ -33,14 +33,12 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
 
   bool _formFieldsEnabled = true;
   bool _wrongLoginData = false;
-  final TextEditingController _nameInputController = TextEditingController();
   final TextEditingController _usernameInputController =
       TextEditingController();
   final TextEditingController _passwordInputController =
       TextEditingController();
 
   _GeneralSettingsScreenState(this._generalSettings, this._courseSettings) {
-    this._nameInputController.text = this._generalSettings.name ?? '';
     this._usernameInputController.text = this._generalSettings.username ?? '';
   }
 
@@ -108,7 +106,6 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
       return;
     }
 
-    this._generalSettings.name = this._nameInputController.text;
     this._generalSettings.username = this._usernameInputController.text;
     String? encryptedPassword = this._passwordInputController.text.isEmpty
         ? this._generalSettings.encryptedPassword
@@ -139,7 +136,6 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
 
   @override
   void dispose() {
-    this._nameInputController.dispose();
     this._usernameInputController.dispose();
     this._passwordInputController.dispose();
     super.dispose();
@@ -181,25 +177,7 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                 'Allgemeine Einstellungen',
                 style: TextStyle(fontSize: 25),
               ),
-              SizedBox(height: 12),
-              TextFormField(
-                enabled: this._formFieldsEnabled,
-                keyboardType: TextInputType.text,
-                autocorrect: false,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.face),
-                  labelText: 'Dein Name',
-                ),
-                controller: this._nameInputController,
-                validator: (String? name) {
-                  if (name == null || name.isEmpty) {
-                    return 'Bitte gib Deinen Namen an!';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 12),
+              SizedBox(height: 15),
               DropdownButtonFormField<UserType>(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -300,7 +278,12 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                 'Anmeldung',
                 style: TextStyle(fontSize: 25),
               ),
-              SizedBox(height: 12),
+              SizedBox(height: 2),
+              Text(
+                'Gib bitte Deine DAVINCI-Anmeldedaten an.',
+                style: TextStyle(fontSize: 18),
+              ),
+              SizedBox(height: 15),
               TextFormField(
                 enabled: this._formFieldsEnabled,
                 decoration: InputDecoration(

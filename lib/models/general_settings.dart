@@ -4,14 +4,12 @@ import 'package:enum_to_string/enum_to_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GeneralSettings {
-  String? name;
   UserType? userType;
   SchoolType? schoolType;
   int? grade;
   String? username;
   String? encryptedPassword;
 
-  String _nameKey = 'name';
   String _usertypeKey = 'userType';
   String _schoolTypeKey = 'schoolType';
   String _gradeKey = 'grade';
@@ -20,7 +18,6 @@ class GeneralSettings {
 
   Future<bool> loadData() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    this.name = sharedPreferences.getString(this._nameKey);
     String? userType = sharedPreferences.getString(this._usertypeKey);
     this.userType = EnumToString.fromString(UserType.values, userType ?? '');
     String? schoolType = sharedPreferences.getString(this._schoolTypeKey);
@@ -29,8 +26,7 @@ class GeneralSettings {
         EnumToString.fromString(SchoolType.values, schoolType ?? '');
     this.username = sharedPreferences.getString(this._usernameKey);
     this.encryptedPassword = sharedPreferences.getString(this._passwordKey);
-    if (this.name == null ||
-        this.userType == null ||
+    if (this.userType == null ||
         (this.userType == UserType.student && this.schoolType == null) ||
         (this.schoolType == SchoolType.vocationalGymnasium &&
             this.grade == null) ||
@@ -43,7 +39,6 @@ class GeneralSettings {
 
   void storeData() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setString(this._nameKey, this.name!);
     sharedPreferences.setString(
         this._usertypeKey, EnumToString.convertToString(this.userType));
     if (this.schoolType != null)
