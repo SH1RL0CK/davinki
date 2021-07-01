@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:crypto/crypto.dart' as crypto;
+import 'dart:convert';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:davinki/utils.dart';
 import 'package:davinki/models/course_settings.dart';
@@ -15,10 +17,12 @@ class GeneralSettingsScreen extends StatefulWidget {
   final GeneralSettings _generalSettings;
   final CourseSettings _courseSettings;
 
-  GeneralSettingsScreen(this._generalSettings, this._courseSettings, {Key? key}) : super(key: key);
+  GeneralSettingsScreen(this._generalSettings, this._courseSettings, {Key? key})
+      : super(key: key);
 
   @override
-  _GeneralSettingsScreenState createState() => _GeneralSettingsScreenState(this._generalSettings, this._courseSettings);
+  _GeneralSettingsScreenState createState() =>
+      _GeneralSettingsScreenState(this._generalSettings, this._courseSettings);
 }
 
 class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
@@ -30,8 +34,10 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
   bool _formFieldsEnabled = true;
   bool _wrongLoginData = false;
   final TextEditingController _nameInputController = TextEditingController();
-  final TextEditingController _usernameInputController = TextEditingController();
-  final TextEditingController _passwordInputController = TextEditingController();
+  final TextEditingController _usernameInputController =
+      TextEditingController();
+  final TextEditingController _passwordInputController =
+      TextEditingController();
 
   _GeneralSettingsScreenState(this._generalSettings, this._courseSettings) {
     this._nameInputController.text = this._generalSettings.name ?? '';
@@ -40,7 +46,8 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
 
   Future<bool> _loginDataIsCorrect(String? username, String? password) async {
     try {
-      this._infoserverData = await DavinciInfoserverService(username!, password!).getOnlineData();
+      this._infoserverData =
+          await DavinciInfoserverService(username!, password!).getOnlineData();
     } on UserIsOfflineException {
       showDialog(
         context: context,
@@ -82,6 +89,10 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
     return true;
   }
 
+  String encryptPassword(String password) {
+    return crypto.md5.convert(utf8.encode(password)).toString();
+  }
+
   void _handleForm() async {
     if (!this._formFieldsEnabled) return;
 
@@ -99,15 +110,19 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
 
     this._generalSettings.name = this._nameInputController.text;
     this._generalSettings.username = this._usernameInputController.text;
-    String? password = this._passwordInputController.text.isEmpty ? this._generalSettings.password : this._passwordInputController.text;
+    String? encryptedPassword = this._passwordInputController.text.isEmpty
+        ? this._generalSettings.encryptedPassword
+        : encryptPassword(this._passwordInputController.text);
 
-    if (!await this._loginDataIsCorrect(this._generalSettings.username, password)) return;
+    if (!await this._loginDataIsCorrect(
+        this._generalSettings.username, encryptedPassword)) return;
 
-    this._generalSettings.password = password;
+    this._generalSettings.encryptedPassword = encryptedPassword;
     this._generalSettings.storeData();
     if (this._generalSettings.userType == UserType.student) {
       navigateToOtherScreen(
-        CourseSettingsScreen(this._infoserverData, this._generalSettings, this._courseSettings),
+        CourseSettingsScreen(
+            this._infoserverData, this._generalSettings, this._courseSettings),
         context,
       );
     } else {
@@ -227,7 +242,8 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                         onChanged: this._formFieldsEnabled
                             ? (SchoolType? newSchoolType) {
                                 setState(() {
-                                  this._generalSettings.schoolType = newSchoolType;
+                                  this._generalSettings.schoolType =
+                                      newSchoolType;
                                 });
                               }
                             : null,
@@ -291,7 +307,9 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                   prefixIcon: Icon(Icons.person),
                   border: OutlineInputBorder(),
                   labelText: 'Benutzername',
-                  errorText: this._wrongLoginData ? 'Die Anmeldedaten sind falsch!' : null,
+                  errorText: this._wrongLoginData
+                      ? 'Die Anmeldedaten sind falsch!'
+                      : null,
                 ),
                 controller: this._usernameInputController,
                 validator: (String? username) {
@@ -308,12 +326,17 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.lock),
                   border: OutlineInputBorder(),
-                  labelText: this._generalSettings.password == null ? 'Passwort' : 'Neues Passwort',
-                  errorText: this._wrongLoginData ? 'Die Anmeldedaten sind falsch!' : null,
+                  labelText: this._generalSettings.encryptedPassword == null
+                      ? 'Passwort'
+                      : 'Neues Passwort',
+                  errorText: this._wrongLoginData
+                      ? 'Die Anmeldedaten sind falsch!'
+                      : null,
                 ),
                 controller: this._passwordInputController,
                 validator: (String? password) {
-                  if (this._generalSettings.password == null && (password == null || password.isEmpty)) {
+                  if (this._generalSettings.encryptedPassword == null &&
+                      (password == null || password.isEmpty)) {
                     return 'Bitte gib Dein Passwort an!';
                   }
                   return null;
@@ -323,7 +346,9 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
               FloatingActionButton.extended(
                 icon: Icon(Icons.save),
                 label: Text(
-                  this._generalSettings.userType == UserType.student ? 'Zu Deinen Kursen' : 'Speichern',
+                  this._generalSettings.userType == UserType.student
+                      ? 'Zu Deinen Kursen'
+                      : 'Speichern',
                 ),
                 onPressed: this._handleForm,
               ),

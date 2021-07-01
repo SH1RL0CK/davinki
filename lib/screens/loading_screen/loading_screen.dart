@@ -29,14 +29,18 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
-  void _navigateToWeeklyTimetable(Map<String, dynamic> infoserverData, {bool offline = false}) {
+  void _navigateToWeeklyTimetable(Map<String, dynamic> infoserverData,
+      {bool offline = false}) {
     navigateToOtherScreen(
-      WeeklyTimetableScreen(infoserverData, this._generalSettings, this._courseSettings, offline: offline),
+      WeeklyTimetableScreen(
+          infoserverData, this._generalSettings, this._courseSettings,
+          offline: offline),
       context,
     );
   }
 
-  void _showInfoDialog(String dialogTitle, String dialogBody, Function onClose) {
+  void _showInfoDialog(
+      String dialogTitle, String dialogBody, Function onClose) {
     setState(() {
       this._isLoading = false;
     });
@@ -49,7 +53,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   void _loadOfflineInfoserverData(DavinciInfoserverService infoserverService) {
-    infoserverService.getOfflineData().then((Map<String, dynamic> infoserverData) {
+    infoserverService.getOfflineData().then(
+        (Map<String, dynamic> infoserverData) {
       this._navigateToWeeklyTimetable(infoserverData, offline: true);
     }, onError: (dynamic exception) {
       if (exception is NoOfflineDataExeption) {
@@ -63,8 +68,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   void _loadInofoserverData() {
-    DavinciInfoserverService infoserverService = DavinciInfoserverService(this._generalSettings.username!, this._generalSettings.password!);
-    infoserverService.getOnlineData().then((Map<String, dynamic> infoserverData) {
+    DavinciInfoserverService infoserverService = DavinciInfoserverService(
+        this._generalSettings.username!,
+        this._generalSettings.encryptedPassword!);
+    infoserverService.getOnlineData().then(
+        (Map<String, dynamic> infoserverData) {
       this._navigateToWeeklyTimetable(infoserverData);
     }, onError: (dynamic exception) {
       if (exception is WrongLoginDataException) {

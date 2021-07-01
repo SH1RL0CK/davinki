@@ -8,13 +8,13 @@ class DavinciInfoserverService {
   Uri _infoserverUrl;
   final String _infoserverDataFileName = 'infoserver_data.json';
 
-  DavinciInfoserverService(username, password)
+  DavinciInfoserverService(username, encryptedPassword)
       : _infoserverUrl = Uri.https(
           'stundenplan.bwshofheim.de',
           '/daVinciIS.dll',
           <String, String>{
             'username': username,
-            'password': password,
+            'key': encryptedPassword,
             'content': 'json',
           },
         );
@@ -50,7 +50,7 @@ class DavinciInfoserverService {
     if (response.statusCode == 200) {
       writeDate(response.body);
       return jsonDecode(response.body);
-    } else if (response.statusCode == 910) {
+    } else if (<int>[900, 910].contains(response.statusCode)) {
       throw WrongLoginDataException();
     }
     throw UnknownErrorException();
