@@ -118,7 +118,7 @@ class _LessonTimetableDialogState extends State<LessonTimetableDialog> {
                   )
                   .toList(),
               options: CarouselOptions(
-                  height: MediaQuery.of(context).size.height / 3.0,
+                  height: MediaQuery.of(context).size.height / 2.5,
                   enlargeCenterPage: true,
                   initialPage: !this._usersLesson.freeTime
                       ? this._lessons.indexOf(this._usersLesson)

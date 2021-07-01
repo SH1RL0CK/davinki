@@ -23,8 +23,8 @@ class LessonSliderItem extends StatelessWidget {
           children: <Widget>[
             this._lesson.changeCaption != ''
                 ? Container(
-                    padding: EdgeInsets.all(2),
-                    margin: EdgeInsets.only(bottom: 2),
+                    padding: EdgeInsets.all(5),
+                    margin: EdgeInsets.only(bottom: 3),
                     decoration: BoxDecoration(
                       color: Colors.red.shade900,
                       borderRadius: BorderRadius.circular(3),
@@ -40,7 +40,8 @@ class LessonSliderItem extends StatelessWidget {
                 : Container(),
             this._lesson.changeInformation != ''
                 ? Container(
-                    padding: EdgeInsets.all(2),
+                    padding: EdgeInsets.all(5),
+                    margin: EdgeInsets.only(bottom: 3),
                     decoration: BoxDecoration(
                       color: Colors.yellow.shade800,
                       borderRadius: BorderRadius.circular(3),
@@ -49,7 +50,7 @@ class LessonSliderItem extends StatelessWidget {
                       this._lesson.changeInformation,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 14,
+                        fontSize: 16,
                       ),
                     ),
                   )
