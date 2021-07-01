@@ -160,7 +160,8 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
           child: Stack(
             children: <Widget>[
               SingleChildScrollView(
-                child: Container(
+                child: AnimatedContainer(
+                  duration: const Duration(seconds: 1),
                   color: Colors.white,
                   padding: EdgeInsets.only(
                       bottom: _offlineSnackbarIsDisplayed ? 120 : 55),
