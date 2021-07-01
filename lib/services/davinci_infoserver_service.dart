@@ -50,7 +50,8 @@ class DavinciInfoserverService {
     if (response.statusCode == 200) {
       writeDate(response.body);
       return jsonDecode(response.body);
-    } else if (<int>[900, 910].contains(response.statusCode)) {
+    } else if (response.statusCode == 900) {
+      print(response.statusCode);
       throw WrongLoginDataException();
     }
     throw UnknownErrorException();

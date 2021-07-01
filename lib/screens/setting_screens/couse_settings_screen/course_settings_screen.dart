@@ -14,10 +14,16 @@ class CourseSettingsScreen extends StatefulWidget {
   final Map<String, dynamic> _infoserverData;
   final GeneralSettings _generalSettings;
   final CourseSettings _courseSettings;
-  CourseSettingsScreen(this._infoserverData, this._generalSettings, this._courseSettings, {Key? key}) : super(key: key);
+  CourseSettingsScreen(
+    this._infoserverData,
+    this._generalSettings,
+    this._courseSettings, {
+    Key? key,
+  }) : super(key: key);
 
   @override
-  _CourseSettingsScreenState createState() => _CourseSettingsScreenState(this._infoserverData, this._generalSettings, this._courseSettings);
+  _CourseSettingsScreenState createState() => _CourseSettingsScreenState(
+      this._infoserverData, this._generalSettings, this._courseSettings);
 }
 
 class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
@@ -28,7 +34,8 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
 
   List<Subject> _subjects = <Subject>[];
 
-  _CourseSettingsScreenState(this._infoserverData, this._generalSettings, this._courseSettings) {
+  _CourseSettingsScreenState(
+      this._infoserverData, this._generalSettings, this._courseSettings) {
     this._createSubjectList();
   }
 
@@ -39,7 +46,9 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
   */
   List<String> _searchForCourseTeachersInLessons(String courseTitle) {
     List<String> teachers = <String>[];
-    this._infoserverData['result']['displaySchedule']['lessonTimes'].forEach((dynamic lessonAsMap) {
+    this
+        ._infoserverData['result']['displaySchedule']['lessonTimes']
+        .forEach((dynamic lessonAsMap) {
       if (!Lesson.isLesson(lessonAsMap)) return;
       Lesson lesson = Lesson.fromJson(lessonAsMap);
       if (lesson.course.title == courseTitle && !lesson.additional) {
@@ -51,13 +60,17 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
   }
 
   void _removeSubjectsWithNoCourses() {
-    this._subjects = this._subjects.where((Subject subject) => subject.courses.length > 0).toList();
+    this._subjects = this
+        ._subjects
+        .where((Subject subject) => subject.courses.length > 0)
+        .toList();
   }
 
   void _searchForSelectedCoursesInSettings() {
     this._subjects.forEach((Subject subject) {
       subject.courses.forEach((Course course) {
-        if (this._courseSettings.usersCourses.contains(course)) subject.usersCourse = course;
+        if (this._courseSettings.usersCourses.contains(course))
+          subject.usersCourse = course;
       });
     });
   }
@@ -65,7 +78,9 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
   // Select a course automatically if this subject must be selected and there is only one course.
   void _autoSelectCoures() {
     this._subjects.forEach((Subject subject) {
-      if ((subject.template.mustBeSelected || subject.template.mustBeSelectedInGrades.contains(this._generalSettings.grade)) &&
+      if ((subject.template.mustBeSelected ||
+              subject.template.mustBeSelectedInGrades
+                  .contains(this._generalSettings.grade)) &&
           subject.courses.length == 1 &&
           subject.usersCourse == null) {
         subject.usersCourse = subject.courses[0];
@@ -74,9 +89,11 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
   }
 
   void _createSubjectList() {
-    List<SubjectTemplate> templates = subjectTemplates[this._generalSettings.schoolType]!.where(
+    List<SubjectTemplate> templates =
+        subjectTemplates[this._generalSettings.schoolType]!.where(
       (SubjectTemplate template) {
-        return template.onlyInGrades == null || template.onlyInGrades!.contains(this._generalSettings.grade);
+        return template.onlyInGrades == null ||
+            template.onlyInGrades!.contains(this._generalSettings.grade);
       },
     ).toList();
 
@@ -95,9 +112,12 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
         return;
       }
 
-      Subject subject = this._subjects.firstWhere((Subject s) => s.template == subjectTemplate);
+      Subject subject = this
+          ._subjects
+          .firstWhere((Subject s) => s.template == subjectTemplate);
 
-      List<String> teachers = this._searchForCourseTeachersInLessons(courseTitle);
+      List<String> teachers =
+          this._searchForCourseTeachersInLessons(courseTitle);
 
       teachers.forEach((String teacher) {
         subject.courses.add(Course(courseTitle, teacher));
@@ -112,7 +132,8 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
     if (this._formKey.currentState!.validate()) {
       this._courseSettings.usersCourses.clear();
       this._subjects.forEach((Subject subject) {
-        if (subject.usersCourse != null) this._courseSettings.usersCourses.add(subject.usersCourse!);
+        if (subject.usersCourse != null)
+          this._courseSettings.usersCourses.add(subject.usersCourse!);
       });
       this._courseSettings.storeData();
       navigateToOtherScreen(
@@ -164,7 +185,8 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
               shrinkWrap: true,
               itemCount: this._subjects.length,
               itemBuilder: (BuildContext context, int index) {
-                return CourseSelector(this._subjects[index], this._generalSettings);
+                return CourseSelector(
+                    this._subjects[index], this._generalSettings);
               },
             ),
             SizedBox(height: 14),

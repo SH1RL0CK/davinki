@@ -11,6 +11,8 @@ class Course {
 
   @override
   bool operator ==(Object other) {
-    return (other is Course) && other.title == this.title && other.teacher == this.teacher;
+    return (other is Course) &&
+        other.title == this.title &&
+        other.teacher == this.teacher;
   }
 }

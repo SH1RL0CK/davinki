@@ -9,8 +9,10 @@ class CourseSettings {
   Future<bool> loadData() async {
     this.usersCourses.clear();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    List<String>? courseTitles = sharedPreferences.getStringList(this._courseTitlesKey);
-    List<String>? teachers = sharedPreferences.getStringList(this._teachersKeys);
+    List<String>? courseTitles =
+        sharedPreferences.getStringList(this._courseTitlesKey);
+    List<String>? teachers =
+        sharedPreferences.getStringList(this._teachersKeys);
     if (courseTitles == null || teachers == null) {
       return false;
     }

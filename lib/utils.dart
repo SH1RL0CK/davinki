@@ -6,8 +6,9 @@ List<String> weekdayNames = <String>['Mo', 'Di', 'Mi', 'Do', 'Fr'];
 List<DateTime> getDatesOfWeek(int week) {
   List<DateTime> datesOfWeek = <DateTime>[];
   DateTime now = DateTime.now();
-  DateTime firstDayOfWeek = now.subtract(Duration(days: now.weekday - 1 - week * 7));
-  if (now.weekday == 6 || now.weekday == 7) {
+  DateTime firstDayOfWeek =
+      now.subtract(Duration(days: now.weekday - 1 - week * 7));
+  if (<int>[6, 7].contains(now.weekday)) {
     firstDayOfWeek = firstDayOfWeek.add(Duration(days: 7));
   }
   for (int i = 0; i < 5; i++) {

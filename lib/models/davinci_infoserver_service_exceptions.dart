@@ -15,7 +15,8 @@ class UserIsOfflineException implements Exception {
 }
 
 class UnknownErrorException implements Exception {
-  final String _message = 'An unknown error occurred while fetching data from the Infoserver';
+  final String _message =
+      'An unknown error occurred while fetching data from the Infoserver';
   @override
   String toString() {
     return this._message;

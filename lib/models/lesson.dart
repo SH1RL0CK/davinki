@@ -39,13 +39,19 @@ class Lesson {
   }
 
   static bool isLesson(Map<String, dynamic> map) {
-    for (String key in <String>['courseTitle', 'startTime', 'endTime', 'dates']) {
+    for (String key in <String>[
+      'courseTitle',
+      'startTime',
+      'endTime',
+      'dates'
+    ]) {
       if (!map.containsKey(key)) return false;
     }
     return true;
   }
 
-  factory Lesson.fromJson(Map<String, dynamic> lesson, {DateTime? date, int lessonNumber = -1}) {
+  factory Lesson.fromJson(Map<String, dynamic> lesson,
+      {DateTime? date, int lessonNumber = -1}) {
     String teacher = '', room = '';
     String changeCaption = '', changeInformation = '';
     String newTeacher = '', newRoom = '';
@@ -73,7 +79,7 @@ class Lesson {
       if (lesson['changes'].containsKey('absentRoomCodes')) {
         room = lesson['changes']['absentRoomCodes'][0];
       }
-      if (changeCaption == 'Klasse frei' || changeCaption == 'Klasse fehlt') {
+      if (<String>['Klasse frei', 'Klasse fehlt'].contains(changeCaption)) {
         cancelled = true;
       }
       if (changeCaption == 'Zusatzunterricht') {
@@ -93,7 +99,8 @@ class Lesson {
       newRoom: newRoom,
       cancelled: cancelled,
       additional: additional,
-      color: getSubjectTemplateByCourseTitle(lesson['courseTitle'])?.color ?? Colors.pink,
+      color: getSubjectTemplateByCourseTitle(lesson['courseTitle'])?.color ??
+          Colors.pink,
     );
   }
 }
