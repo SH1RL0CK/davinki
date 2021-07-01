@@ -52,7 +52,7 @@ Map<SchoolType, List<SubjectTemplate>> subjectTemplates =
         'Musik/Kunst/DSp', Colors.deepPurple, <String>['DSpG', 'MuK', 'KG'],
         onlyInGrades: <int>[13], mustBeSelected: true),
     SubjectTemplate('2. Fremdsprache', Colors.lime, <String>['SpanG', 'FG']),
-    SubjectTemplate('Turtor', Colors.green, <String>['Tutor'],
+    SubjectTemplate('Tutor', Colors.green, <String>['Tutor'],
         mustBeSelected: true),
   ],
 };

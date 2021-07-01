@@ -12,7 +12,6 @@ class LessonCell extends StatelessWidget {
     String courseTitle = (this._lesson.additional)
         ? '+ ' + this._lesson.course.title
         : this._lesson.course.title;
-    const int maxTitleChars = 5;
 
     return Container(
       child: InkWell(
@@ -33,20 +32,23 @@ class LessonCell extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: <Text>[
                       Text(
-                        (courseTitle.length > maxTitleChars)
-                            ? courseTitle.substring(0, maxTitleChars)
-                            : courseTitle,
+                        courseTitle,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
                         style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
                       ),
                       Text(
                         (this._lesson.newTeacher != '')
                             ? this._lesson.newTeacher
                             : this._lesson.course.teacher,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
                         style: TextStyle(
                           fontSize: 13,
                           color: (this._lesson.newTeacher != '')
@@ -59,8 +61,10 @@ class LessonCell extends StatelessWidget {
                       ),
                       Text(
                         (this._lesson.newRoom != '')
-                            ? this._lesson.newRoom.split('(')[0]
-                            : this._lesson.room.split('(')[0],
+                            ? this._lesson.newRoom
+                            : this._lesson.room,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
                         style: TextStyle(
                           fontSize: 13,
                           color: (this._lesson.newRoom != '')
