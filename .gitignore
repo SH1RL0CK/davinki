@@ -37,6 +37,3 @@ app.*.symbols
 
 # Obfuscation related
 app.*.map.json
-
-lib/secret.dart
-lib/screens/test_screen/
