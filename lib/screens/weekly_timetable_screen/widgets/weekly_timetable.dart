@@ -10,9 +10,12 @@ class WeeklyTimetable extends StatelessWidget {
   final int _week;
   final Map<String, dynamic> _infoserverData;
   final CourseSettings _courseSettings;
-  WeeklyTimetable(this._week, this._infoserverData, this._courseSettings, {Key? key}) : super(key: key);
+  WeeklyTimetable(this._week, this._infoserverData, this._courseSettings,
+      {Key? key})
+      : super(key: key);
 
-  List<List<Lesson>> _getLessonsOfTimetable(List lessonTimes, List timeslots, List<DateTime> datesOfWeek) {
+  List<List<Lesson>> _getLessonsOfTimetable(
+      List lessonTimes, List timeslots, List<DateTime> datesOfWeek) {
     List<List<Lesson>> lessons = List<List<Lesson>>.generate(
       timeslots.length,
       (int lessonNumber) => datesOfWeek
@@ -22,14 +25,16 @@ class WeeklyTimetable extends StatelessWidget {
           .toList(),
     );
 
-    List<String> formatedDatesOfWeek = datesOfWeek.map((DateTime date) => infoserverDateFormat(date)).toList();
+    List<String> formatedDatesOfWeek =
+        datesOfWeek.map((DateTime date) => infoserverDateFormat(date)).toList();
 
     for (Map<String, dynamic> lessonAsMap in lessonTimes) {
       if (!Lesson.isLesson(lessonAsMap)) {
         continue;
       }
       Lesson lesson = Lesson.fromJson(lessonAsMap);
-      bool isUsersLesson = this._courseSettings.usersCourses.contains(lesson.course);
+      bool isUsersLesson =
+          this._courseSettings.usersCourses.contains(lesson.course);
       if (isUsersLesson) {
         formatedDatesOfWeek.asMap().forEach(
           (int weekdayIndex, String date) {
@@ -41,14 +46,16 @@ class WeeklyTimetable extends StatelessWidget {
                 }
               });
               for (; lessonNumber < timeslots.length; lessonNumber++) {
-                if ((lesson.changeCaption.isNotEmpty && !lessons[lessonNumber][weekdayIndex].additional) ||
+                if ((lesson.changeCaption.isNotEmpty &&
+                        !lessons[lessonNumber][weekdayIndex].additional) ||
                     lessons[lessonNumber][weekdayIndex].freeTime) {
                   lesson.date = datesOfWeek[weekdayIndex];
                   lesson.formattedDate = infoserverDateFormat(lesson.date);
                   lesson.lessonNumber = lessonNumber;
                   lessons[lessonNumber][weekdayIndex] = lesson;
                 }
-                if (lessonAsMap['endTime'] == timeslots[lessonNumber]['endTime']) {
+                if (lessonAsMap['endTime'] ==
+                    timeslots[lessonNumber]['endTime']) {
                   break;
                 }
               }
@@ -62,10 +69,13 @@ class WeeklyTimetable extends StatelessWidget {
 
   List<TableRow> _buildTimetable() {
     List<DateTime> datesOfWeek = getDatesOfWeek(this._week);
-    List lessonTimes = this._infoserverData['result']['displaySchedule']['lessonTimes'];
-    List timeslots = this._infoserverData['result']['timeframes'][0]['timeslots'];
+    List lessonTimes =
+        this._infoserverData['result']['displaySchedule']['lessonTimes'];
+    List timeslots =
+        this._infoserverData['result']['timeframes'][0]['timeslots'];
 
-    List<List<Lesson>> timetable = _getLessonsOfTimetable(lessonTimes, timeslots, datesOfWeek);
+    List<List<Lesson>> timetable =
+        _getLessonsOfTimetable(lessonTimes, timeslots, datesOfWeek);
 
     return <TableRow>[
           TableRow(

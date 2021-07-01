@@ -9,7 +9,11 @@ class LessonCell extends StatelessWidget {
   LessonCell(this._lesson, this._infoserverData, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    String courseTitle = (this._lesson.additional) ? '+ ' + this._lesson.course.title : this._lesson.course.title;
+    String courseTitle = (this._lesson.additional)
+        ? '+ ' + this._lesson.course.title
+        : this._lesson.course.title;
+    const int maxTitleChars = 5;
+
     return Container(
       child: InkWell(
         child: Padding(
@@ -20,7 +24,8 @@ class LessonCell extends StatelessWidget {
             children: <Widget>[
               Container(
                 decoration: BoxDecoration(
-                  color: this._lesson.freeTime ? Colors.transparent : Colors.white,
+                  color:
+                      this._lesson.freeTime ? Colors.transparent : Colors.white,
                   border: Border.all(color: this._lesson.color, width: 3),
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                 ),
@@ -30,23 +35,40 @@ class LessonCell extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        (courseTitle.length > 5) ? courseTitle.substring(0, 5) : courseTitle,
-                        style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.bold, color: Colors.black),
+                        (courseTitle.length > maxTitleChars)
+                            ? courseTitle.substring(0, maxTitleChars)
+                            : courseTitle,
+                        style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
                       ),
                       Text(
-                        (this._lesson.newTeacher != '') ? this._lesson.newTeacher : this._lesson.course.teacher,
+                        (this._lesson.newTeacher != '')
+                            ? this._lesson.newTeacher
+                            : this._lesson.course.teacher,
                         style: TextStyle(
                           fontSize: 13,
-                          color: (this._lesson.newTeacher != '') ? Colors.red.shade900 : Colors.black,
-                          fontWeight: (this._lesson.newTeacher != '') ? FontWeight.bold : FontWeight.normal,
+                          color: (this._lesson.newTeacher != '')
+                              ? Colors.red.shade900
+                              : Colors.black,
+                          fontWeight: (this._lesson.newTeacher != '')
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                         ),
                       ),
                       Text(
-                        (this._lesson.newRoom != '') ? this._lesson.newRoom.split('(')[0] : this._lesson.room.split('(')[0],
+                        (this._lesson.newRoom != '')
+                            ? this._lesson.newRoom.split('(')[0]
+                            : this._lesson.room.split('(')[0],
                         style: TextStyle(
                           fontSize: 13,
-                          color: (this._lesson.newRoom != '') ? Colors.red.shade900 : Colors.black,
-                          fontWeight: (this._lesson.newRoom != '') ? FontWeight.bold : FontWeight.normal,
+                          color: (this._lesson.newRoom != '')
+                              ? Colors.red.shade900
+                              : Colors.black,
+                          fontWeight: (this._lesson.newRoom != '')
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                         ),
                       ),
                     ],
@@ -58,7 +80,9 @@ class LessonCell extends StatelessWidget {
           ),
         ),
         onTap: () {
-          LessonTimetableDialog dialog = LessonTimetableDialog(this._lesson, this._infoserverData, key: UniqueKey());
+          LessonTimetableDialog dialog = LessonTimetableDialog(
+              this._lesson, this._infoserverData,
+              key: UniqueKey());
           if (dialog.empty) {
             return;
           }

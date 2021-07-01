@@ -15,7 +15,9 @@ class DateCell extends StatelessWidget {
           padding: EdgeInsets.all(6),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            color: (this._date.year == this._today.year && this._date.month == this._today.month && this._date.day == this._today.day)
+            color: (this._date.year == this._today.year &&
+                    this._date.month == this._today.month &&
+                    this._date.day == this._today.day)
                 ? Colors.blue
                 : Colors.pink,
           ),
@@ -27,7 +29,8 @@ class DateCell extends StatelessWidget {
             ),
           ),
         ),
-        Text(weekdayNames[this._date.weekday - 1], style: TextStyle(fontSize: 16)),
+        Text(weekdayNames[this._date.weekday - 1],
+            style: TextStyle(fontSize: 16)),
       ]),
     );
   }
