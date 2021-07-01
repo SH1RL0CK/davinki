@@ -278,10 +278,9 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                 'Anmeldung',
                 style: TextStyle(fontSize: 25),
               ),
-              SizedBox(height: 2),
               Text(
                 'Gib bitte Deine DAVINCI-Anmeldedaten an.',
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 20),
               ),
               SizedBox(height: 15),
               TextFormField(
