@@ -10,43 +10,54 @@ class GeneralSettings {
   String? username;
   String? encryptedPassword;
 
-  String _usertypeKey = 'userType';
-  String _schoolTypeKey = 'schoolType';
-  String _gradeKey = 'grade';
-  String _usernameKey = 'username';
-  String _passwordKey = 'password';
+  final String _usertypeKey = 'userType';
+  final String _schoolTypeKey = 'schoolType';
+  final String _gradeKey = 'grade';
+  final String _usernameKey = 'username';
+  final String _passwordKey = 'password';
 
   Future<bool> loadData() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String? userType = sharedPreferences.getString(this._usertypeKey);
-    this.userType = EnumToString.fromString(UserType.values, userType ?? '');
-    String? schoolType = sharedPreferences.getString(this._schoolTypeKey);
-    this.grade = sharedPreferences.getInt(this._gradeKey);
-    this.schoolType =
-        EnumToString.fromString(SchoolType.values, schoolType ?? '');
-    this.username = sharedPreferences.getString(this._usernameKey);
-    this.encryptedPassword = sharedPreferences.getString(this._passwordKey);
-    if (this.userType == null ||
-        (this.userType == UserType.student && this.schoolType == null) ||
-        (this.schoolType == SchoolType.vocationalGymnasium &&
-            this.grade == null) ||
-        this.username == null ||
-        this.encryptedPassword == null) {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    final String? storedUserType = sharedPreferences.getString(_usertypeKey);
+    userType = EnumToString.fromString<UserType>(
+      UserType.values,
+      storedUserType ?? '',
+    );
+    final String? storedSchoolType =
+        sharedPreferences.getString(_schoolTypeKey);
+    schoolType = EnumToString.fromString<SchoolType>(
+      SchoolType.values,
+      storedSchoolType ?? '',
+    );
+    grade = sharedPreferences.getInt(_gradeKey);
+    username = sharedPreferences.getString(_usernameKey);
+    encryptedPassword = sharedPreferences.getString(_passwordKey);
+    if (userType == null ||
+        (userType == UserType.student && schoolType == null) ||
+        (schoolType == SchoolType.vocationalGymnasium && grade == null) ||
+        username == null ||
+        encryptedPassword == null) {
       return false;
     }
     return true;
   }
 
-  void storeData() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  Future<void> storeData() async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
     sharedPreferences.setString(
-        this._usertypeKey, EnumToString.convertToString(this.userType));
-    if (this.schoolType != null)
+        _usertypeKey, EnumToString.convertToString(userType));
+    if (schoolType != null) {
       sharedPreferences.setString(
-          this._schoolTypeKey, EnumToString.convertToString(this.schoolType));
-    if (this.grade != null)
-      sharedPreferences.setInt(this._gradeKey, this.grade!);
-    sharedPreferences.setString(this._usernameKey, this.username!);
-    sharedPreferences.setString(this._passwordKey, this.encryptedPassword!);
+        _schoolTypeKey,
+        EnumToString.convertToString(schoolType),
+      );
+    }
+    if (grade != null) {
+      sharedPreferences.setInt(_gradeKey, grade!);
+    }
+    sharedPreferences.setString(_usernameKey, username!);
+    sharedPreferences.setString(_passwordKey, encryptedPassword!);
   }
 }

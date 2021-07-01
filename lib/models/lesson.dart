@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:davinki/utils.dart';
 import 'package:davinki/models/course.dart';
 import 'package:davinki/models/subject_templates.dart';
+import 'package:davinki/utils.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class Lesson {
   final Course course;
@@ -34,12 +34,12 @@ class Lesson {
     this.additional = false,
     this.color = Colors.transparent,
     this.currentLesson = false,
-  }) : this.course = Course(courseTitle, teacher) {
-    formattedDate = infoserverDateFormat(this.date);
+  }) : course = Course(courseTitle, teacher) {
+    formattedDate = infoserverDateFormat(date);
   }
 
   static bool isLesson(Map<String, dynamic> map) {
-    for (String key in <String>[
+    for (final String key in <String>[
       'courseTitle',
       'startTime',
       'endTime',
@@ -57,27 +57,27 @@ class Lesson {
     String newTeacher = '', newRoom = '';
     bool cancelled = false, additional = false;
     if (lesson.containsKey('teacherCodes')) {
-      teacher = lesson['teacherCodes'][0];
+      teacher = lesson['teacherCodes'][0].toString();
     }
     if (lesson.containsKey('roomCodes')) {
-      room = lesson['roomCodes'][0];
+      room = lesson['roomCodes'][0].toString();
     }
     if (lesson.containsKey('changes')) {
-      changeCaption = lesson['changes']['caption'];
-      if (lesson['changes'].containsKey('information')) {
-        changeInformation = lesson['changes']['information'];
+      changeCaption = lesson['changes']['caption'].toString();
+      if (lesson['changes'].containsKey('information') as bool) {
+        changeInformation = lesson['changes']['information'].toString();
       }
-      if (lesson['changes'].containsKey('newTeacherCodes')) {
-        newTeacher = lesson['changes']['newTeacherCodes'][0];
+      if (lesson['changes'].containsKey('newTeacherCodes') as bool) {
+        newTeacher = lesson['changes']['newTeacherCodes'][0].toString();
       }
-      if (lesson['changes'].containsKey('absentTeacherCodes')) {
-        teacher = lesson['changes']['absentTeacherCodes'][0];
+      if (lesson['changes'].containsKey('absentTeacherCodes') as bool) {
+        teacher = lesson['changes']['absentTeacherCodes'][0].toString();
       }
-      if (lesson['changes'].containsKey('newRoomCodes')) {
-        newRoom = lesson['changes']['newRoomCodes'][0];
+      if (lesson['changes'].containsKey('newRoomCodes') as bool) {
+        newRoom = lesson['changes']['newRoomCodes'][0].toString();
       }
-      if (lesson['changes'].containsKey('absentRoomCodes')) {
-        room = lesson['changes']['absentRoomCodes'][0];
+      if (lesson['changes'].containsKey('absentRoomCodes') as bool) {
+        room = lesson['changes']['absentRoomCodes'][0].toString();
       }
       if (<String>['Klasse frei', 'Klasse fehlt'].contains(changeCaption)) {
         cancelled = true;
@@ -89,17 +89,18 @@ class Lesson {
     return Lesson(
       date ?? DateTime(-1),
       lessonNumber,
-      courseTitle: lesson['courseTitle'],
+      courseTitle: lesson['courseTitle'].toString(),
       teacher: teacher,
       room: room,
-      classes: lesson['classCodes'],
+      classes: lesson['classCodes'] as List<dynamic>,
       changeCaption: changeCaption,
       changeInformation: changeInformation,
       newTeacher: newTeacher,
       newRoom: newRoom,
       cancelled: cancelled,
       additional: additional,
-      color: getSubjectTemplateByCourseTitle(lesson['courseTitle'])?.color ??
+      color: getSubjectTemplateByCourseTitle(lesson['courseTitle'].toString())
+              ?.color ??
           Colors.pink,
     );
   }

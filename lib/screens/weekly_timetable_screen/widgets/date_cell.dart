@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
 import 'package:davinki/utils.dart';
+import 'package:flutter/material.dart';
 
 class DateCell extends StatelessWidget {
   final DateTime _date;
@@ -9,28 +9,28 @@ class DateCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 5, top: 10.0),
+      padding: const EdgeInsets.only(bottom: 5, top: 10.0),
       child: Column(children: <Widget>[
         Container(
-          padding: EdgeInsets.all(6),
+          padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            color: (this._date.year == this._today.year &&
-                    this._date.month == this._today.month &&
-                    this._date.day == this._today.day)
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            color: (_date.year == _today.year &&
+                    _date.month == _today.month &&
+                    _date.day == _today.day)
                 ? Colors.blue
                 : Colors.pink,
           ),
           child: Text(
-            formatDate(this._date, [dd, '.', mm]),
-            style: TextStyle(
+            formatDate(_date, <String>[dd, '.', mm]),
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 16,
             ),
           ),
         ),
-        Text(weekdayNames[this._date.weekday - 1],
-            style: TextStyle(fontSize: 16)),
+        Text(weekdayNames[_date.weekday - 1],
+            style: const TextStyle(fontSize: 16)),
       ]),
     );
   }

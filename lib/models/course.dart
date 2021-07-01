@@ -3,16 +3,16 @@ class Course {
   Course(this.title, this.teacher);
 
   int compareTo(Course otherCourse) {
-    if (this.title != otherCourse.title) {
-      return this.title.compareTo(otherCourse.title);
+    if (title != otherCourse.title) {
+      return title.compareTo(otherCourse.title);
     }
-    return this.teacher.compareTo(otherCourse.teacher);
+    return teacher.compareTo(otherCourse.teacher);
   }
 
   @override
   bool operator ==(Object other) {
     return (other is Course) &&
-        other.title == this.title &&
-        other.teacher == this.teacher;
+        other.title == title &&
+        other.teacher == teacher;
   }
 }

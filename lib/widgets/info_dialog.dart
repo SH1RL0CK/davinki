@@ -8,14 +8,14 @@ class InfoDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(this._title),
-      content: Text(this._body),
+      title: Text(_title),
+      content: Text(_body),
       actions: <Widget>[
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text('Ok'),
+          child: const Text('Ok'),
         ),
       ],
     );

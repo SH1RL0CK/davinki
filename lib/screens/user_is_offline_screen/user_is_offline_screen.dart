@@ -1,7 +1,7 @@
+import 'package:davinki/screens/loading_screen/loading_screen.dart';
+import 'package:davinki/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:davinki/utils.dart';
-import 'package:davinki/screens/loading_screen/loading_screen.dart';
 
 class UserIsOfflineScreen extends StatelessWidget {
   const UserIsOfflineScreen({Key? key}) : super(key: key);
@@ -16,13 +16,13 @@ class UserIsOfflineScreen extends StatelessWidget {
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.refresh,
               color: Colors.white,
             ),
             onPressed: () {
               navigateToOtherScreen(
-                LoadingScreen(),
+                const LoadingScreen(),
                 context,
               );
             },
@@ -32,7 +32,7 @@ class UserIsOfflineScreen extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: const <Widget>[
             Icon(
               Icons.wifi_off,
               size: 50,

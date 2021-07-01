@@ -1,26 +1,23 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:davinki/utils.dart';
-import 'package:davinki/models/general_settings.dart';
 import 'package:davinki/models/course_settings.dart';
+import 'package:davinki/models/general_settings.dart';
 import 'package:davinki/screens/loading_screen/loading_screen.dart';
 import 'package:davinki/screens/setting_screens/general_settings_screen/general_settings_screen.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/weekly_timetable.dart';
+import 'package:davinki/utils.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class WeeklyTimetableScreen extends StatefulWidget {
   final Map<String, dynamic> _infoserverData;
   final GeneralSettings _generalSettings;
   final CourseSettings _courseSettings;
   final bool offline;
-  WeeklyTimetableScreen(
+  const WeeklyTimetableScreen(
       this._infoserverData, this._generalSettings, this._courseSettings,
       {this.offline = false});
   @override
   _WeeklyTimetableScreenState createState() => _WeeklyTimetableScreenState(
-      this._infoserverData,
-      this.offline,
-      this._generalSettings,
-      this._courseSettings);
+      _infoserverData, offline, _generalSettings, _courseSettings);
 }
 
 class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
@@ -30,18 +27,22 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
   final CourseSettings _courseSettings;
   int _week = 0;
   bool _offlineSnackbarIsDisplayed = false;
-  _WeeklyTimetableScreenState(this._infoserverData, this._offline,
-      this._generalSettings, this._courseSettings);
+  _WeeklyTimetableScreenState(
+    this._infoserverData,
+    this._offline,
+    this._generalSettings,
+    this._courseSettings,
+  );
 
   @override
   void initState() {
     super.initState();
-    if (this._offline) this._showOfflineSnackbar();
+    if (_offline) _showOfflineSnackbar();
   }
 
   void _showOfflineSnackbar() {
     setState(() {
-      this._offlineSnackbarIsDisplayed = true;
+      _offlineSnackbarIsDisplayed = true;
     });
 
     WidgetsBinding.instance!.addPostFrameCallback((Duration timestamp) {
@@ -49,10 +50,10 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
           .showSnackBar(
             SnackBar(
               backgroundColor: Colors.red.shade800,
-              duration: Duration(seconds: 5),
+              duration: const Duration(seconds: 5),
               content: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
+                children: const <Widget>[
                   Icon(
                     Icons.wifi_off,
                     color: Colors.white,
@@ -72,7 +73,7 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
           .then(
         (dynamic reason) {
           setState(() {
-            this._offlineSnackbarIsDisplayed = false;
+            _offlineSnackbarIsDisplayed = false;
           });
         },
       );
@@ -81,8 +82,8 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
 
   void _changeWeek(int i) {
     setState(() {
-      if (!(i < 0 && this._week <= -2)) {
-        this._week += i;
+      if (!(i < 0 && _week <= -2)) {
+        _week += i;
       }
     });
   }
@@ -97,26 +98,25 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.refresh,
               color: Colors.white,
             ),
             onPressed: () {
               navigateToOtherScreen(
-                LoadingScreen(),
+                const LoadingScreen(),
                 context,
               );
             },
           ),
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.settings,
               color: Colors.white,
             ),
             onPressed: () {
               navigateToOtherScreen(
-                GeneralSettingsScreen(
-                    this._generalSettings, this._courseSettings),
+                GeneralSettingsScreen(_generalSettings, _courseSettings),
                 context,
               );
             },
@@ -130,19 +130,19 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Visibility(
-              visible: this._week > -2,
+              visible: _week > -2,
               child: FloatingActionButton(
-                onPressed: () => this._changeWeek(-1),
+                onPressed: () => _changeWeek(-1),
                 mini: true,
-                child: Icon(Icons.keyboard_arrow_left),
                 heroTag: null,
+                child: const Icon(Icons.keyboard_arrow_left),
               ),
             ),
             FloatingActionButton(
-              onPressed: () => this._changeWeek(1),
+              onPressed: () => _changeWeek(1),
               mini: true,
-              child: Icon(Icons.keyboard_arrow_right),
               heroTag: null,
+              child: const Icon(Icons.keyboard_arrow_right),
             ),
           ],
         ),
@@ -150,7 +150,7 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
       body: RefreshIndicator(
         onRefresh: () async {
           navigateToOtherScreen(
-            LoadingScreen(),
+            const LoadingScreen(),
             context,
           );
         },
@@ -159,21 +159,22 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
             child: Container(
               color: Colors.white,
               padding: EdgeInsets.only(
-                  bottom: this._offlineSnackbarIsDisplayed ? 120 : 55),
+                  bottom: _offlineSnackbarIsDisplayed ? 120 : 55),
               child: WeeklyTimetable(
-                this._week,
-                this._infoserverData,
-                this._courseSettings,
+                _week,
+                _infoserverData,
+                _courseSettings,
                 key: UniqueKey(),
               ),
             ),
           ),
           onHorizontalDragEnd: (DragEndDetails details) {
             if (details.primaryVelocity == 0) return;
-            if (details.primaryVelocity!.compareTo(0) == -1)
-              this._changeWeek(1);
-            else
-              this._changeWeek(-1);
+            if (details.primaryVelocity!.compareTo(0) == -1) {
+              _changeWeek(1);
+            } else {
+              _changeWeek(-1);
+            }
           },
         ),
       ),

@@ -1,147 +1,146 @@
-import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:date_format/date_format.dart';
 import 'package:davinki/models/lesson.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/lesson_timetable/lesson_slider_item.dart';
 import 'package:davinki/utils.dart';
+import 'package:flutter/material.dart';
 
 class LessonTimetableDialog extends StatefulWidget {
   final Lesson _usersLesson;
   final Map<String, dynamic> _infoserverData;
-  List _lessonTimes = [], _timeslots = [];
-  List<Lesson> _lessons = <Lesson>[];
+  List<dynamic> _lessonTimes = <dynamic>[], _timeslots = <dynamic>[];
+  final List<Lesson> _lessons = <Lesson>[];
   bool empty = false;
 
   LessonTimetableDialog(this._usersLesson, this._infoserverData, {Key? key})
       : super(key: key) {
-    this._lessonTimes =
-        this._infoserverData['result']['displaySchedule']['lessonTimes'];
-    this._timeslots =
-        this._infoserverData['result']['timeframes'][0]['timeslots'];
-    DateTime date = this._usersLesson.date;
-    String formattedDate = this._usersLesson.formattedDate;
-    int lessonNumber = this._usersLesson.lessonNumber;
+    _lessonTimes = _infoserverData['result']['displaySchedule']['lessonTimes']
+        as List<dynamic>;
+    _timeslots = _infoserverData['result']['timeframes'][0]['timeslots']
+        as List<dynamic>;
+    final DateTime date = _usersLesson.date;
+    final String formattedDate = _usersLesson.formattedDate;
+    final int lessonNumber = _usersLesson.lessonNumber;
 
-    if (!this._usersLesson.freeTime) {
-      this._lessons.add(this._usersLesson);
+    if (!_usersLesson.freeTime) {
+      _lessons.add(_usersLesson);
     }
 
-    this._lessonTimes.forEach((lessonAsMap) {
-      if (Lesson.isLesson(lessonAsMap) &&
-          lessonAsMap['dates'].contains(formattedDate) &&
-          this._timeslots.indexWhere((timeslot) =>
+    for (final dynamic lessonAsMap in _lessonTimes) {
+      if (Lesson.isLesson(lessonAsMap as Map<String, dynamic>) &&
+          lessonAsMap['dates'].contains(formattedDate) as bool &&
+          _timeslots.indexWhere((dynamic timeslot) =>
                   timeslot['startTime'] == lessonAsMap['startTime']) <=
               lessonNumber &&
-          this._timeslots.indexWhere((timeslot) =>
+          _timeslots.indexWhere((dynamic timeslot) =>
                   timeslot['endTime'] == lessonAsMap['endTime']) >=
               lessonNumber) {
-        int lessonIndex = this
-            ._lessons
-            .indexWhere((l) => l.course.title == lessonAsMap['courseTitle']);
-        Lesson lesson = Lesson.fromJson(lessonAsMap,
+        final int lessonIndex = _lessons.indexWhere(
+            (Lesson l) => l.course.title == lessonAsMap['courseTitle']);
+        final Lesson lesson = Lesson.fromJson(lessonAsMap,
             date: date, lessonNumber: lessonNumber);
         if (lessonIndex == -1 ||
-            (this._lessons[lessonIndex].course != lesson.course)) {
-          this._lessons.add(lesson);
+            (_lessons[lessonIndex].course != lesson.course)) {
+          _lessons.add(lesson);
         } else if (lesson.changeCaption.isNotEmpty &&
-            this._lessons[lessonIndex] != this._usersLesson) {
-          this._lessons[lessonIndex] = lesson;
+            _lessons[lessonIndex] != _usersLesson) {
+          _lessons[lessonIndex] = lesson;
         }
       }
-    });
-    this._lessons.sort((lesson1, lesson2) {
+    }
+    _lessons.sort((Lesson lesson1, Lesson lesson2) {
       return lesson1.course.compareTo(lesson2.course);
     });
-    if (this._lessons.length == 0) {
-      this.empty = true;
+    if (_lessons.isEmpty) {
+      empty = true;
     }
   }
 
   @override
-  _LessonTimetableDialogState createState() => _LessonTimetableDialogState(
-      this._usersLesson, this._lessons, this._timeslots);
+  _LessonTimetableDialogState createState() =>
+      _LessonTimetableDialogState(_usersLesson, _lessons, _timeslots);
 }
 
 class _LessonTimetableDialogState extends State<LessonTimetableDialog> {
   final Lesson _usersLesson;
   final List<Lesson> _lessons;
-  final List _timeslots;
+  final List<dynamic> _timeslots;
   int _current = 0;
   _LessonTimetableDialogState(this._usersLesson, this._lessons, this._timeslots)
       : super() {
-    if (!this._usersLesson.freeTime) {
-      this._current = this._lessons.indexOf(this._usersLesson);
+    if (!_usersLesson.freeTime) {
+      _current = _lessons.indexOf(_usersLesson);
     }
   }
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      titleTextStyle: TextStyle(
+      titleTextStyle: const TextStyle(
         fontSize: 16,
         color: Colors.black,
         fontWeight: FontWeight.bold,
       ),
       title: Text(
-        '${this._usersLesson.lessonNumber + 1}: ' +
-            this
-                ._timeslots[this._usersLesson.lessonNumber]['startTime']
+        '${_usersLesson.lessonNumber + 1}: ' +
+            _timeslots[_usersLesson.lessonNumber]['startTime']
+                .toString()
                 .substring(0, 2) +
             ':' +
-            this
-                ._timeslots[this._usersLesson.lessonNumber]['startTime']
+            _timeslots[_usersLesson.lessonNumber]['startTime']
+                .toString()
                 .substring(2) +
             ' - ' +
-            this
-                ._timeslots[this._usersLesson.lessonNumber]['endTime']
+            _timeslots[_usersLesson.lessonNumber]['endTime']
+                .toString()
                 .substring(0, 2) +
             ':' +
-            this
-                ._timeslots[this._usersLesson.lessonNumber]['endTime']
+            _timeslots[_usersLesson.lessonNumber]['endTime']
+                .toString()
                 .substring(2) +
             '  ' +
-            weekdayNames[this._usersLesson.date.weekday - 1] +
+            weekdayNames[_usersLesson.date.weekday - 1] +
             ', ' +
-            formatDate(this._usersLesson.date, [dd, '.', mm, '.', yyyy]),
+            formatDate(_usersLesson.date, <String>[dd, '.', mm, '.', yyyy]),
       ),
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(25.0)),
       ),
       children: <Widget>[
-        Container(
+        SizedBox(
           width: double.maxFinite,
-          child: Column(children: [
+          child: Column(children: <Widget>[
             CarouselSlider(
-              items: this
-                  ._lessons
+              items: _lessons
                   .map(
-                    (lesson) => LessonSliderItem(lesson),
+                    (Lesson lesson) => LessonSliderItem(lesson),
                   )
                   .toList(),
               options: CarouselOptions(
                   height: MediaQuery.of(context).size.height / 2.5,
                   enlargeCenterPage: true,
-                  initialPage: !this._usersLesson.freeTime
-                      ? this._lessons.indexOf(this._usersLesson)
+                  initialPage: !_usersLesson.freeTime
+                      ? _lessons.indexOf(_usersLesson)
                       : 0,
-                  onPageChanged: (index, reason) {
+                  onPageChanged: (int index, CarouselPageChangedReason reason) {
                     setState(() {
-                      this._current = index;
+                      _current = index;
                     });
                   }),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: this._lessons.map((lesson) {
-                int index = this._lessons.indexOf(lesson);
+              children: _lessons.map<Container>((Lesson lesson) {
+                final int index = _lessons.indexOf(lesson);
                 return Container(
                   width: 8.0,
                   height: 8.0,
-                  margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 2.0),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: _current == index
-                        ? Color.fromRGBO(0, 0, 0, 0.9)
-                        : Color.fromRGBO(0, 0, 0, 0.4),
+                        ? const Color.fromRGBO(0, 0, 0, 0.9)
+                        : const Color.fromRGBO(0, 0, 0, 0.4),
                   ),
                 );
               }).toList(),

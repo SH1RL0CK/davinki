@@ -1,28 +1,29 @@
-import 'package:flutter/material.dart';
-import 'package:crypto/crypto.dart' as crypto;
 import 'dart:convert';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:davinki/utils.dart';
+import 'package:crypto/crypto.dart' as crypto;
 import 'package:davinki/models/course_settings.dart';
-import 'package:davinki/models/user_type.dart';
-import 'package:davinki/models/school_type.dart';
-import 'package:davinki/models/general_settings.dart';
 import 'package:davinki/models/davinci_infoserver_service_exceptions.dart';
-import 'package:davinki/services/davinci_infoserver_service.dart';
+import 'package:davinki/models/general_settings.dart';
+import 'package:davinki/models/school_type.dart';
+import 'package:davinki/models/user_type.dart';
 import 'package:davinki/screens/loading_screen/loading_screen.dart';
 import 'package:davinki/screens/setting_screens/couse_settings_screen/course_settings_screen.dart';
+import 'package:davinki/services/davinci_infoserver_service.dart';
+import 'package:davinki/utils.dart';
 import 'package:davinki/widgets/info_dialog.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class GeneralSettingsScreen extends StatefulWidget {
   final GeneralSettings _generalSettings;
   final CourseSettings _courseSettings;
 
-  GeneralSettingsScreen(this._generalSettings, this._courseSettings, {Key? key})
+  const GeneralSettingsScreen(this._generalSettings, this._courseSettings,
+      {Key? key})
       : super(key: key);
 
   @override
   _GeneralSettingsScreenState createState() =>
-      _GeneralSettingsScreenState(this._generalSettings, this._courseSettings);
+      _GeneralSettingsScreenState(_generalSettings, _courseSettings);
 }
 
 class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
@@ -39,46 +40,46 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
       TextEditingController();
 
   _GeneralSettingsScreenState(this._generalSettings, this._courseSettings) {
-    this._usernameInputController.text = this._generalSettings.username ?? '';
+    _usernameInputController.text = _generalSettings.username ?? '';
   }
 
   Future<bool> _loginDataIsCorrect(String? username, String? password) async {
     try {
-      this._infoserverData =
+      _infoserverData =
           await DavinciInfoserverService(username!, password!).getOnlineData();
     } on UserIsOfflineException {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return InfoDialog(
+          return const InfoDialog(
             'Du bist offline!',
             'Du musst online sein, um die Einstellungen zu speichern!',
           );
         },
       ).then((dynamic exit) {
         setState(() {
-          this._formFieldsEnabled = true;
+          _formFieldsEnabled = true;
         });
       });
       return false;
     } on WrongLoginDataException {
       setState(() {
-        this._wrongLoginData = true;
-        this._formFieldsEnabled = true;
+        _wrongLoginData = true;
+        _formFieldsEnabled = true;
       });
       return false;
     } on UnknownErrorException {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return InfoDialog(
+          return const InfoDialog(
             'Unbekannter Fehler!',
             'Ein unbekannter Fehler ist während der Verbindung mit dem DAVINCI-Infoserver aufgetreten!',
           );
         },
       ).then((dynamic exit) {
         setState(() {
-          this._formFieldsEnabled = true;
+          _formFieldsEnabled = true;
         });
       });
       return false;
@@ -91,40 +92,40 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
     return crypto.md5.convert(utf8.encode(password)).toString();
   }
 
-  void _handleForm() async {
-    if (!this._formFieldsEnabled) return;
+  Future<void> _handleForm() async {
+    if (!_formFieldsEnabled) return;
 
     setState(() {
-      this._wrongLoginData = false;
-      this._formFieldsEnabled = false;
+      _wrongLoginData = false;
+      _formFieldsEnabled = false;
     });
 
-    if (!this._formKey.currentState!.validate()) {
+    if (!_formKey.currentState!.validate()) {
       setState(() {
-        this._formFieldsEnabled = true;
+        _formFieldsEnabled = true;
       });
       return;
     }
 
-    this._generalSettings.username = this._usernameInputController.text;
-    String? encryptedPassword = this._passwordInputController.text.isEmpty
-        ? this._generalSettings.encryptedPassword
-        : encryptPassword(this._passwordInputController.text);
+    _generalSettings.username = _usernameInputController.text;
+    final String? encryptedPassword = _passwordInputController.text.isEmpty
+        ? _generalSettings.encryptedPassword
+        : encryptPassword(_passwordInputController.text);
 
-    if (!await this._loginDataIsCorrect(
-        this._generalSettings.username, encryptedPassword)) return;
+    if (!await _loginDataIsCorrect(
+        _generalSettings.username, encryptedPassword)) return;
 
-    this._generalSettings.encryptedPassword = encryptedPassword;
-    this._generalSettings.storeData();
-    if (this._generalSettings.userType == UserType.student) {
+    _generalSettings.encryptedPassword = encryptedPassword;
+    _generalSettings.storeData();
+    if (_generalSettings.userType == UserType.student) {
       navigateToOtherScreen(
         CourseSettingsScreen(
-            this._infoserverData, this._generalSettings, this._courseSettings),
+            _infoserverData, _generalSettings, _courseSettings),
         context,
       );
     } else {
       navigateToOtherScreen(
-        LoadingScreen(),
+        const LoadingScreen(),
         context,
       );
     }
@@ -136,8 +137,8 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
 
   @override
   void dispose() {
-    this._usernameInputController.dispose();
-    this._passwordInputController.dispose();
+    _usernameInputController.dispose();
+    _passwordInputController.dispose();
     super.dispose();
   }
 
@@ -151,14 +152,14 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.close,
               color: Colors.white,
             ),
             onPressed: () {
-              if (this._formFieldsEnabled) {
+              if (_formFieldsEnabled) {
                 navigateToOtherScreen(
-                  LoadingScreen(),
+                  const LoadingScreen(),
                   context,
                 );
               }
@@ -167,29 +168,29 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
         ],
       ),
       body: GestureDetector(
-        onTap: this._unfocusTextFields,
+        onTap: _unfocusTextFields,
         child: Form(
-          key: this._formKey,
+          key: _formKey,
           child: ListView(
-            padding: EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(12.0),
             children: <Widget>[
-              Text(
+              const Text(
                 'Allgemeine Einstellungen',
                 style: TextStyle(fontSize: 25),
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               DropdownButtonFormField<UserType>(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.school),
                   labelText: 'Du bist',
                 ),
-                value: this._generalSettings.userType,
-                onTap: this._unfocusTextFields,
-                onChanged: this._formFieldsEnabled
+                value: _generalSettings.userType,
+                onTap: _unfocusTextFields,
+                onChanged: _formFieldsEnabled
                     ? (UserType? newUserType) {
                         setState(() {
-                          this._generalSettings.userType = newUserType;
+                          _generalSettings.userType = newUserType;
                         });
                       }
                     : null,
@@ -199,101 +200,101 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                   }
                   return null;
                 },
-                items: <DropdownMenuItem<UserType>>[
+                items: const <DropdownMenuItem<UserType>>[
                   DropdownMenuItem<UserType>(
-                    child: Text('Schüler'),
                     value: UserType.student,
+                    child: Text('Schüler'),
                   )
                 ],
               ),
-              this._generalSettings.userType == UserType.student
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 12),
-                      child: DropdownButtonFormField<SchoolType>(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.account_balance),
-                          labelText: 'Deine Schulform',
-                        ),
-                        value: this._generalSettings.schoolType,
-                        onTap: this._unfocusTextFields,
-                        onChanged: this._formFieldsEnabled
-                            ? (SchoolType? newSchoolType) {
-                                setState(() {
-                                  this._generalSettings.schoolType =
-                                      newSchoolType;
-                                });
-                              }
-                            : null,
-                        validator: (SchoolType? schoolType) {
-                          if (schoolType == null) {
-                            return 'Bitte wähle Deine Schulform aus!';
+              if (_generalSettings.userType == UserType.student)
+                Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: DropdownButtonFormField<SchoolType>(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.account_balance),
+                      labelText: 'Deine Schulform',
+                    ),
+                    value: _generalSettings.schoolType,
+                    onTap: _unfocusTextFields,
+                    onChanged: _formFieldsEnabled
+                        ? (SchoolType? newSchoolType) {
+                            setState(() {
+                              _generalSettings.schoolType = newSchoolType;
+                            });
                           }
-                          return null;
-                        },
-                        items: <DropdownMenuItem<SchoolType>>[
-                          DropdownMenuItem<SchoolType>(
-                            child: Text('Berufliches Gymnasium'),
-                            value: SchoolType.vocationalGymnasium,
-                          ),
-                        ],
+                        : null,
+                    validator: (SchoolType? schoolType) {
+                      if (schoolType == null) {
+                        return 'Bitte wähle Deine Schulform aus!';
+                      }
+                      return null;
+                    },
+                    items: const <DropdownMenuItem<SchoolType>>[
+                      DropdownMenuItem<SchoolType>(
+                        value: SchoolType.vocationalGymnasium,
+                        child: Text('Berufliches Gymnasium'),
                       ),
-                    )
-                  : Container(),
-              this._generalSettings.schoolType == SchoolType.vocationalGymnasium
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 12),
-                      child: DropdownButtonFormField<int>(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.class_),
-                          labelText: 'Deine Klasse',
-                        ),
-                        value: this._generalSettings.grade,
-                        onTap: this._unfocusTextFields,
-                        onChanged: this._formFieldsEnabled
-                            ? (int? newGrade) {
-                                setState(() {
-                                  this._generalSettings.grade = newGrade;
-                                });
-                              }
-                            : null,
-                        validator: (int? grade) {
-                          if (grade == null) {
-                            return 'Bitte wähle Deine Klasse aus!';
+                    ],
+                  ),
+                )
+              else
+                Container(),
+              if (_generalSettings.schoolType == SchoolType.vocationalGymnasium)
+                Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: DropdownButtonFormField<int>(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.class_),
+                      labelText: 'Deine Klasse',
+                    ),
+                    value: _generalSettings.grade,
+                    onTap: _unfocusTextFields,
+                    onChanged: _formFieldsEnabled
+                        ? (int? newGrade) {
+                            setState(() {
+                              _generalSettings.grade = newGrade;
+                            });
                           }
-                          return null;
-                        },
-                        items: <int>[11, 12, 13]
-                            .map((int grade) => DropdownMenuItem<int>(
-                                  child: Text(grade.toString()),
-                                  value: grade,
-                                ))
-                            .toList(),
-                      ),
-                    )
-                  : Container(),
-              SizedBox(height: 20),
-              Text(
+                        : null,
+                    validator: (int? grade) {
+                      if (grade == null) {
+                        return 'Bitte wähle Deine Klasse aus!';
+                      }
+                      return null;
+                    },
+                    items: <int>[11, 12, 13]
+                        .map((int grade) => DropdownMenuItem<int>(
+                              value: grade,
+                              child: Text(grade.toString()),
+                            ))
+                        .toList(),
+                  ),
+                )
+              else
+                Container(),
+              const SizedBox(height: 20),
+              const Text(
                 'Anmeldung',
                 style: TextStyle(fontSize: 25),
               ),
-              Text(
+              const Text(
                 'Gib bitte Deine DAVINCI-Anmeldedaten an.',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 18),
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               TextFormField(
-                enabled: this._formFieldsEnabled,
+                enabled: _formFieldsEnabled,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.person),
-                  border: OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.person),
+                  border: const OutlineInputBorder(),
                   labelText: 'Benutzername',
-                  errorText: this._wrongLoginData
-                      ? 'Die Anmeldedaten sind falsch!'
-                      : null,
+                  errorText:
+                      _wrongLoginData ? 'Die Anmeldedaten sind falsch!' : null,
                 ),
-                controller: this._usernameInputController,
+                controller: _usernameInputController,
                 validator: (String? username) {
                   if (username == null || username.isEmpty) {
                     return 'Bitte gib Deinen Benutzernamen an!';
@@ -301,40 +302,39 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               TextFormField(
-                enabled: this._formFieldsEnabled,
+                enabled: _formFieldsEnabled,
                 obscureText: true,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.lock),
-                  border: OutlineInputBorder(),
-                  labelText: this._generalSettings.encryptedPassword == null
+                  prefixIcon: const Icon(Icons.lock),
+                  border: const OutlineInputBorder(),
+                  labelText: _generalSettings.encryptedPassword == null
                       ? 'Passwort'
                       : 'Neues Passwort',
-                  errorText: this._wrongLoginData
-                      ? 'Die Anmeldedaten sind falsch!'
-                      : null,
+                  errorText:
+                      _wrongLoginData ? 'Die Anmeldedaten sind falsch!' : null,
                 ),
-                controller: this._passwordInputController,
+                controller: _passwordInputController,
                 validator: (String? password) {
-                  if (this._generalSettings.encryptedPassword == null &&
+                  if (_generalSettings.encryptedPassword == null &&
                       (password == null || password.isEmpty)) {
                     return 'Bitte gib Dein Passwort an!';
                   }
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               FloatingActionButton.extended(
-                icon: Icon(Icons.save),
+                icon: const Icon(Icons.save),
                 label: Text(
-                  this._generalSettings.userType == UserType.student
+                  _generalSettings.userType == UserType.student
                       ? 'Zu Deinen Kursen'
                       : 'Speichern',
                 ),
-                onPressed: this._handleForm,
+                onPressed: _handleForm,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
             ],
           ),
         ),

@@ -1,22 +1,22 @@
-import 'package:flutter/material.dart';
-import 'package:davinki/utils.dart';
 import 'package:davinki/models/course_settings.dart';
 import 'package:davinki/models/lesson.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/date_cell.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/lesson_cell.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/timseslot_cell.dart';
+import 'package:davinki/utils.dart';
+import 'package:flutter/material.dart';
 
 class WeeklyTimetable extends StatelessWidget {
   final int _week;
   final Map<String, dynamic> _infoserverData;
   final CourseSettings _courseSettings;
-  WeeklyTimetable(this._week, this._infoserverData, this._courseSettings,
+  const WeeklyTimetable(this._week, this._infoserverData, this._courseSettings,
       {Key? key})
       : super(key: key);
 
-  List<List<Lesson>> _getLessonsOfTimetable(
-      List lessonTimes, List timeslots, List<DateTime> datesOfWeek) {
-    List<List<Lesson>> lessons = List<List<Lesson>>.generate(
+  List<List<Lesson>> _getLessonsOfTimetable(List<dynamic> lessonTimes,
+      List<dynamic> timeslots, List<DateTime> datesOfWeek) {
+    final List<List<Lesson>> lessons = List<List<Lesson>>.generate(
       timeslots.length,
       (int lessonNumber) => datesOfWeek
           .map(
@@ -25,22 +25,22 @@ class WeeklyTimetable extends StatelessWidget {
           .toList(),
     );
 
-    List<String> formatedDatesOfWeek =
+    final List<String> formatedDatesOfWeek =
         datesOfWeek.map((DateTime date) => infoserverDateFormat(date)).toList();
 
-    for (Map<String, dynamic> lessonAsMap in lessonTimes) {
-      if (!Lesson.isLesson(lessonAsMap)) {
+    for (final dynamic lessonAsMap in lessonTimes) {
+      if (!Lesson.isLesson(lessonAsMap as Map<String, dynamic>)) {
         continue;
       }
-      Lesson lesson = Lesson.fromJson(lessonAsMap);
-      bool isUsersLesson =
-          this._courseSettings.usersCourses.contains(lesson.course);
+      final Lesson lesson = Lesson.fromJson(lessonAsMap);
+      final bool isUsersLesson =
+          _courseSettings.usersCourses.contains(lesson.course);
       if (isUsersLesson) {
         formatedDatesOfWeek.asMap().forEach(
           (int weekdayIndex, String date) {
-            if (lessonAsMap['dates'].contains(date)) {
+            if (lessonAsMap['dates'].contains(date) as bool) {
               int lessonNumber = 0;
-              timeslots.asMap().forEach((timeslotIndex, timeslot) {
+              timeslots.asMap().forEach((int timeslotIndex, dynamic timeslot) {
                 if (timeslot['startTime'] == lessonAsMap['startTime']) {
                   lessonNumber = timeslotIndex;
                 }
@@ -68,13 +68,13 @@ class WeeklyTimetable extends StatelessWidget {
   }
 
   List<TableRow> _buildTimetable() {
-    List<DateTime> datesOfWeek = getDatesOfWeek(this._week);
-    List lessonTimes =
-        this._infoserverData['result']['displaySchedule']['lessonTimes'];
-    List timeslots =
-        this._infoserverData['result']['timeframes'][0]['timeslots'];
+    final List<DateTime> datesOfWeek = getDatesOfWeek(_week);
+    final List<dynamic> lessonTimes = _infoserverData['result']
+        ['displaySchedule']['lessonTimes'] as List<dynamic>;
+    final List<dynamic> timeslots = _infoserverData['result']['timeframes'][0]
+        ['timeslots'] as List<dynamic>;
 
-    List<List<Lesson>> timetable =
+    final List<List<Lesson>> timetable =
         _getLessonsOfTimetable(lessonTimes, timeslots, datesOfWeek);
 
     return <TableRow>[
@@ -91,20 +91,21 @@ class WeeklyTimetable extends StatelessWidget {
                       ),
                     )
                     .toList(),
-            decoration: BoxDecoration(color: Colors.white),
+            decoration: const BoxDecoration(color: Colors.white),
           )
         ] +
         List<TableRow>.generate(timetable.length, (int index) {
           return TableRow(
             children: <TableCell>[
                   TableCell(
-                    child: TimeslotCell(timeslots[index]),
+                    child:
+                        TimeslotCell(timeslots[index] as Map<dynamic, dynamic>),
                   ),
                 ] +
                 timetable[index]
                     .map(
                       (Lesson lesson) => TableCell(
-                        child: LessonCell(lesson, this._infoserverData),
+                        child: LessonCell(lesson, _infoserverData),
                       ),
                     )
                     .toList(),
@@ -119,8 +120,8 @@ class WeeklyTimetable extends StatelessWidget {
   Widget build(BuildContext context) {
     return Table(
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-      children: this._buildTimetable(),
-      columnWidths: {
+      children: _buildTimetable(),
+      columnWidths: const <int, TableColumnWidth>{
         0: FixedColumnWidth(58),
       },
     );

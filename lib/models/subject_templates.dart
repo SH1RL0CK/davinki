@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:davinki/models/school_type.dart';
+import 'package:flutter/material.dart';
 
 class SubjectTemplate {
   final String title;
@@ -43,7 +43,7 @@ Map<SchoolType, List<SubjectTemplate>> subjectTemplates =
         mustBeSelected: true),
     SubjectTemplate(
         'Politik & Wirtschaft', Colors.pink.shade700, <String>['PWG'],
-        mustBeSelectedInGrades: [11, 12]),
+        mustBeSelectedInGrades: <int>[11, 12]),
     SubjectTemplate('Geschichte', Colors.black, <String>['GG'],
         mustBeSelected: true),
     SubjectTemplate('Sport', Colors.deepOrangeAccent, <String>['SpG'],
@@ -60,9 +60,11 @@ Map<SchoolType, List<SubjectTemplate>> subjectTemplates =
 SubjectTemplate? getSubjectTemplateByCourseTitle(String courseTitle,
     {SchoolType? schoolType, int? grade}) {
   SubjectTemplate? searchInSchoolType() {
-    for (SubjectTemplate subjectTemplate in subjectTemplates[schoolType]!) {
-      for (String courseTitlePrefix in subjectTemplate.courseTitlePrefixes) {
-        RegExp regex = RegExp(r'^' + courseTitlePrefix + r'([0-9]+)?$');
+    for (final SubjectTemplate subjectTemplate
+        in subjectTemplates[schoolType]!) {
+      for (final String courseTitlePrefix
+          in subjectTemplate.courseTitlePrefixes) {
+        final RegExp regex = RegExp(r'^' + courseTitlePrefix + r'([0-9]+)?$');
         if (regex.hasMatch(courseTitle) &&
             (grade == null ||
                 (subjectTemplate.onlyInGrades == null ||
@@ -78,7 +80,7 @@ SubjectTemplate? getSubjectTemplateByCourseTitle(String courseTitle,
     return searchInSchoolType();
   } else {
     for (schoolType in subjectTemplates.keys) {
-      SubjectTemplate? result = searchInSchoolType();
+      final SubjectTemplate? result = searchInSchoolType();
       if (result != null) return result;
     }
   }

@@ -1,5 +1,7 @@
 name: davinki
-description: A new Flutter project.
+description: Die bessere Vertretungsplan-App für die Brühlwiesenschule in Hofheim
+
+include: package:lint/analysis_options.yaml
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -39,6 +41,7 @@ dev_dependencies:
     sdk: flutter
   flutter_launcher_icons: ^0.9.0
   flutter_native_splash: ^1.2.0
+  lint: ^1.5.3
 
 dependency_overrides:
   args: 2.0.0
@@ -88,4 +91,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-

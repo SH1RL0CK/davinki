@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:davinki/models/lesson.dart';
+import 'package:flutter/material.dart';
 
 class Cancelled extends StatelessWidget {
   final Lesson _lesson;
@@ -7,7 +7,7 @@ class Cancelled extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (this._lesson.cancelled) {
+    if (_lesson.cancelled) {
       return Icon(
         Icons.close,
         color: Colors.red.shade900,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class TimeslotCell extends StatelessWidget {
-  final Map _timeslot;
-  TimeslotCell(this._timeslot);
+  final Map<dynamic, dynamic> _timeslot;
+  const TimeslotCell(this._timeslot);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -10,16 +10,16 @@ class TimeslotCell extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Text(
-            ' ${this._timeslot['startTime'].substring(0, 2)}:${this._timeslot['startTime'].substring(2)}',
-            style: TextStyle(fontSize: 14),
+            ' ${_timeslot['startTime'].substring(0, 2)}:${_timeslot['startTime'].substring(2)}',
+            style: const TextStyle(fontSize: 14),
           ),
           Text(
-            '${this._timeslot['label']}',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            '${_timeslot['label']}',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           Text(
-            '${this._timeslot['endTime'].substring(0, 2)}:${this._timeslot['endTime'].substring(2)}',
-            style: TextStyle(fontSize: 14),
+            '${_timeslot['endTime'].substring(0, 2)}:${_timeslot['endTime'].substring(2)}',
+            style: const TextStyle(fontSize: 14),
           ),
         ],
       ),
