@@ -2,6 +2,7 @@ import 'package:davinki/models/course_settings.dart';
 import 'package:davinki/models/general_settings.dart';
 import 'package:davinki/screens/loading_screen/loading_screen.dart';
 import 'package:davinki/screens/setting_screens/general_settings_screen/general_settings_screen.dart';
+import 'package:davinki/screens/weekly_timetable_screen/widgets/date_cell.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/weekly_timetable.dart';
 import 'package:davinki/utils.dart';
 import 'package:flutter/material.dart';
@@ -90,6 +91,7 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final List<DateTime> datesOfWeek = getDatesOfWeek(_week);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -155,18 +157,45 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
           );
         },
         child: GestureDetector(
-          child: SingleChildScrollView(
-            child: Container(
-              color: Colors.white,
-              padding: EdgeInsets.only(
-                  bottom: _offlineSnackbarIsDisplayed ? 120 : 55),
-              child: WeeklyTimetable(
-                _week,
-                _infoserverData,
-                _courseSettings,
-                key: UniqueKey(),
+          child: Stack(
+            children: <Widget>[
+              SingleChildScrollView(
+                child: Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.only(
+                      bottom: _offlineSnackbarIsDisplayed ? 120 : 55),
+                  child: WeeklyTimetable(
+                    _week,
+                    _infoserverData,
+                    _courseSettings,
+                    key: UniqueKey(),
+                  ),
+                ),
               ),
-            ),
+              Table(
+                children: <TableRow>[
+                  TableRow(
+                    children: <TableCell>[
+                          TableCell(
+                            child: Container(),
+                          ),
+                        ] +
+                        datesOfWeek
+                            .map((DateTime date) => TableCell(
+                                  child: DateCell(date),
+                                ))
+                            .toList(),
+                    decoration: const BoxDecoration(color: Colors.white),
+                  ),
+                ],
+                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                border: const TableBorder(
+                    bottom: BorderSide(color: Colors.black12)),
+                columnWidths: const <int, TableColumnWidth>{
+                  0: FixedColumnWidth(58),
+                },
+              ),
+            ],
           ),
           onHorizontalDragEnd: (DragEndDetails details) {
             if (details.primaryVelocity == 0) return;

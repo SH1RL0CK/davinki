@@ -85,13 +85,11 @@ class WeeklyTimetable extends StatelessWidget {
                   ),
                 ] +
                 datesOfWeek
-                    .map(
-                      (DateTime date) => TableCell(
-                        child: DateCell(date),
-                      ),
-                    )
+                    .map((DateTime date) => TableCell(
+                          child: DateCell(date),
+                        ))
                     .toList(),
-            decoration: const BoxDecoration(color: Colors.white),
+            decoration: const BoxDecoration(),
           )
         ] +
         List<TableRow>.generate(timetable.length, (int index) {
@@ -110,7 +108,7 @@ class WeeklyTimetable extends StatelessWidget {
                     )
                     .toList(),
             decoration: BoxDecoration(
-              color: (index % 2 == 0) ? Colors.pink[50] : Colors.white,
+              color: (index % 2 == 0) ? Colors.pink.shade50 : Colors.white,
             ),
           );
         });
