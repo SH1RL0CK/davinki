@@ -74,6 +74,19 @@ class _LessonTimetableDialogState extends State<LessonTimetableDialog> {
   }
   @override
   Widget build(BuildContext context) {
+    final int lessonNumber = _usersLesson.lessonNumber + 1;
+    final String startTime =
+        _timeslots[_usersLesson.lessonNumber]['startTime'].toString();
+    final String formattedStartTime =
+        '${startTime.substring(0, 2)}:${startTime.substring(2)}';
+    final String endTime =
+        _timeslots[_usersLesson.lessonNumber]['endTime'].toString();
+    final String formattedEndTime =
+        '${endTime.substring(0, 2)}:${endTime.substring(2)}';
+    final String weekdayName = weekdayNames[_usersLesson.date.weekday - 1];
+    final String formattedDate =
+        formatDate(_usersLesson.date, <String>[dd, '.', mm, '.', yyyy]);
+
     return SimpleDialog(
       titleTextStyle: const TextStyle(
         fontSize: 16,
@@ -81,26 +94,7 @@ class _LessonTimetableDialogState extends State<LessonTimetableDialog> {
         fontWeight: FontWeight.bold,
       ),
       title: Text(
-        '${_usersLesson.lessonNumber + 1}: ' +
-            _timeslots[_usersLesson.lessonNumber]['startTime']
-                .toString()
-                .substring(0, 2) +
-            ':' +
-            _timeslots[_usersLesson.lessonNumber]['startTime']
-                .toString()
-                .substring(2) +
-            ' - ' +
-            _timeslots[_usersLesson.lessonNumber]['endTime']
-                .toString()
-                .substring(0, 2) +
-            ':' +
-            _timeslots[_usersLesson.lessonNumber]['endTime']
-                .toString()
-                .substring(2) +
-            '  ' +
-            weekdayNames[_usersLesson.date.weekday - 1] +
-            ', ' +
-            formatDate(_usersLesson.date, <String>[dd, '.', mm, '.', yyyy]),
+        '$lessonNumber: $formattedStartTime - $formattedEndTime  $weekdayName, $formattedDate',
       ),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(25.0)),
