@@ -15,6 +15,19 @@ class LessonCell extends StatelessWidget {
         : _lesson.course.title;
 
     return InkWell(
+      onTap: () {
+        final LessonTimetableDialog dialog =
+            LessonTimetableDialog(_lesson, _infoserverData, key: UniqueKey());
+        if (dialog.empty) {
+          return;
+        }
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return dialog;
+          },
+        );
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 1.5),
         child: Stack(
@@ -80,19 +93,6 @@ class LessonCell extends StatelessWidget {
           ],
         ),
       ),
-      onTap: () {
-        final LessonTimetableDialog dialog =
-            LessonTimetableDialog(_lesson, _infoserverData, key: UniqueKey());
-        if (dialog.empty) {
-          return;
-        }
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return dialog;
-          },
-        );
-      },
     );
   }
 }

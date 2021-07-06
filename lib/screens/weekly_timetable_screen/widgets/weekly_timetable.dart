@@ -78,18 +78,19 @@ class WeeklyTimetable extends StatelessWidget {
         _getLessonsOfTimetable(lessonTimes, timeslots, datesOfWeek);
 
     return <TableRow>[
+          // Generates fake header row with date cells for the right spacing
           TableRow(
-            children: <TableCell>[
-                  TableCell(
+            children: List<TableCell>.generate(
+                  5,
+                  (int index) => TableCell(
                     child: Container(),
                   ),
-                ] +
-                datesOfWeek
-                    .map((DateTime date) => TableCell(
-                          child: DateCell(date),
-                        ))
-                    .toList(),
-            decoration: const BoxDecoration(),
+                ) +
+                <TableCell>[
+                  TableCell(
+                    child: DateCell(DateTime(2021, 7, 9)),
+                  ),
+                ],
           )
         ] +
         List<TableRow>.generate(timetable.length, (int index) {
@@ -101,7 +102,7 @@ class WeeklyTimetable extends StatelessWidget {
                   ),
                 ] +
                 timetable[index]
-                    .map(
+                    .map<TableCell>(
                       (Lesson lesson) => TableCell(
                         child: LessonCell(lesson, _infoserverData),
                       ),
