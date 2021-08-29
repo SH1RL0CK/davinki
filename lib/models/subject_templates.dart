@@ -22,13 +22,14 @@ Map<SchoolType, List<SubjectTemplate>> subjectTemplates =
     <SchoolType, List<SubjectTemplate>>{
   SchoolType.vocationalGymnasium: <SubjectTemplate>[
     SubjectTemplate('Schwerpunkt-LK', Colors.blueAccent,
-        <String>['PRIN', 'WIL', 'METR', 'ERWI'],
+        <String>['PRINL', 'WIL', 'METRL', 'ERWIL'],
         mustBeSelected: true),
     SubjectTemplate('1. Schwerpunkt-GK', Colors.teal,
-        <String>['ITEC', 'RWG', 'MTTS', 'PsyG'],
-        mustBeSelected: true),
+        <String>['ITECG', 'RWG', 'MTTSG', 'PsyG'],
+        mustBeSelectedInGrades: <int>[11, 12]),
     SubjectTemplate(
         '2. Schwerpunkt-GK', Colors.cyan, <String>['PRING', 'DVG', 'ERWIG']),
+    SubjectTemplate('3. Schwerpunkt-GK', Colors.cyan.shade200, <String>['WIG']),
     SubjectTemplate('Mathematik', Colors.blue.shade900, <String>['ML', 'MG'],
         mustBeSelected: true),
     SubjectTemplate('Englisch', Colors.yellow.shade800, <String>['EL', 'EG'],
@@ -49,7 +50,7 @@ Map<SchoolType, List<SubjectTemplate>> subjectTemplates =
     SubjectTemplate('Sport', Colors.deepOrangeAccent, <String>['SpG'],
         mustBeSelected: true),
     SubjectTemplate(
-        'Musik/Kunst/DSp', Colors.deepPurple, <String>['DSpG', 'MuK', 'KG'],
+        'Musik/Kunst/DSp', Colors.deepPurple, <String>['DSpG', 'MuG', 'KG'],
         onlyInGrades: <int>[13], mustBeSelected: true),
     SubjectTemplate('2. Fremdsprache', Colors.lime, <String>['SpanG', 'FG']),
     SubjectTemplate('Tutor', Colors.green, <String>['Tutor'],
