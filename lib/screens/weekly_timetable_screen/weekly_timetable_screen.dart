@@ -157,6 +157,14 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
           );
         },
         child: GestureDetector(
+          onHorizontalDragEnd: (DragEndDetails details) {
+            if (details.primaryVelocity == 0) return;
+            if (details.primaryVelocity!.compareTo(0) == -1) {
+              _changeWeek(1);
+            } else {
+              _changeWeek(-1);
+            }
+          },
           child: Stack(
             children: <Widget>[
               SingleChildScrollView(
@@ -182,9 +190,11 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
                           ),
                         ] +
                         datesOfWeek
-                            .map((DateTime date) => TableCell(
-                                  child: DateCell(date),
-                                ))
+                            .map<TableCell>(
+                              (DateTime date) => TableCell(
+                                child: DateCell(date),
+                              ),
+                            )
                             .toList(),
                     decoration: const BoxDecoration(color: Colors.white),
                   ),
@@ -198,14 +208,6 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
               ),
             ],
           ),
-          onHorizontalDragEnd: (DragEndDetails details) {
-            if (details.primaryVelocity == 0) return;
-            if (details.primaryVelocity!.compareTo(0) == -1) {
-              _changeWeek(1);
-            } else {
-              _changeWeek(-1);
-            }
-          },
         ),
       ),
     );
