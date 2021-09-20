@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:davinki/models/davinci_infoserver_service_exceptions.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
@@ -31,6 +33,7 @@ class DavinciInfoserverService {
   }
 
   Future<Map<String, dynamic>> getOfflineData() async {
+    if (kIsWeb) throw NoOfflineDataExeption();
     try {
       final File file = await _infoserverDateFile;
       final String infoserverData = await file.readAsString();
@@ -48,7 +51,9 @@ class DavinciInfoserverService {
       throw UserIsOfflineException();
     }
     if (response.statusCode == 200) {
-      writeDate(response.body);
+      if (!kIsWeb) {
+        writeDate(response.body);
+      }
       return jsonDecode(response.body) as Map<String, dynamic>;
     } else if (response.statusCode == 900) {
       throw WrongLoginDataException();
