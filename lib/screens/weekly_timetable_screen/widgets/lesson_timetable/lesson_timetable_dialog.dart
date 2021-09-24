@@ -1,8 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:date_format/date_format.dart';
+import 'package:davinki/constants.dart';
 import 'package:davinki/models/lesson.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/lesson_timetable/lesson_slider_item.dart';
-import 'package:davinki/utils.dart';
 import 'package:flutter/material.dart';
 
 class LessonTimetableDialog extends StatefulWidget {
@@ -83,7 +83,7 @@ class _LessonTimetableDialogState extends State<LessonTimetableDialog> {
         _timeslots[_usersLesson.lessonNumber]['endTime'].toString();
     final String formattedEndTime =
         '${endTime.substring(0, 2)}:${endTime.substring(2)}';
-    final String weekdayName = weekdayNames[_usersLesson.date.weekday - 1];
+    final String weekdayName = kWeekdayNames[_usersLesson.date.weekday - 1];
     final String formattedDate =
         formatDate(_usersLesson.date, <String>[dd, '.', mm, '.', yyyy]);
 
