@@ -94,8 +94,6 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
   }
 
   Future<void> _handleForm() async {
-    if (!_formFieldsEnabled) return;
-
     setState(() {
       _wrongLoginData = false;
       _formFieldsEnabled = false;
@@ -341,7 +339,7 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                           ? 'Zu Deinen Kursen'
                           : 'Speichern',
                     ),
-                    onPressed: _handleForm,
+                    onPressed: _formFieldsEnabled ? _handleForm : null,
                   ),
                   const SizedBox(height: 20),
                 ],
