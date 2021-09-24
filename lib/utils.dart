@@ -1,8 +1,6 @@
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 
-List<String> weekdayNames = <String>['Mo', 'Di', 'Mi', 'Do', 'Fr'];
-
 List<DateTime> getDatesOfWeek(int week) {
   final List<DateTime> datesOfWeek = <DateTime>[];
   final DateTime now = DateTime.now();

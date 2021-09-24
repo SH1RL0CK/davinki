@@ -1,5 +1,5 @@
 import 'package:date_format/date_format.dart';
-import 'package:davinki/utils.dart';
+import 'package:davinki/constants.dart';
 import 'package:flutter/material.dart';
 
 class DateCell extends StatelessWidget {
@@ -29,7 +29,7 @@ class DateCell extends StatelessWidget {
             ),
           ),
         ),
-        Text(weekdayNames[_date.weekday - 1],
+        Text(kWeekdayNames[_date.weekday - 1],
             style: const TextStyle(fontSize: 16)),
       ]),
     );

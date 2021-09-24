@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart' as crypto;
+import 'package:davinki/constants.dart';
 import 'package:davinki/models/course_settings.dart';
 import 'package:davinki/models/davinci_infoserver_service_exceptions.dart';
 import 'package:davinki/models/general_settings.dart';
@@ -169,173 +170,183 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
       ),
       body: GestureDetector(
         onTap: _unfocusTextFields,
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            padding: const EdgeInsets.all(12.0),
-            children: <Widget>[
-              const Text(
-                'Allgemeine Einstellungen',
-                style: TextStyle(fontSize: 25),
-              ),
-              const SizedBox(height: 15),
-              DropdownButtonFormField<UserType>(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.school),
-                  labelText: 'Du bist',
-                ),
-                value: _generalSettings.userType,
-                onTap: _unfocusTextFields,
-                onChanged: _formFieldsEnabled
-                    ? (UserType? newUserType) {
-                        setState(() {
-                          _generalSettings.userType = newUserType;
-                        });
-                      }
-                    : null,
-                validator: (UserType? userType) {
-                  if (userType == null) {
-                    return 'Bitte gib an, was Du bist!';
-                  }
-                  return null;
-                },
-                items: const <DropdownMenuItem<UserType>>[
-                  DropdownMenuItem<UserType>(
-                    value: UserType.student,
-                    child: Text('Schüler'),
-                  )
-                ],
-              ),
-              if (_generalSettings.userType == UserType.student)
-                Padding(
-                  padding: const EdgeInsets.only(top: 12),
-                  child: DropdownButtonFormField<SchoolType>(
+        child: Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width >= kDesktopBreakpoint
+                ? 800.0
+                : double.infinity,
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                padding: const EdgeInsets.all(12.0),
+                children: <Widget>[
+                  const Text(
+                    'Allgemeine Einstellungen',
+                    style: TextStyle(fontSize: 25),
+                  ),
+                  const SizedBox(height: 15),
+                  DropdownButtonFormField<UserType>(
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.account_balance),
-                      labelText: 'Deine Schulform',
+                      prefixIcon: Icon(Icons.school),
+                      labelText: 'Du bist',
                     ),
-                    value: _generalSettings.schoolType,
+                    value: _generalSettings.userType,
                     onTap: _unfocusTextFields,
                     onChanged: _formFieldsEnabled
-                        ? (SchoolType? newSchoolType) {
+                        ? (UserType? newUserType) {
                             setState(() {
-                              _generalSettings.schoolType = newSchoolType;
+                              _generalSettings.userType = newUserType;
                             });
                           }
                         : null,
-                    validator: (SchoolType? schoolType) {
-                      if (schoolType == null) {
-                        return 'Bitte wähle Deine Schulform aus!';
+                    validator: (UserType? userType) {
+                      if (userType == null) {
+                        return 'Bitte gib an, was Du bist!';
                       }
                       return null;
                     },
-                    items: const <DropdownMenuItem<SchoolType>>[
-                      DropdownMenuItem<SchoolType>(
-                        value: SchoolType.vocationalGymnasium,
-                        child: Text('Berufliches Gymnasium'),
-                      ),
+                    items: const <DropdownMenuItem<UserType>>[
+                      DropdownMenuItem<UserType>(
+                        value: UserType.student,
+                        child: Text('Schüler'),
+                      )
                     ],
                   ),
-                )
-              else
-                Container(),
-              if (_generalSettings.schoolType == SchoolType.vocationalGymnasium)
-                Padding(
-                  padding: const EdgeInsets.only(top: 12),
-                  child: DropdownButtonFormField<int>(
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.class_),
-                      labelText: 'Deine Klasse',
-                    ),
-                    value: _generalSettings.grade,
-                    onTap: _unfocusTextFields,
-                    onChanged: _formFieldsEnabled
-                        ? (int? newGrade) {
-                            setState(() {
-                              _generalSettings.grade = newGrade;
-                            });
+                  if (_generalSettings.userType == UserType.student)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: DropdownButtonFormField<SchoolType>(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.account_balance),
+                          labelText: 'Deine Schulform',
+                        ),
+                        value: _generalSettings.schoolType,
+                        onTap: _unfocusTextFields,
+                        onChanged: _formFieldsEnabled
+                            ? (SchoolType? newSchoolType) {
+                                setState(() {
+                                  _generalSettings.schoolType = newSchoolType;
+                                });
+                              }
+                            : null,
+                        validator: (SchoolType? schoolType) {
+                          if (schoolType == null) {
+                            return 'Bitte wähle Deine Schulform aus!';
                           }
-                        : null,
-                    validator: (int? grade) {
-                      if (grade == null) {
-                        return 'Bitte wähle Deine Klasse aus!';
+                          return null;
+                        },
+                        items: const <DropdownMenuItem<SchoolType>>[
+                          DropdownMenuItem<SchoolType>(
+                            value: SchoolType.vocationalGymnasium,
+                            child: Text('Berufliches Gymnasium'),
+                          ),
+                        ],
+                      ),
+                    )
+                  else
+                    Container(),
+                  if (_generalSettings.schoolType ==
+                      SchoolType.vocationalGymnasium)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: DropdownButtonFormField<int>(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.class_),
+                          labelText: 'Deine Klasse',
+                        ),
+                        value: _generalSettings.grade,
+                        onTap: _unfocusTextFields,
+                        onChanged: _formFieldsEnabled
+                            ? (int? newGrade) {
+                                setState(() {
+                                  _generalSettings.grade = newGrade;
+                                });
+                              }
+                            : null,
+                        validator: (int? grade) {
+                          if (grade == null) {
+                            return 'Bitte wähle Deine Klasse aus!';
+                          }
+                          return null;
+                        },
+                        items: <int>[11, 12, 13]
+                            .map((int grade) => DropdownMenuItem<int>(
+                                  value: grade,
+                                  child: Text(grade.toString()),
+                                ))
+                            .toList(),
+                      ),
+                    )
+                  else
+                    Container(),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Anmeldung',
+                    style: TextStyle(fontSize: 25),
+                  ),
+                  const Text(
+                    'Gib bitte Deine DAVINCI-Anmeldedaten an.',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  const SizedBox(height: 15),
+                  TextFormField(
+                    enabled: _formFieldsEnabled,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Benutzername',
+                      errorText: _wrongLoginData
+                          ? 'Die Anmeldedaten sind falsch!'
+                          : null,
+                    ),
+                    controller: _usernameInputController,
+                    validator: (String? username) {
+                      if (username == null || username.isEmpty) {
+                        return 'Bitte gib Deinen Benutzernamen an!';
                       }
                       return null;
                     },
-                    items: <int>[11, 12, 13]
-                        .map((int grade) => DropdownMenuItem<int>(
-                              value: grade,
-                              child: Text(grade.toString()),
-                            ))
-                        .toList(),
                   ),
-                )
-              else
-                Container(),
-              const SizedBox(height: 20),
-              const Text(
-                'Anmeldung',
-                style: TextStyle(fontSize: 25),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    enabled: _formFieldsEnabled,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.lock),
+                      border: const OutlineInputBorder(),
+                      labelText: _generalSettings.encryptedPassword == null
+                          ? 'Passwort'
+                          : 'Neues Passwort',
+                      errorText: _wrongLoginData
+                          ? 'Die Anmeldedaten sind falsch!'
+                          : null,
+                    ),
+                    controller: _passwordInputController,
+                    validator: (String? password) {
+                      if (_generalSettings.encryptedPassword == null &&
+                          (password == null || password.isEmpty)) {
+                        return 'Bitte gib Dein Passwort an!';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  FloatingActionButton.extended(
+                    icon: const Icon(Icons.save),
+                    label: Text(
+                      _generalSettings.userType == UserType.student
+                          ? 'Zu Deinen Kursen'
+                          : 'Speichern',
+                    ),
+                    onPressed: _handleForm,
+                  ),
+                  const SizedBox(height: 20),
+                ],
               ),
-              const Text(
-                'Gib bitte Deine DAVINCI-Anmeldedaten an.',
-                style: TextStyle(fontSize: 18),
-              ),
-              const SizedBox(height: 15),
-              TextFormField(
-                enabled: _formFieldsEnabled,
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.person),
-                  border: const OutlineInputBorder(),
-                  labelText: 'Benutzername',
-                  errorText:
-                      _wrongLoginData ? 'Die Anmeldedaten sind falsch!' : null,
-                ),
-                controller: _usernameInputController,
-                validator: (String? username) {
-                  if (username == null || username.isEmpty) {
-                    return 'Bitte gib Deinen Benutzernamen an!';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 12),
-              TextFormField(
-                enabled: _formFieldsEnabled,
-                obscureText: true,
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.lock),
-                  border: const OutlineInputBorder(),
-                  labelText: _generalSettings.encryptedPassword == null
-                      ? 'Passwort'
-                      : 'Neues Passwort',
-                  errorText:
-                      _wrongLoginData ? 'Die Anmeldedaten sind falsch!' : null,
-                ),
-                controller: _passwordInputController,
-                validator: (String? password) {
-                  if (_generalSettings.encryptedPassword == null &&
-                      (password == null || password.isEmpty)) {
-                    return 'Bitte gib Dein Passwort an!';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              FloatingActionButton.extended(
-                icon: const Icon(Icons.save),
-                label: Text(
-                  _generalSettings.userType == UserType.student
-                      ? 'Zu Deinen Kursen'
-                      : 'Speichern',
-                ),
-                onPressed: _handleForm,
-              ),
-              const SizedBox(height: 20),
-            ],
+            ),
           ),
         ),
       ),

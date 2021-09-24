@@ -1,8 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:date_format/date_format.dart';
+import 'package:davinki/constants.dart';
 import 'package:davinki/models/lesson.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/lesson_timetable/lesson_slider_item.dart';
-import 'package:davinki/utils.dart';
 import 'package:flutter/material.dart';
 
 class LessonTimetableDialog extends StatefulWidget {
@@ -66,6 +66,7 @@ class _LessonTimetableDialogState extends State<LessonTimetableDialog> {
   final List<Lesson> _lessons;
   final List<dynamic> _timeslots;
   int _current = 0;
+  CarouselController lessonCarouselController = CarouselController();
   _LessonTimetableDialogState(this._usersLesson, this._lessons, this._timeslots)
       : super() {
     if (!_usersLesson.freeTime) {
@@ -83,10 +84,11 @@ class _LessonTimetableDialogState extends State<LessonTimetableDialog> {
         _timeslots[_usersLesson.lessonNumber]['endTime'].toString();
     final String formattedEndTime =
         '${endTime.substring(0, 2)}:${endTime.substring(2)}';
-    final String weekdayName = weekdayNames[_usersLesson.date.weekday - 1];
+    final String weekdayName = kWeekdayNames[_usersLesson.date.weekday - 1];
     final String formattedDate =
         formatDate(_usersLesson.date, <String>[dd, '.', mm, '.', yyyy]);
 
+    var onPressed;
     return SimpleDialog(
       titleTextStyle: const TextStyle(
         fontSize: 16,
@@ -101,7 +103,9 @@ class _LessonTimetableDialogState extends State<LessonTimetableDialog> {
       ),
       children: <Widget>[
         SizedBox(
-          width: double.maxFinite,
+          width: MediaQuery.of(context).size.width >= kDesktopBreakpoint
+              ? 600.0
+              : double.maxFinite,
           child: Column(children: <Widget>[
             CarouselSlider(
               items: _lessons
@@ -109,6 +113,7 @@ class _LessonTimetableDialogState extends State<LessonTimetableDialog> {
                     (Lesson lesson) => LessonSliderItem(lesson),
                   )
                   .toList(),
+              carouselController: lessonCarouselController,
               options: CarouselOptions(
                   height: MediaQuery.of(context).size.height / 2.5,
                   enlargeCenterPage: true,
@@ -123,21 +128,37 @@ class _LessonTimetableDialogState extends State<LessonTimetableDialog> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: _lessons.map<Container>((Lesson lesson) {
-                final int index = _lessons.indexOf(lesson);
-                return Container(
-                  width: 8.0,
-                  height: 8.0,
-                  margin: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 2.0),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _current == index
-                        ? const Color.fromRGBO(0, 0, 0, 0.9)
-                        : const Color.fromRGBO(0, 0, 0, 0.4),
-                  ),
-                );
-              }).toList(),
+              children: <Widget>[
+                    InkWell(
+                      onTap: () => lessonCarouselController.previousPage(),
+                      child: const Icon(Icons.keyboard_arrow_left),
+                    )
+                  ] +
+                  _lessons.map<Widget>((Lesson lesson) {
+                    final int index = _lessons.indexOf(lesson);
+                    return Container(
+                      width: 8.0,
+                      height: 8.0,
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 2.0),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: _current == index
+                            ? const Color.fromRGBO(0, 0, 0, 0.9)
+                            : const Color.fromRGBO(0, 0, 0, 0.4),
+                      ),
+                      child: InkWell(
+                        onTap: () =>
+                            lessonCarouselController.animateToPage(index),
+                      ),
+                    );
+                  }).toList() +
+                  <Widget>[
+                    InkWell(
+                      onTap: () => lessonCarouselController.nextPage(),
+                      child: const Icon(Icons.keyboard_arrow_right),
+                    )
+                  ],
             ),
           ]),
         ),
