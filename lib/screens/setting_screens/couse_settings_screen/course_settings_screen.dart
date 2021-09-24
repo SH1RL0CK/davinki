@@ -1,3 +1,4 @@
+import 'package:davinki/constants.dart';
 import 'package:davinki/models/course.dart';
 import 'package:davinki/models/course_settings.dart';
 import 'package:davinki/models/general_settings.dart';
@@ -168,38 +169,45 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
           )
         ],
       ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(12.0),
-          children: <Widget>[
-            const Text(
-              'Deine Kurse',
-              style: TextStyle(fontSize: 25),
+      body: Center(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width >= kDesktopBreakpoint
+              ? 800.0
+              : double.infinity,
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              padding: const EdgeInsets.all(12.0),
+              children: <Widget>[
+                const Text(
+                  'Deine Kurse',
+                  style: TextStyle(fontSize: 25),
+                ),
+                const Text(
+                  'Wähle bitte Deine Kurse aus.',
+                  style: TextStyle(fontSize: 20),
+                ),
+                const SizedBox(height: 10),
+                ListView.builder(
+                  primary: false,
+                  shrinkWrap: true,
+                  itemCount: _subjects.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return CourseSelector(_subjects[index], _generalSettings);
+                  },
+                ),
+                const SizedBox(height: 14),
+                FloatingActionButton.extended(
+                  icon: const Icon(Icons.save),
+                  label: const Text(
+                    'Speichern',
+                  ),
+                  onPressed: _handleForm,
+                ),
+                const SizedBox(height: 20),
+              ],
             ),
-            const Text(
-              'Wähle bitte Deine Kurse aus.',
-              style: TextStyle(fontSize: 20),
-            ),
-            const SizedBox(height: 10),
-            ListView.builder(
-              primary: false,
-              shrinkWrap: true,
-              itemCount: _subjects.length,
-              itemBuilder: (BuildContext context, int index) {
-                return CourseSelector(_subjects[index], _generalSettings);
-              },
-            ),
-            const SizedBox(height: 14),
-            FloatingActionButton.extended(
-              icon: const Icon(Icons.save),
-              label: const Text(
-                'Speichern',
-              ),
-              onPressed: _handleForm,
-            ),
-            const SizedBox(height: 20),
-          ],
+          ),
         ),
       ),
     );

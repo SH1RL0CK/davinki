@@ -1,3 +1,4 @@
+import 'package:davinki/constants.dart';
 import 'package:davinki/models/course_settings.dart';
 import 'package:davinki/models/general_settings.dart';
 import 'package:davinki/screens/loading_screen/loading_screen.dart';
@@ -92,6 +93,8 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
   @override
   Widget build(BuildContext context) {
     final List<DateTime> datesOfWeek = getDatesOfWeek(_week);
+    final bool isDesktop =
+        MediaQuery.of(context).size.width >= kDesktopBreakpoint;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -127,7 +130,7 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Padding(
-        padding: const EdgeInsets.all(2.0),
+        padding: EdgeInsets.all(isDesktop ? 10.0 : 2.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -165,48 +168,53 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
               _changeWeek(-1);
             }
           },
-          child: Stack(
-            children: <Widget>[
-              SingleChildScrollView(
-                child: AnimatedContainer(
-                  duration: const Duration(seconds: 1),
-                  color: Colors.white,
-                  padding: EdgeInsets.only(
-                      bottom: _offlineSnackbarIsDisplayed ? 120 : 55),
-                  child: WeeklyTimetable(
-                    _week,
-                    _infoserverData,
-                    _courseSettings,
-                    key: UniqueKey(),
+          child: Center(
+            child: SizedBox(
+              width: isDesktop ? 1100.0 : double.infinity,
+              child: Stack(
+                children: <Widget>[
+                  SingleChildScrollView(
+                    child: AnimatedContainer(
+                      duration: const Duration(seconds: 1),
+                      color: Colors.white,
+                      padding: EdgeInsets.only(
+                          bottom: _offlineSnackbarIsDisplayed ? 120 : 55),
+                      child: WeeklyTimetable(
+                        _week,
+                        _infoserverData,
+                        _courseSettings,
+                        key: UniqueKey(),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Table(
-                children: <TableRow>[
-                  TableRow(
-                    children: <TableCell>[
-                          TableCell(
-                            child: Container(),
-                          ),
-                        ] +
-                        datesOfWeek
-                            .map<TableCell>(
-                              (DateTime date) => TableCell(
-                                child: DateCell(date),
+                  Table(
+                    children: <TableRow>[
+                      TableRow(
+                        children: <TableCell>[
+                              TableCell(
+                                child: Container(),
                               ),
-                            )
-                            .toList(),
-                    decoration: const BoxDecoration(color: Colors.white),
+                            ] +
+                            datesOfWeek
+                                .map<TableCell>(
+                                  (DateTime date) => TableCell(
+                                    child: DateCell(date),
+                                  ),
+                                )
+                                .toList(),
+                        decoration: const BoxDecoration(color: Colors.white),
+                      ),
+                    ],
+                    defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                    border: const TableBorder(
+                        bottom: BorderSide(color: Colors.black12)),
+                    columnWidths: const <int, TableColumnWidth>{
+                      0: FixedColumnWidth(58),
+                    },
                   ),
                 ],
-                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                border: const TableBorder(
-                    bottom: BorderSide(color: Colors.black12)),
-                columnWidths: const <int, TableColumnWidth>{
-                  0: FixedColumnWidth(58),
-                },
               ),
-            ],
+            ),
           ),
         ),
       ),
