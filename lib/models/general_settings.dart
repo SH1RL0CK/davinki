@@ -47,7 +47,9 @@ class GeneralSettings {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     sharedPreferences.setString(
-        _usertypeKey, EnumToString.convertToString(userType));
+      _usertypeKey,
+      EnumToString.convertToString(userType),
+    );
     if (schoolType != null) {
       sharedPreferences.setString(
         _schoolTypeKey,

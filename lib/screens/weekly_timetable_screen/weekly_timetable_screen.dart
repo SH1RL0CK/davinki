@@ -15,11 +15,18 @@ class WeeklyTimetableScreen extends StatefulWidget {
   final CourseSettings _courseSettings;
   final bool offline;
   const WeeklyTimetableScreen(
-      this._infoserverData, this._generalSettings, this._courseSettings,
-      {this.offline = false});
+    this._infoserverData,
+    this._generalSettings,
+    this._courseSettings, {
+    this.offline = false,
+  });
   @override
   _WeeklyTimetableScreenState createState() => _WeeklyTimetableScreenState(
-      _infoserverData, offline, _generalSettings, _courseSettings);
+        _infoserverData,
+        offline,
+        _generalSettings,
+        _courseSettings,
+      );
 }
 
 class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
@@ -179,7 +186,8 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
                       duration: const Duration(seconds: 1),
                       color: Colors.white,
                       padding: EdgeInsets.only(
-                          bottom: _offlineSnackbarIsDisplayed ? 120 : 55),
+                        bottom: _offlineSnackbarIsDisplayed ? 120 : 55,
+                      ),
                       child: WeeklyTimetable(
                         _week,
                         _infoserverData,

@@ -21,45 +21,95 @@ class SubjectTemplate {
 Map<SchoolType, List<SubjectTemplate>> subjectTemplates =
     <SchoolType, List<SubjectTemplate>>{
   SchoolType.vocationalGymnasium: <SubjectTemplate>[
-    SubjectTemplate('Schwerpunkt-LK', Colors.blueAccent,
-        <String>['PRINL', 'WIL', 'METRL', 'ERWIL'],
-        mustBeSelected: true),
-    SubjectTemplate('1. Schwerpunkt-GK', Colors.teal,
-        <String>['ITECG', 'RWG', 'MTTSG', 'PsyG'],
-        mustBeSelectedInGrades: <int>[11, 12]),
     SubjectTemplate(
-        '2. Schwerpunkt-GK', Colors.cyan, <String>['PRING', 'DVG', 'ERWIG']),
-    SubjectTemplate('3. Schwerpunkt-GK', Colors.cyan.shade200, <String>['WIG']),
-    SubjectTemplate('Mathematik', Colors.blue.shade900, <String>['ML', 'MG'],
-        mustBeSelected: true),
-    SubjectTemplate('Englisch', Colors.yellow.shade800, <String>['EL', 'EG'],
-        mustBeSelected: true),
-    SubjectTemplate('Deutsch', Colors.red.shade600, <String>['DL', 'DG'],
-        mustBeSelected: true),
+      'Schwerpunkt-LK',
+      Colors.blueAccent,
+      <String>['PRINL', 'WIL', 'METRL', 'ERWIL'],
+      mustBeSelected: true,
+    ),
+    SubjectTemplate(
+      '1. Schwerpunkt-GK',
+      Colors.teal,
+      <String>['ITECG', 'RWG', 'MTTSG', 'PsyG'],
+      mustBeSelectedInGrades: <int>[11, 12],
+    ),
+    SubjectTemplate(
+      '2. Schwerpunkt-GK',
+      Colors.cyan,
+      <String>['PRING', 'DVG', 'ERWIG'],
+    ),
+    SubjectTemplate(
+      '3. Schwerpunkt-GK',
+      Colors.cyan.shade200,
+      <String>['WIG'],
+    ),
+    SubjectTemplate(
+      'Mathematik',
+      Colors.blue.shade900,
+      <String>['ML', 'MG'],
+      mustBeSelected: true,
+    ),
+    SubjectTemplate(
+      'Englisch',
+      Colors.yellow.shade800,
+      <String>['EL', 'EG'],
+      mustBeSelected: true,
+    ),
+    SubjectTemplate(
+      'Deutsch',
+      Colors.red.shade600,
+      <String>['DL', 'DG'],
+      mustBeSelected: true,
+    ),
     SubjectTemplate('Physik', Colors.grey.shade700, <String>['PhG']),
     SubjectTemplate('Biologie', Colors.green.shade800, <String>['BioG']),
     SubjectTemplate('Chemie', Colors.greenAccent.shade400, <String>['ChG']),
     SubjectTemplate(
-        'Religion/Ethik', Colors.purple, <String>['ReG', 'RkG', 'EtG'],
-        mustBeSelected: true),
+      'Religion/Ethik',
+      Colors.purple,
+      <String>['ReG', 'RkG', 'EtG'],
+      mustBeSelected: true,
+    ),
     SubjectTemplate(
-        'Politik & Wirtschaft', Colors.pink.shade700, <String>['PWG'],
-        mustBeSelectedInGrades: <int>[11, 12]),
-    SubjectTemplate('Geschichte', Colors.black, <String>['GG'],
-        mustBeSelected: true),
-    SubjectTemplate('Sport', Colors.deepOrangeAccent, <String>['SpG'],
-        mustBeSelected: true),
+      'Politik & Wirtschaft',
+      Colors.pink.shade700,
+      <String>['PWG'],
+      mustBeSelectedInGrades: <int>[11, 12],
+    ),
     SubjectTemplate(
-        'Musik/Kunst/DSp', Colors.deepPurple, <String>['DSpG', 'MuG', 'KG'],
-        onlyInGrades: <int>[13], mustBeSelected: true),
+      'Geschichte',
+      Colors.black,
+      <String>['GG'],
+      mustBeSelected: true,
+    ),
+    SubjectTemplate(
+      'Sport',
+      Colors.deepOrangeAccent,
+      <String>['SpG'],
+      mustBeSelected: true,
+    ),
+    SubjectTemplate(
+      'Musik/Kunst/DSp',
+      Colors.deepPurple,
+      <String>['DSpG', 'MuG', 'KG'],
+      onlyInGrades: <int>[13],
+      mustBeSelected: true,
+    ),
     SubjectTemplate('2. Fremdsprache', Colors.lime, <String>['SpanG', 'FG']),
-    SubjectTemplate('Tutor', Colors.green, <String>['Tutor'],
-        mustBeSelected: true),
+    SubjectTemplate(
+      'Tutor',
+      Colors.green,
+      <String>['Tutor'],
+      mustBeSelected: true,
+    ),
   ],
 };
 
-SubjectTemplate? getSubjectTemplateByCourseTitle(String courseTitle,
-    {SchoolType? schoolType, int? grade}) {
+SubjectTemplate? getSubjectTemplateByCourseTitle(
+  String courseTitle, {
+  SchoolType? schoolType,
+  int? grade,
+}) {
   SubjectTemplate? searchInSchoolType() {
     for (final SubjectTemplate subjectTemplate
         in subjectTemplates[schoolType]!) {

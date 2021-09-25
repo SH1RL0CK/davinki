@@ -7,3 +7,4 @@ linter:
     always_specify_types: true
     lines_longer_than_80_chars: false
     no_logic_in_create_state: false
+    depend_on_referenced_packages: false

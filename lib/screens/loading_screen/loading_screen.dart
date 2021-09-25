@@ -29,17 +29,26 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
-  void _navigateToWeeklyTimetable(Map<String, dynamic> infoserverData,
-      {bool offline = false}) {
+  void _navigateToWeeklyTimetable(
+    Map<String, dynamic> infoserverData, {
+    bool offline = false,
+  }) {
     navigateToOtherScreen(
-      WeeklyTimetableScreen(infoserverData, _generalSettings, _courseSettings,
-          offline: offline),
+      WeeklyTimetableScreen(
+        infoserverData,
+        _generalSettings,
+        _courseSettings,
+        offline: offline,
+      ),
       context,
     );
   }
 
   void _showInfoDialog(
-      String dialogTitle, String dialogBody, Function onClose) {
+    String dialogTitle,
+    String dialogBody,
+    Function onClose,
+  ) {
     setState(() {
       _isLoading = false;
     });
@@ -53,17 +62,19 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   void _loadOfflineInfoserverData(DavinciInfoserverService infoserverService) {
     infoserverService.getOfflineData().then(
-        (Map<String, dynamic> infoserverData) {
-      _navigateToWeeklyTimetable(infoserverData, offline: true);
-    }, onError: (dynamic exception) {
-      if (exception is NoOfflineDataExeption) {
-        _showInfoDialog(
-          'Kein Offline Stundenplan gefunden!',
-          'Bitte gehe online, um Deinen Stundenplan zu sehen!',
-          () => navigateToOtherScreen(const UserIsOfflineScreen(), context),
-        );
-      }
-    });
+      (Map<String, dynamic> infoserverData) {
+        _navigateToWeeklyTimetable(infoserverData, offline: true);
+      },
+      onError: (dynamic exception) {
+        if (exception is NoOfflineDataExeption) {
+          _showInfoDialog(
+            'Kein Offline Stundenplan gefunden!',
+            'Bitte gehe online, um Deinen Stundenplan zu sehen!',
+            () => navigateToOtherScreen(const UserIsOfflineScreen(), context),
+          );
+        }
+      },
+    );
   }
 
   void _loadInofoserverData() {
@@ -72,25 +83,27 @@ class _LoadingScreenState extends State<LoadingScreen> {
       _generalSettings.encryptedPassword!,
     );
     infoserverService.getOnlineData().then(
-        (Map<String, dynamic> infoserverData) {
-      _navigateToWeeklyTimetable(infoserverData);
-    }, onError: (dynamic exception) {
-      if (exception is WrongLoginDataException) {
-        _showInfoDialog(
-          'Falsche Anmeldededaten!',
-          'Die Anmeldedaten für den DAVINCI-Infoserver sind falsch. Bitte korrigiere sie in den Einstellungen!',
-          _navigateToSettings,
-        );
-      } else if (exception is UserIsOfflineException) {
-        _loadOfflineInfoserverData(infoserverService);
-      } else if (exception is UnknownErrorException) {
-        _showInfoDialog(
-          'Unbekannter Fehler!',
-          'Ein unbekannter Fehler ist während der Verbindung mit dem DAVINCI-Infoserver aufgetreten!',
-          () => _loadOfflineInfoserverData(infoserverService),
-        );
-      }
-    });
+      (Map<String, dynamic> infoserverData) {
+        _navigateToWeeklyTimetable(infoserverData);
+      },
+      onError: (dynamic exception) {
+        if (exception is WrongLoginDataException) {
+          _showInfoDialog(
+            'Falsche Anmeldededaten!',
+            'Die Anmeldedaten für den DAVINCI-Infoserver sind falsch. Bitte korrigiere sie in den Einstellungen!',
+            _navigateToSettings,
+          );
+        } else if (exception is UserIsOfflineException) {
+          _loadOfflineInfoserverData(infoserverService);
+        } else if (exception is UnknownErrorException) {
+          _showInfoDialog(
+            'Unbekannter Fehler!',
+            'Ein unbekannter Fehler ist während der Verbindung mit dem DAVINCI-Infoserver aufgetreten!',
+            () => _loadOfflineInfoserverData(infoserverService),
+          );
+        }
+      },
+    );
   }
 
   void _laodRequiredData() {

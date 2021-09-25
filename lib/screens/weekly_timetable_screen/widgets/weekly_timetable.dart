@@ -10,12 +10,18 @@ class WeeklyTimetable extends StatelessWidget {
   final int _week;
   final Map<String, dynamic> _infoserverData;
   final CourseSettings _courseSettings;
-  const WeeklyTimetable(this._week, this._infoserverData, this._courseSettings,
-      {Key? key})
-      : super(key: key);
+  const WeeklyTimetable(
+    this._week,
+    this._infoserverData,
+    this._courseSettings, {
+    Key? key,
+  }) : super(key: key);
 
-  List<List<Lesson>> _getLessonsOfTimetable(List<dynamic> lessonTimes,
-      List<dynamic> timeslots, List<DateTime> datesOfWeek) {
+  List<List<Lesson>> _getLessonsOfTimetable(
+    List<dynamic> lessonTimes,
+    List<dynamic> timeslots,
+    List<DateTime> datesOfWeek,
+  ) {
     final List<List<Lesson>> lessons = List<List<Lesson>>.generate(
       timeslots.length,
       (int lessonNumber) => datesOfWeek

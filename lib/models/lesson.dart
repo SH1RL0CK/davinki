@@ -11,9 +11,13 @@ class Lesson {
   DateTime date;
   String formattedDate;
   int lessonNumber;
-  final String changeCaption, changeInformation;
-  final String newTeacher, newRoom;
-  final bool cancelled, additional, freeTime;
+  final String changeCaption;
+  final String changeInformation;
+  final String newTeacher;
+  final String newRoom;
+  final bool cancelled;
+  final bool additional;
+  final bool freeTime;
   final Color color;
   bool currentLesson;
 
@@ -50,12 +54,19 @@ class Lesson {
     return true;
   }
 
-  factory Lesson.fromJson(Map<String, dynamic> lesson,
-      {DateTime? date, int lessonNumber = -1}) {
-    String teacher = '', room = '';
-    String changeCaption = '', changeInformation = '';
-    String newTeacher = '', newRoom = '';
-    bool cancelled = false, additional = false;
+  factory Lesson.fromJson(
+    Map<String, dynamic> lesson, {
+    DateTime? date,
+    int lessonNumber = -1,
+  }) {
+    String teacher = '';
+    String room = '';
+    String changeCaption = '';
+    String changeInformation = '';
+    String newTeacher = '';
+    String newRoom = '';
+    bool cancelled = false;
+    bool additional = false;
     if (lesson.containsKey('teacherCodes')) {
       teacher = lesson['teacherCodes'][0].toString();
     }

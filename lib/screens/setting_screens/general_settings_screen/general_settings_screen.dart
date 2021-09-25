@@ -18,9 +18,11 @@ class GeneralSettingsScreen extends StatefulWidget {
   final GeneralSettings _generalSettings;
   final CourseSettings _courseSettings;
 
-  const GeneralSettingsScreen(this._generalSettings, this._courseSettings,
-      {Key? key})
-      : super(key: key);
+  const GeneralSettingsScreen(
+    this._generalSettings,
+    this._courseSettings, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   _GeneralSettingsScreenState createState() =>
@@ -112,14 +114,19 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
         : encryptPassword(_passwordInputController.text);
 
     if (!await _loginDataIsCorrect(
-        _generalSettings.username, encryptedPassword)) return;
+      _generalSettings.username,
+      encryptedPassword,
+    )) return;
 
     _generalSettings.encryptedPassword = encryptedPassword;
     _generalSettings.storeData();
     if (_generalSettings.userType == UserType.student) {
       navigateToOtherScreen(
         CourseSettingsScreen(
-            _infoserverData, _generalSettings, _courseSettings),
+          _infoserverData,
+          _generalSettings,
+          _courseSettings,
+        ),
         context,
       );
     } else {
@@ -271,10 +278,12 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
                           return null;
                         },
                         items: <int>[11, 12, 13]
-                            .map((int grade) => DropdownMenuItem<int>(
-                                  value: grade,
-                                  child: Text(grade.toString()),
-                                ))
+                            .map(
+                              (int grade) => DropdownMenuItem<int>(
+                                value: grade,
+                                child: Text(grade.toString()),
+                              ),
+                            )
                             .toList(),
                       ),
                     )

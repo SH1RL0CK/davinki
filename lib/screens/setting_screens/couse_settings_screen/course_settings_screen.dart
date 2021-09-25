@@ -39,7 +39,10 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
   List<Subject> _subjects = <Subject>[];
 
   _CourseSettingsScreenState(
-      this._infoserverData, this._generalSettings, this._courseSettings) {
+    this._infoserverData,
+    this._generalSettings,
+    this._courseSettings,
+  ) {
     _createSubjectList();
   }
 

@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 class LessonTimetableDialog extends StatefulWidget {
   final Lesson _usersLesson;
   final Map<String, dynamic> _infoserverData;
-  List<dynamic> _lessonTimes = <dynamic>[], _timeslots = <dynamic>[];
+  List<dynamic> _lessonTimes = <dynamic>[];
+  List<dynamic> _timeslots = <dynamic>[];
   final List<Lesson> _lessons = <Lesson>[];
   bool empty = false;
 
@@ -30,16 +31,24 @@ class LessonTimetableDialog extends StatefulWidget {
     for (final dynamic lessonAsMap in _lessonTimes) {
       if (Lesson.isLesson(lessonAsMap as Map<String, dynamic>) &&
           lessonAsMap['dates'].contains(formattedDate) as bool &&
-          _timeslots.indexWhere((dynamic timeslot) =>
-                  timeslot['startTime'] == lessonAsMap['startTime']) <=
+          _timeslots.indexWhere(
+                (dynamic timeslot) =>
+                    timeslot['startTime'] == lessonAsMap['startTime'],
+              ) <=
               lessonNumber &&
-          _timeslots.indexWhere((dynamic timeslot) =>
-                  timeslot['endTime'] == lessonAsMap['endTime']) >=
+          _timeslots.indexWhere(
+                (dynamic timeslot) =>
+                    timeslot['endTime'] == lessonAsMap['endTime'],
+              ) >=
               lessonNumber) {
         final int lessonIndex = _lessons.indexWhere(
-            (Lesson l) => l.course.title == lessonAsMap['courseTitle']);
-        final Lesson lesson = Lesson.fromJson(lessonAsMap,
-            date: date, lessonNumber: lessonNumber);
+          (Lesson l) => l.course.title == lessonAsMap['courseTitle'],
+        );
+        final Lesson lesson = Lesson.fromJson(
+          lessonAsMap,
+          date: date,
+          lessonNumber: lessonNumber,
+        );
         if (lessonIndex == -1 ||
             (_lessons[lessonIndex].course != lesson.course)) {
           _lessons.add(lesson);
@@ -106,15 +115,16 @@ class _LessonTimetableDialogState extends State<LessonTimetableDialog> {
           width: MediaQuery.of(context).size.width >= kDesktopBreakpoint
               ? 600.0
               : double.maxFinite,
-          child: Column(children: <Widget>[
-            CarouselSlider(
-              items: _lessons
-                  .map(
-                    (Lesson lesson) => LessonSliderItem(lesson),
-                  )
-                  .toList(),
-              carouselController: lessonCarouselController,
-              options: CarouselOptions(
+          child: Column(
+            children: <Widget>[
+              CarouselSlider(
+                items: _lessons
+                    .map(
+                      (Lesson lesson) => LessonSliderItem(lesson),
+                    )
+                    .toList(),
+                carouselController: lessonCarouselController,
+                options: CarouselOptions(
                   height: MediaQuery.of(context).size.height / 2.5,
                   enlargeCenterPage: true,
                   initialPage: !_usersLesson.freeTime
@@ -124,43 +134,47 @@ class _LessonTimetableDialogState extends State<LessonTimetableDialog> {
                     setState(() {
                       _current = index;
                     });
-                  }),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                    InkWell(
-                      onTap: () => lessonCarouselController.previousPage(),
-                      child: const Icon(Icons.keyboard_arrow_left),
-                    )
-                  ] +
-                  _lessons.map<Widget>((Lesson lesson) {
-                    final int index = _lessons.indexOf(lesson);
-                    return Container(
-                      width: 8.0,
-                      height: 8.0,
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 2.0),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: _current == index
-                            ? const Color.fromRGBO(0, 0, 0, 0.9)
-                            : const Color.fromRGBO(0, 0, 0, 0.4),
-                      ),
-                      child: InkWell(
-                        onTap: () =>
-                            lessonCarouselController.animateToPage(index),
-                      ),
-                    );
-                  }).toList() +
-                  <Widget>[
-                    InkWell(
-                      onTap: () => lessonCarouselController.nextPage(),
-                      child: const Icon(Icons.keyboard_arrow_right),
-                    )
-                  ],
-            ),
-          ]),
+                  },
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                      InkWell(
+                        onTap: () => lessonCarouselController.previousPage(),
+                        child: const Icon(Icons.keyboard_arrow_left),
+                      )
+                    ] +
+                    _lessons.map<Widget>((Lesson lesson) {
+                      final int index = _lessons.indexOf(lesson);
+                      return Container(
+                        width: 8.0,
+                        height: 8.0,
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 10.0,
+                          horizontal: 2.0,
+                        ),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: _current == index
+                              ? const Color.fromRGBO(0, 0, 0, 0.9)
+                              : const Color.fromRGBO(0, 0, 0, 0.4),
+                        ),
+                        child: InkWell(
+                          onTap: () =>
+                              lessonCarouselController.animateToPage(index),
+                        ),
+                      );
+                    }).toList() +
+                    <Widget>[
+                      InkWell(
+                        onTap: () => lessonCarouselController.nextPage(),
+                        child: const Icon(Icons.keyboard_arrow_right),
+                      )
+                    ],
+              ),
+            ],
+          ),
         ),
       ],
     );
