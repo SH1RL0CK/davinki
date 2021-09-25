@@ -15,4 +15,7 @@ class Course {
         other.title == title &&
         other.teacher == teacher;
   }
+
+  @override
+  int get hashCode => title.hashCode ^ teacher.hashCode;
 }

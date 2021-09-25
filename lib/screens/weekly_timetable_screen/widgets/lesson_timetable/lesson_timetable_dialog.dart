@@ -5,6 +5,7 @@ import 'package:davinki/models/lesson.dart';
 import 'package:davinki/screens/weekly_timetable_screen/widgets/lesson_timetable/lesson_slider_item.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class LessonTimetableDialog extends StatefulWidget {
   final Lesson _usersLesson;
   final Map<String, dynamic> _infoserverData;
@@ -88,7 +89,6 @@ class _LessonTimetableDialogState extends State<LessonTimetableDialog> {
     final String formattedDate =
         formatDate(_usersLesson.date, <String>[dd, '.', mm, '.', yyyy]);
 
-    var onPressed;
     return SimpleDialog(
       titleTextStyle: const TextStyle(
         fontSize: 16,

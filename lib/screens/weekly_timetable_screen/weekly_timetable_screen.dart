@@ -31,6 +31,7 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
   bool _offlineSnackbarIsDisplayed = false;
   _WeeklyTimetableScreenState(
     this._infoserverData,
+    // ignore: avoid_positional_boolean_parameters
     this._offline,
     this._generalSettings,
     this._courseSettings,
@@ -207,7 +208,8 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
                     ],
                     defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                     border: const TableBorder(
-                        bottom: BorderSide(color: Colors.black12)),
+                      bottom: BorderSide(color: Colors.black12),
+                    ),
                     columnWidths: const <int, TableColumnWidth>{
                       0: FixedColumnWidth(58),
                     },

@@ -65,6 +65,7 @@ SubjectTemplate? getSubjectTemplateByCourseTitle(String courseTitle,
         in subjectTemplates[schoolType]!) {
       for (final String courseTitlePrefix
           in subjectTemplate.courseTitlePrefixes) {
+        // ignore: unnecessary_raw_strings
         final RegExp regex = RegExp(r'^' + courseTitlePrefix + r'([0-9]+)?$');
         if (regex.hasMatch(courseTitle) &&
             (grade == null ||
