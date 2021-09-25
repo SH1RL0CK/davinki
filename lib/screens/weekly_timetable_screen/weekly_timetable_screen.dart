@@ -111,6 +111,17 @@ class _WeeklyTimetableScreenState extends State<WeeklyTimetableScreen> {
         ),
         actions: <Widget>[
           IconButton(
+            onPressed: () {
+              setState(() {
+                _week = 0;
+              });
+            },
+            icon: const Icon(
+              Icons.star,
+              color: Colors.white,
+            ),
+          ),
+          IconButton(
             icon: const Icon(
               Icons.refresh,
               color: Colors.white,
