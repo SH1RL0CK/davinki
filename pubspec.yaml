@@ -43,9 +43,6 @@ dev_dependencies:
     sdk: flutter
   lint: ^1.7.2
 
-dependency_overrides:
-  args: 2.0.0
-
 flutter_icons:
   android: true
   ios: true
