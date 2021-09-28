@@ -1,0 +1,12 @@
+Dieses Release enthält alle westlichen Features, die Davinki enthalten soll:
+- In den Allgemeinen Einstellungen kann der Benutzer angeben, 
+    - welche Rolle er hat (aktuell nur Schüler).
+    - welchen Schulzweig er belegt (aktuell nur Berufliches Gymnasium).
+    - in welche Klasse er geht (11-13).
+    - wie seine Anmeldedaten für den DAVINCI-Infoserver lauten.
+    - Diese Daten werden lokal gespeichert und außerdem wird das Passwort verschlüsselt
+- In den Kurseinstellungen kann der Benutzer die Kurse auswählen, die er belegt. Dabei sind die Kurse verschiedenen Fächern zugeordnet. Je nach Klasse, müssen einige dieser Fächer belegt werden und einige nicht. Auch die Kurseinstellungen werden lokal gespeichert.
+- Auf dem Stundenplan-Screen sieht der Benutzer den Stundenplan mit seinen Kursen. Änderungen, wie Vertretungen, Raumwechsel oder Entfall werden direkt angezeigt. Der Benutzer kann zwischen den verschieden Wochen hin und her navigieren.
+- Mit Klicken auf eine bestimmte Stunde öffnet sich ein Dialog. Hier kann der Benutzer sich alle Kurse ansehen, die in dieser Stunde stattfinden.
+- Bei jedem Aufruf des DAVINCI-Infoservers werden die erhalten Daten in eine Datei geschrieben. So ist ein Offline-Modus der App möglich.
+- Davinki wird als Android App und als Web App veröffentlicht. Die APK-Dateien kann man sich bei dem GitHub-Release herunterladen. Die Web App wird mit GitHub Pages gehostet.

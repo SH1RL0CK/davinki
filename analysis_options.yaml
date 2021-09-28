@@ -1,0 +1,10 @@
+include: package:lint/analysis_options.yaml
+linter:
+  rules:
+    always_put_required_named_parameters_first: true
+    avoid_classes_with_only_static_members: true
+    prefer_single_quotes: true
+    always_specify_types: true
+    lines_longer_than_80_chars: false
+    no_logic_in_create_state: false
+    depend_on_referenced_packages: false
