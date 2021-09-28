@@ -1,0 +1,91 @@
+name: CD
+on:
+  push:
+    branches: 
+      - main
+jobs:
+  release:
+    name: Build and release/deploy Android app and web app
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.3.4
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: 15
+          distribution: adopt
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: stable
+      - name: Install pub dependencies
+        run: flutter pub get
+      - name: Build APKs for different ABIs
+        run: | 
+          flutter build apk --split-per-abi
+          flutter build apk
+      - name: Build web app
+        run: flutter build web --web-renderer=canvaskit
+      - name: Get version from pubspec.yaml
+        id: get_tag
+        run: "echo \"::set-output name=version_tag::v$(cat pubspec.yaml | grep version: | cut -c 10-)\""
+      - name: Push tag
+        uses: anothrNick/github-tag-action@1.34.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CUSTOM_TAG: ${{ steps.get_tag.outputs.version_tag }}
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_tag.outputs.version_tag}}
+          release_name: Release ${{ steps.get_tag.outputs.version_tag }}
+          body_path: ./release_body.md
+          draft: false
+          prerelease: false
+      - name: Upload APK for all ABIs
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/app/outputs/flutter-apk/app-release.apk
+          asset_name:  davinki_${{ steps.get_tag.outputs.version_tag }}.apk
+          asset_content_type: application/zip
+      - name: Upload APK for arm64_v8a
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+          asset_name:  davinki_${{ steps.get_tag.outputs.version_tag }}_arm64_v8a.apk
+          asset_content_type: application/zip
+      - name: Upload APK for armeabi-v7a
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+          asset_name:  davinki_${{ steps.get_tag.outputs.version_tag }}_armeabi_v7a.apk
+          asset_content_type: application/zip
+      - name: Upload APK for x86_x64
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/app/outputs/flutter-apk/app-x86_64-release.apk
+          asset_name:  davinki_${{ steps.get_tag.outputs.version_tag }}_x86_64.apk
+          asset_content_type: application/zip
+      - name: Deploy web app to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.5
+        with:
+          branch: gh-pages
+          folder: build/web 
+          token: ${{ secrets.GITHUB_TOKEN }}
+  

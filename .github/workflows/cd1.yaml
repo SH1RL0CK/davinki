@@ -1,0 +1,60 @@
+name: CD
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - labeled
+      - synchronize
+jobs:
+  flutter_analyze:
+    name: Run flutter analyze
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.3.4
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: 15
+          distribution: adopt
+      - name: Set up Java
+        uses: subosito/flutter-action@v1
+        with:
+          channel: stable
+      - name: Install pub dependencies
+        run: flutter pub get
+      - name: Analyze code
+        run: flutter analyze
+  bump_version:
+    needs: flutter_test
+    name: Bump version and write it to pubspec.yaml 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.3.4
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Check pull request label
+        id: check_pull_request_label 
+        uses: zwaldowski/match-label-action@v2
+        with:
+          allowed: major,minor,patch
+      - name: Bump version
+        id: bump_version
+        uses: zwaldowski/semver-release-action@v2
+        with:
+          bump: ${{ steps.check_pull_request_label.outputs.match }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dry_run: true
+      - name: Write version to pubspec.yaml
+        run: "sed -i 's/version:.*/version: ${{ steps.bump_version.outputs.version_tag }}/g' pubspec.yaml"
+      - name: Commit and push change
+        run: |
+          git config --global user.name 'SH1RL0CK'
+          git config --global user.email 'sh1rl0ck@users.noreply.github.com'
+          git commit -am "write new version to pubspec.yaml"
+          git push
+      
+  
+  
