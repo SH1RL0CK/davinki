@@ -47,9 +47,14 @@ jobs:
           bump: ${{ steps.check_pull_request_label.outputs.match }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           dry_run: true
+      - name: Get version from pubspec.yaml
+        id: get_version
+        run: "echo \"::set-output name=pubspec_yaml_version::$(cat pubspec.yaml | grep version: | cut -c 10-)\""
       - name: Write version to pubspec.yaml
+        if: ${{ steps.get_version.outputs.pubspec_yaml_version != steps.bump_version.outputs.version_tag }}
         run: "sed -i 's/version:.*/version: ${{ steps.bump_version.outputs.version_tag }}/g' pubspec.yaml"
       - name: Commit and push change
+        if: ${{ steps.get_version.outputs.pubspec_yaml_version != steps.bump_version.outputs.version_tag }}
         run: |
           git config --global user.name 'SH1RL0CK'
           git config --global user.email 'sh1rl0ck@users.noreply.github.com'
