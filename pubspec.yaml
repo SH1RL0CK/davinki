@@ -1,5 +1,5 @@
 name: davinki
-description: Die bessere Vertretungsplan-App für die Brühlwiesenschule in Hofheim
+description: Die bessere Stundenplan-App für die Brühlwiesenschule in Hofheim
 
 include: package:lint/analysis_options.yaml
 
