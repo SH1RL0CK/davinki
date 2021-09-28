@@ -27,7 +27,7 @@ jobs:
       - name: Analyze code
         run: flutter analyze
   bump_version:
-    needs: flutter_test
+    needs: flutter_analyze
     name: Bump version and write it to pubspec.yaml 
     runs-on: ubuntu-latest
     steps:
