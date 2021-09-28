@@ -12,8 +12,12 @@
     <a href="https://flutter.dev/">
         <img alt="Made with Flutter" src='https://img.shields.io/badge/Made%20with-Flutter-08599d?style=for-the-badge&logo=Flutter&labelColor=1ebbfd'>
     </a>
-    <img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/SH1RLOCK/davinki?color=green&include_prereleases&logo=Github&style=for-the-badge">
-    <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/SH1RL0CK/davinki/total?logo=github&style=for-the-badge">
+    <a href="https://github.com/SH1RL0CK/davinki/releases/latest">
+        <img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/SH1RL0CK/davinki?color=e91e63&include_prereleases&logo=Github&style=for-the-badge">
+    </a>
+    <a href="https://github.com/SH1RL0CK/davinki/releases/latest">
+        <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/SH1RL0CK/davinki/total?logo=github&style=for-the-badge">
+    </a>
     <a href="https://sh1rl0ck.github.io/davinki/">
         <img alt="Made with Flutter" src='https://img.shields.io/badge/Web%20App-Online-green?style=for-the-badge&logo=GitHub'>
     </a>
