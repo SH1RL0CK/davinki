@@ -31,7 +31,7 @@
 - [Wie kann ich die App installieren?](#-wie-kann-ich-die-app-installieren)
     - [Android](#-android)
     - [iOS](#-ios)
-- [Gibt es auch eine Web-App?](#-gibt-es-auch-eine-web-app)
+- [Gibt es auch eine Web App?](#-gibt-es-auch-eine-web-app)
 - [Wie kann ich Bugs melden oder neue Features vorschlagen?](#-wie-kann-ich-bugs-melden-oder-neue-features-vorschlagen)
 - [Wie kann ich mitentwickeln?](#-wie-kann-ich-mitentwickeln)
 
@@ -68,12 +68,12 @@ Zum Installieren musst Du einfach die Datei aus deinem Download-Ordner ausführe
 Ich versuche außerdem bald, die App im Google Play Store zu veröffentlichen.
 
 ### 🍎 iOS
-iOS-Nutzer muss ich leider enttäuschen. Bei iOS kann man Apps nur aus dem App Store installieren. Allerdings kostet es 99 US-Dollar pro Jahr, dort Apps zu veröffentlichen und das ist mir zu teuer. Aber Ihr könnt die [Web-App](https://sh1rl0ck.github.io/davinki/) verwenden.
+iOS-Nutzer muss ich leider enttäuschen. Bei iOS kann man Apps nur aus dem App Store installieren. Allerdings kostet es 99 US-Dollar pro Jahr, dort Apps zu veröffentlichen und das ist mir zu teuer. Aber Ihr könnt die [Web App](https://sh1rl0ck.github.io/davinki/) verwenden.
 
-## 🌐 Gibt es auch eine Web-App?
-Ja, Davinki gibt es auch als Web-App. Um sie aufzurufen, klicke [hier](https://sh1rl0ck.github.io/davinki/). 
+## 🌐 Gibt es auch eine Web App?
+Ja, Davinki gibt es auch als Web App. Um sie aufzurufen, klicke [hier](https://sh1rl0ck.github.io/davinki/). 
 
-Das Framework Flutter, was ich zum Programmieren der App verwendet habe, ist allerdings für Web-Apps noch nicht komplett optimiert und deswegen kann es sein, dass die Web-App vor allem auf mobilen Geräten etwas langsam läuft.
+Das Framework Flutter, was ich zum Programmieren der App verwendet habe, ist allerdings für Web Apps noch nicht komplett optimiert und deswegen kann es sein, dass die Web App vor allem auf mobilen Geräten etwas langsam läuft.
 
 ## 🐛 Wie kann ich Bugs melden oder neue Features vorschlagen?
 Wenn Du in der App einen Bug findest oder du Vorschläge für neue Features hast, kannst Du hier bei GitHub einen neuen sogenannten Issue erstellen. Darin beschreibst Du dann ausführlich Dein Problem oder Deinen Vorschlag und dann kümmere ich mich darum.
