@@ -25,15 +25,15 @@
 <hr />
 
 ## 📝 Inhalt
-- [Was ist Davinki?](#💡-was-ist-davinki)
-- [Wie funktioniert die App?](#🏭-wie-funktioniert-die-app)
-- [Wie sieht die App aus?](#🖼️-wie-sieht-die-app-aus)
-- [Wie kann ich die App installieren?](#📱-wie-kann-ich-die-app-installieren)
-    - [Android](#🤖-android)
-    - [iOS](#🍎-ios)
-- [Gibt es auch eine Web-App?](#🌐-gibt-es-auch-eine-web-app)
-- [Wie kann ich Bugs melden oder neue Features vorschlagen?](#🐛-wie-kann-ich-bugs-melden-oder-neue-features-vorschlagen)
-- [Wie kann ich mitentwickeln?](#👨‍💻-wie-kann-ich-mitentwickeln)
+- [Was ist Davinki?](#-was-ist-davinki)
+- [Wie funktioniert die App?](#-wie-funktioniert-die-app)
+- [Wie sieht die App aus?](#%EF%B8%8F-wie-sieht-die-app-aus)
+- [Wie kann ich die App installieren?](#-wie-kann-ich-die-app-installieren)
+    - [Android](#-android)
+    - [iOS](#-ios)
+- [Gibt es auch eine Web-App?](#-gibt-es-auch-eine-web-app)
+- [Wie kann ich Bugs melden oder neue Features vorschlagen?](#-wie-kann-ich-bugs-melden-oder-neue-features-vorschlagen)
+- [Wie kann ich mitentwickeln?](#-wie-kann-ich-mitentwickeln)
 
 ## 💡 Was ist Davinki?
 Aktuell verwenden wir in unserer Schule (der Brühlwiesenschule in Hofheim) [DAVINCI](https://davinci.stueber.de/) als Stundenplan-System. Dafür gibt es die [DAVINCI MOBILE App](https://davinci.stueber.de/davinci-mobile.php), wo man sich als Schüler bzw. Lehrer die Stundenpläne anschauen kann und auch Änderungen sieht wie z.B. Vertretungen oder Entfall. Allerdings hat mich an dieser App schon immer einiges gestört:
