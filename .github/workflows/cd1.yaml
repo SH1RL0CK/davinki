@@ -1,33 +1,12 @@
-name: CD
+name: CD (1)
 on:
   pull_request:
     branches:
       - main
     types:
       - labeled
-      - synchronize
 jobs:
-  flutter_analyze:
-    name: Run flutter analyze
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2.3.4
-      - name: Set up Java
-        uses: actions/setup-java@v2
-        with:
-          java-version: 11
-          distribution: adopt
-      - name: Set up Java
-        uses: subosito/flutter-action@v1
-        with:
-          channel: stable
-      - name: Install pub dependencies
-        run: flutter pub get
-      - name: Analyze code
-        run: flutter analyze
   bump_version:
-    needs: flutter_analyze
     name: Bump version and write it to pubspec.yaml 
     runs-on: ubuntu-latest
     steps:
