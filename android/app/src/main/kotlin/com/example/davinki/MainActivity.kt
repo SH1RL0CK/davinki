@@ -1,4 +1,4 @@
-package com.example.DAVINKI
+package com.example.davinki
 
 import io.flutter.embedding.android.FlutterActivity
 
