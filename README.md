@@ -19,7 +19,7 @@
         <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/SH1RL0CK/davinki/total?logo=github&style=for-the-badge">
     </a>
     <a href="https://sh1rl0ck.github.io/davinki/">
-        <img alt="Made with Flutter" src='https://img.shields.io/badge/Web%20App-Online-green?style=for-the-badge&logo=GitHub'>
+        <img alt="Made with Flutter" src='https://img.shields.io/badge/Web%20App-Offline-red?style=for-the-badge&logo=GitHub'>
     </a>
 </p>
 <hr />
